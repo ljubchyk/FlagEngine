@@ -1,0 +1,13 @@
+[package]
+name = "FlagEngine"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+r2d2 = "0.8.10"
+r2d2_sqlite = "0.35.0"
+rusqlite = { version = "0.40.2", features = ["bundled"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "2.0.20"
+uuid = { version = "1.8", features = ["v7", "serde"] }
