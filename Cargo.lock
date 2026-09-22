@@ -6,6 +6,7 @@ version = 4
 name = "FlagEngine"
 version = "0.1.0"
 dependencies = [
+ "arc-swap",
  "r2d2",
  "r2d2_sqlite",
  "rusqlite",
@@ -13,6 +14,15 @@ dependencies = [
  "serde_json",
  "thiserror",
  "uuid",
+]
+
+[[package]]
+name = "arc-swap"
+version = "1.9.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c049c0be4daef0b145cb3555416b3b8ef5b7888a38aea1a3a155801fe7b0810b"
+dependencies = [
+ "rustversion",
 ]
 
 [[package]]

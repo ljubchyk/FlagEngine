@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+arc-swap = "1.9.2"
 r2d2 = "0.8.10"
 r2d2_sqlite = "0.35.0"
 rusqlite = { version = "0.40.2", features = ["bundled"] }

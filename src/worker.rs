@@ -1,17 +1,19 @@
 use rusqlite::{Connection, Result, params};
-use std::{thread, time::Duration};
+use std::{sync::Arc, thread, time::Duration};
 
-use crate::db::apply_parameters;
+use crate::{cache::FlagCache, db::apply_parameters};
 
 pub struct OutboxWorker {
     db_path: String,
+    cache: Arc<FlagCache>,
     poll_interval: Duration,
 }
 
 impl OutboxWorker {
-    pub fn new(db_path: &str, poll_interval: Duration) -> Self {
+    pub fn new(db_path: &str, cache: Arc<FlagCache>, poll_interval: Duration) -> Self {
         Self {
             db_path: db_path.to_string(),
+            cache,
             poll_interval,
         }
     }
@@ -21,9 +23,10 @@ impl OutboxWorker {
         let mut conn = Connection::open(&self.db_path)?;
         apply_parameters(&conn)?;
 
+        let cache = self.cache.clone();
         thread::spawn(move || {
             loop {
-                if let Err(e) = Self::process_pending_messages(&mut conn) {
+                if let Err(e) = Self::process_pending_messages(&mut conn, &cache) {
                     eprintln!("[OutboxWorker] Error processing batch: {}", e);
                 }
 
@@ -35,7 +38,7 @@ impl OutboxWorker {
         Ok(())
     }
 
-    fn process_pending_messages(conn: &mut Connection) -> Result<usize> {
+    fn process_pending_messages(conn: &mut Connection, cache: &FlagCache) -> Result<usize> {
         // Вибираємо пачку 'Pending' подій, сортуючи за часом створення (UUIDv7 гарантує хронологію)
         let messages = conn
             .prepare_cached(
