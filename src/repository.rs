@@ -46,7 +46,7 @@ impl SqliteFlagRepository {
                 is_archived: row.get(3)?,
                 version: row.get(4)?,
                 updated_at: row.get(5)?,
-                uncommitted_events: Vec::new(),
+                domain_events: Vec::new(),
             })
         })
         .optional()
@@ -54,7 +54,7 @@ impl SqliteFlagRepository {
 
     // pub fn find_by_key(&self, conn: &Connection, key: &str) -> Result<Option<FeatureFlag>> {
     //     let mut stmt = conn.prepare_cached(
-    //         "SELECT id, key, is_enabled, is_archived, version, updated_at 
+    //         "SELECT id, key, is_enabled, is_archived, version, updated_at
     //          FROM feature_flags WHERE key = ?1",
     //     )?;
 

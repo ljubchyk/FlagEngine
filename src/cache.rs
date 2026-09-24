@@ -1,6 +1,5 @@
 use arc_swap::ArcSwap;
 use std::collections::HashMap;
-use std::sync::Arc;
 
 pub struct FlagCache {
     // Атомарний вказівник на таблицю прапорців (Lock-Free reads)
@@ -21,9 +20,19 @@ impl FlagCache {
     }
 
     /// Атомарне оновлення кешу при отриманні події з Outbox
-    pub fn update(&self, key: String, is_enabled: bool) {
-        let mut current = (**self.flags.load()).clone();
-        current.insert(key, is_enabled);
-        self.flags.store(Arc::new(current));
+    pub fn update(&self, key: &str, is_enabled: bool) {
+        self.flags.rcu(|current| {
+            let mut new_map = (**current).clone();
+            new_map.insert(key.into(), is_enabled);
+            new_map
+        });
+    }
+
+    pub fn remove(&self, key: &str) {
+        self.flags.rcu(|map| {
+            let mut new_map = (**map).clone();
+            new_map.remove(key);
+            new_map
+        });
     }
 }

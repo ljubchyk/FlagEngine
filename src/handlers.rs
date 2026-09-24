@@ -9,7 +9,7 @@ pub fn handle_audit_log(tx: &Transaction, event: &DomainEvent) -> Result<()> {
             event.id.to_string(),
             event.flag_id.to_string(),
             event.actor_id,
-            event.event_type,
+            event.payload.event_type(),
             serde_json::to_string(&event.payload).unwrap_or_default(),
             event.occurred_at
         ],
@@ -23,7 +23,7 @@ pub fn handle_outbox(tx: &Transaction, event: &DomainEvent) -> Result<()> {
          VALUES (?1, ?2, ?3, 'Pending', ?4)",
         params![
             event.id.to_string(),
-            event.event_type,
+            event.payload.event_type(),
             serde_json::to_string(event).unwrap_or_default(),
             event.occurred_at
         ],

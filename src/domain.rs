@@ -3,12 +3,29 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(tag = "type")]
+pub enum EventPayload {
+    FlagCreated { key: String, is_enabled: bool },
+    FlagToogled { key: String, is_enabled: bool },
+    FlagArchived { key: String },
+}
+
+impl EventPayload {
+    pub fn event_type(&self) -> &'static str {
+        match self {
+            EventPayload::FlagCreated { .. } => "FlagCreated",
+            EventPayload::FlagToogled { .. } => "FlagToogled",
+            EventPayload::FlagArchived { .. } => "FlagArchived",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DomainEvent {
     pub id: Uuid,
     pub flag_id: Uuid,
     pub actor_id: String,
-    pub event_type: String,
-    pub payload: serde_json::Value,
+    pub payload: EventPayload,
     pub occurred_at: i64,
 }
 
@@ -20,7 +37,7 @@ pub struct FeatureFlag {
     pub is_archived: bool,
     pub version: i64,
     pub updated_at: i64,
-    pub uncommitted_events: Vec<DomainEvent>,
+    pub domain_events: Vec<DomainEvent>,
 }
 
 impl FeatureFlag {
@@ -35,18 +52,16 @@ impl FeatureFlag {
             is_archived: false,
             version: 1,
             updated_at: now,
-            uncommitted_events: Vec::new(),
+            domain_events: Vec::new(),
         };
 
-        flag.uncommitted_events.push(DomainEvent {
-            id: Uuid::now_v7(),
-            flag_id,
+        flag.record_event(
             actor_id,
-            event_type: "FlagCreated".to_string(),
-            payload: serde_json::json!({ "is_enabled": false }),
-            occurred_at: now,
-        });
-
+            EventPayload::FlagCreated {
+                key: flag.key.clone(),
+                is_enabled: flag.is_enabled,
+            },
+        );
         flag
     }
 
@@ -59,14 +74,13 @@ impl FeatureFlag {
         self.version += 1;
         self.updated_at = current_time_ms();
 
-        self.uncommitted_events.push(DomainEvent {
-            id: Uuid::now_v7(),
-            flag_id: self.id,
+        self.record_event(
             actor_id,
-            event_type: "FlagToggled".to_string(),
-            payload: serde_json::json!({ "new_state": new_state }),
-            occurred_at: self.updated_at,
-        });
+            EventPayload::FlagToogled {
+                key: self.key.clone(),
+                is_enabled: new_state,
+            },
+        );
     }
 
     pub fn archive(&mut self, actor_id: String) {
@@ -79,12 +93,20 @@ impl FeatureFlag {
         self.version += 1;
         self.updated_at = current_time_ms();
 
-        self.uncommitted_events.push(DomainEvent {
+        self.record_event(
+            actor_id,
+            EventPayload::FlagArchived {
+                key: self.key.clone(),
+            },
+        );
+    }
+
+    fn record_event(&mut self, actor_id: String, payload: EventPayload) {
+        self.domain_events.push(DomainEvent {
             id: Uuid::now_v7(),
             flag_id: self.id,
             actor_id,
-            event_type: "FlagArchived".to_string(),
-            payload: serde_json::json!({ "key": self.key }),
+            payload,
             occurred_at: self.updated_at,
         });
     }

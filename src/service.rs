@@ -45,7 +45,7 @@ impl FeatureFlagService {
         let flag_id = flag.id;
 
         self.repo.save(&tx, &flag)?;
-        process_events(&tx, &flag.uncommitted_events)?;
+        process_events(&tx, &flag.domain_events)?;
 
         tx.commit()?;
         Ok(flag_id)
@@ -62,7 +62,7 @@ impl FeatureFlagService {
         flag.toggle(actor_id, new_state);
 
         self.repo.save(&tx, &flag)?;
-        process_events(&tx, &flag.uncommitted_events)?;
+        process_events(&tx, &flag.domain_events)?;
 
         tx.commit()?;
         Ok(())
@@ -79,7 +79,7 @@ impl FeatureFlagService {
         flag.archive(actor_id);
 
         self.repo.save(&tx, &flag)?;
-        process_events(&tx, &flag.uncommitted_events)?;
+        process_events(&tx, &flag.domain_events)?;
 
         tx.commit()?;
         Ok(())
