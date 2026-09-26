@@ -34,7 +34,7 @@ pub fn handle_outbox(tx: &Transaction, event: &DomainEvent) -> Result<()> {
     Ok(())
 }
 
-pub fn dispatch_sync(tx: &Transaction, events: &[DomainEvent]) -> Result<()> {
+pub fn notify_sync_subscribers(tx: &Transaction, events: &[DomainEvent]) -> Result<()> {
     for event in events {
         handle_audit_log(tx, event)?;
         handle_outbox(tx, event)?;
@@ -58,7 +58,7 @@ pub fn handle_cache(event: &DomainEvent, cache: &FlagCache) {
     }
 }
 
-pub fn dispatch_async(event: &DomainEvent, cache: &FlagCache) {
+pub fn notify_async_subscribers(event: &DomainEvent, cache: &FlagCache) {
     handle_cache(event, cache);
     handle_dispatch(event);
 }

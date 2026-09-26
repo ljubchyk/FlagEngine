@@ -3,7 +3,7 @@ use std::thread::JoinHandle;
 use std::{sync::Arc, thread, time::Duration};
 
 use crate::domain::DomainEvent;
-use crate::handlers::dispatch_async;
+use crate::handlers::notify_async_subscribers;
 use crate::{cache::FlagCache, db::apply_parameters};
 
 pub fn spawn_outbox_worker(
@@ -70,13 +70,11 @@ fn process_pending_messages(conn: &mut Connection, cache: &FlagCache) -> Result<
     for (id, payload, ..) in &messages {
         match serde_json::from_str::<DomainEvent>(payload) {
             Ok(event) => {
-                dispatch_async(&event, cache);
-
+                notify_async_subscribers(&event, cache);
                 complete_stmt.execute(params![id])?;
             }
             Err(e) => {
                 eprintln!("[OutboxWorker] Failed to parse event: {}", e);
-
                 failed_stmt.execute(params![id])?;
             }
         }
