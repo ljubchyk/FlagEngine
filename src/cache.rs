@@ -1,5 +1,5 @@
 use arc_swap::ArcSwap;
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::Arc};
 
 pub struct FlagCache {
     // Атомарний вказівник на таблицю прапорців (Lock-Free reads)
@@ -34,5 +34,10 @@ impl FlagCache {
             new_map.remove(key);
             new_map
         });
+    }
+
+    pub fn hydrate<I: IntoIterator<Item = (String, bool)>>(&self, flags: I) {
+        let map = flags.into_iter().collect::<HashMap<String, bool>>();
+        self.flags.store(Arc::new(map));
     }
 }

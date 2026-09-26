@@ -1,4 +1,4 @@
-use crate::handlers::process_events;
+use crate::handlers::dispatch_sync;
 use crate::repository::SqliteFlagRepository;
 use crate::{db::DbPool, domain::FeatureFlag};
 use rusqlite::TransactionBehavior;
@@ -13,8 +13,6 @@ pub enum ServiceError {
     #[error("Feature flag with key '{0}' was not found")]
     FlagKeyNotFound(String),
 
-    // #[error("Invalid rule configuration for flag '{key}': {reason}")]
-    // InvalidRule { key: String, reason: String },
     #[error("Database operation failed: {0}")]
     Database(#[from] rusqlite::Error),
 
@@ -45,7 +43,7 @@ impl FeatureFlagService {
         let flag_id = flag.id;
 
         self.repo.save(&tx, &flag)?;
-        process_events(&tx, &flag.domain_events)?;
+        dispatch_sync(&tx, &flag.domain_events)?;
 
         tx.commit()?;
         Ok(flag_id)
@@ -62,7 +60,7 @@ impl FeatureFlagService {
         flag.toggle(actor_id, new_state);
 
         self.repo.save(&tx, &flag)?;
-        process_events(&tx, &flag.domain_events)?;
+        dispatch_sync(&tx, &flag.domain_events)?;
 
         tx.commit()?;
         Ok(())
@@ -79,7 +77,7 @@ impl FeatureFlagService {
         flag.archive(actor_id);
 
         self.repo.save(&tx, &flag)?;
-        process_events(&tx, &flag.domain_events)?;
+        dispatch_sync(&tx, &flag.domain_events)?;
 
         tx.commit()?;
         Ok(())

@@ -2,7 +2,8 @@ use rusqlite::{Connection, Result, params};
 use std::thread::JoinHandle;
 use std::{sync::Arc, thread, time::Duration};
 
-use crate::domain::{DomainEvent, EventPayload};
+use crate::domain::DomainEvent;
+use crate::handlers::dispatch_async;
 use crate::{cache::FlagCache, db::apply_parameters};
 
 pub fn spawn_outbox_worker(
@@ -15,11 +16,20 @@ pub fn spawn_outbox_worker(
 
     let handle = thread::spawn(move || {
         loop {
-            if let Err(e) = process_pending_messages(&mut conn, &cache) {
-                eprintln!("[OutboxWorker] Error processing batch: {}", e);
+            match process_pending_messages(&mut conn, &cache) {
+                Ok(processed_count) => {
+                    if processed_count == 0 {
+                        thread::sleep(poll_interval);
+                    }
+                }
+                Err(e) => {
+                    eprintln!("[OutboxWorker] Error processing batch: {}", e);
+                    thread::sleep(poll_interval);
+                }
             }
-
-            thread::sleep(poll_interval);
+            // if let Err(e) = process_pending_messages(&mut conn, &cache) {
+            //     eprintln!("[OutboxWorker] Error processing batch: {}", e);
+            // }
         }
     });
 
@@ -57,30 +67,15 @@ fn process_pending_messages(conn: &mut Connection, cache: &FlagCache) -> Result<
 
     let mut processed_count = 0;
 
-    for (id, event_type, payload) in &messages {
-        println!(
-            "🚀 [OutboxWorker] Dispatching event -> Type: {}, Payload: {}",
-            event_type, payload
-        );
-
+    for (id, payload, ..) in &messages {
         match serde_json::from_str::<DomainEvent>(payload) {
             Ok(event) => {
-                match event.payload {
-                    EventPayload::FlagCreated { key, is_enabled }
-                    | EventPayload::FlagToogled { key, is_enabled } => {
-                        cache.update(&key, is_enabled)
-                    }
-                    EventPayload::FlagArchived { key } => cache.remove(&key),
-                }
+                dispatch_async(&event, cache);
 
                 complete_stmt.execute(params![id])?;
             }
             Err(e) => {
                 eprintln!("[OutboxWorker] Failed to parse event: {}", e);
-                eprintln!(
-                    "[OutboxWorker] Event {} could not be applied to cache - marking Failed, needs investigation",
-                    id
-                );
 
                 failed_stmt.execute(params![id])?;
             }

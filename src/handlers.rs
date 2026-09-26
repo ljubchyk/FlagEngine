@@ -1,4 +1,7 @@
-use crate::domain::DomainEvent;
+use crate::{
+    cache::FlagCache,
+    domain::{DomainEvent, EventPayload},
+};
 use rusqlite::{Result, Transaction, params};
 
 pub fn handle_audit_log(tx: &Transaction, event: &DomainEvent) -> Result<()> {
@@ -31,10 +34,31 @@ pub fn handle_outbox(tx: &Transaction, event: &DomainEvent) -> Result<()> {
     Ok(())
 }
 
-pub fn process_events(tx: &Transaction, events: &[DomainEvent]) -> Result<()> {
+pub fn dispatch_sync(tx: &Transaction, events: &[DomainEvent]) -> Result<()> {
     for event in events {
         handle_audit_log(tx, event)?;
         handle_outbox(tx, event)?;
     }
     Ok(())
+}
+
+pub fn handle_dispatch(event: &DomainEvent) {
+    println!(
+        "🚀 Dispatching event -> Type: {}, Payload: {:?}",
+        event.payload.event_type(),
+        event.payload
+    );
+}
+
+pub fn handle_cache(event: &DomainEvent, cache: &FlagCache) {
+    match &event.payload {
+        EventPayload::FlagCreated { key, is_enabled }
+        | EventPayload::FlagToogled { key, is_enabled } => cache.update(&key, *is_enabled),
+        EventPayload::FlagArchived { key } => cache.remove(&key),
+    }
+}
+
+pub fn dispatch_async(event: &DomainEvent, cache: &FlagCache) {
+    handle_cache(event, cache);
+    handle_dispatch(event);
 }
