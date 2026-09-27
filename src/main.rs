@@ -24,7 +24,7 @@ fn main() -> rusqlite::Result<()> {
 
     cache.hydrate(flags.into_iter().map(|flag| (flag.key, flag.is_enabled)));
 
-    worker::spawn_outbox_worker(db_path, Duration::from_millis(500), cache)?;
+    worker::spawn_outbox_worker(db_path, Duration::from_millis(500))?;
 
     loop {
         thread::sleep(Duration::from_secs(1));

@@ -1,7 +1,4 @@
-use crate::{
-    cache::FlagCache,
-    domain::{DomainEvent, EventPayload},
-};
+use crate::domain::DomainEvent;
 use rusqlite::{Result, Transaction, params};
 
 pub fn handle_audit_log(tx: &Transaction, event: &DomainEvent) -> Result<()> {
@@ -50,15 +47,6 @@ pub fn handle_dispatch(event: &DomainEvent) {
     );
 }
 
-pub fn handle_cache(event: &DomainEvent, cache: &FlagCache) {
-    match &event.payload {
-        EventPayload::FlagCreated { key, is_enabled }
-        | EventPayload::FlagToogled { key, is_enabled } => cache.update(&key, *is_enabled),
-        EventPayload::FlagArchived { key } => cache.remove(&key),
-    }
-}
-
-pub fn notify_async_subscribers(event: &DomainEvent, cache: &FlagCache) {
-    handle_cache(event, cache);
+pub fn notify_async_subscribers(event: &DomainEvent) {
     handle_dispatch(event);
 }

@@ -1,22 +1,18 @@
 use rusqlite::{Connection, Result, params};
 use std::thread::JoinHandle;
-use std::{sync::Arc, thread, time::Duration};
+use std::{thread, time::Duration};
 
+use crate::db::apply_parameters;
 use crate::domain::DomainEvent;
 use crate::handlers::notify_async_subscribers;
-use crate::{cache::FlagCache, db::apply_parameters};
 
-pub fn spawn_outbox_worker(
-    db_path: &str,
-    poll_interval: Duration,
-    cache: Arc<FlagCache>,
-) -> Result<JoinHandle<()>> {
+pub fn spawn_outbox_worker(db_path: &str, poll_interval: Duration) -> Result<JoinHandle<()>> {
     let mut conn = Connection::open(&db_path)?;
     apply_parameters(&conn)?;
 
     let handle = thread::spawn(move || {
         loop {
-            match process_pending_messages(&mut conn, &cache) {
+            match process_pending_messages(&mut conn) {
                 Ok(processed_count) => {
                     if processed_count == 0 {
                         thread::sleep(poll_interval);
@@ -27,7 +23,7 @@ pub fn spawn_outbox_worker(
                     thread::sleep(poll_interval);
                 }
             }
-            // if let Err(e) = process_pending_messages(&mut conn, &cache) {
+            // if let Err(e) = process_pending_messages(&mut conn) {
             //     eprintln!("[OutboxWorker] Error processing batch: {}", e);
             // }
         }
@@ -36,7 +32,7 @@ pub fn spawn_outbox_worker(
     Ok(handle)
 }
 
-fn process_pending_messages(conn: &mut Connection, cache: &FlagCache) -> Result<usize> {
+fn process_pending_messages(conn: &mut Connection) -> Result<usize> {
     // Вибираємо пачку 'Pending' подій, сортуючи за часом створення (UUIDv7 гарантує хронологію)
     let messages = conn
         .prepare_cached(
@@ -70,7 +66,7 @@ fn process_pending_messages(conn: &mut Connection, cache: &FlagCache) -> Result<
     for (id, payload, ..) in &messages {
         match serde_json::from_str::<DomainEvent>(payload) {
             Ok(event) => {
-                notify_async_subscribers(&event, cache);
+                notify_async_subscribers(&event);
                 complete_stmt.execute(params![id])?;
             }
             Err(e) => {

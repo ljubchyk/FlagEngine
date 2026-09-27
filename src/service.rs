@@ -4,7 +4,7 @@ use crate::cache::FlagCache;
 use crate::handlers::notify_sync_subscribers;
 use crate::repository::SqliteFlagRepository;
 use crate::{db::DbPool, domain::FeatureFlag};
-use rusqlite::{TransactionBehavior};
+use rusqlite::TransactionBehavior;
 use thiserror::Error;
 use uuid::Uuid;
 
@@ -31,16 +31,16 @@ pub type Result<T> = std::result::Result<T, ServiceError>;
 fn is_unique_violation(err: &rusqlite::Error) -> bool {
     match err {
         rusqlite::Error::SqliteFailure(inner, _) => {
-            inner.code == rusqlite::ErrorCode::ConstraintViolation && inner.extended_code == 2067 
-        },
-        _ => false
+            inner.code == rusqlite::ErrorCode::ConstraintViolation && inner.extended_code == 2067
+        }
+        _ => false,
     }
 }
 
 pub struct FeatureFlagService {
     pool: DbPool,
     repo: SqliteFlagRepository,
-    cache: Arc<FlagCache>
+    cache: Arc<FlagCache>,
 }
 
 impl FeatureFlagService {
@@ -48,7 +48,7 @@ impl FeatureFlagService {
         Self {
             pool,
             repo: SqliteFlagRepository::new(),
-            cache
+            cache,
         }
     }
 
@@ -73,6 +73,7 @@ impl FeatureFlagService {
         notify_sync_subscribers(&tx, &flag.domain_events)?;
 
         tx.commit()?;
+        self.cache.update(&flag.key, flag.is_enabled);
         Ok(flag_id)
     }
 
@@ -90,6 +91,7 @@ impl FeatureFlagService {
         notify_sync_subscribers(&tx, &flag.domain_events)?;
 
         tx.commit()?;
+        self.cache.update(&flag.key, flag.is_enabled);
         Ok(())
     }
 
@@ -107,6 +109,7 @@ impl FeatureFlagService {
         notify_sync_subscribers(&tx, &flag.domain_events)?;
 
         tx.commit()?;
+        self.cache.remove(&flag.key);
         Ok(())
     }
 }

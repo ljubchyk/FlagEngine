@@ -69,7 +69,8 @@ impl SqliteFlagRepository {
                 updated_at: row.get(5)?,
                 domain_events: Vec::new(),
             })
-        }).optional()
+        })
+        .optional()
     }
 
     pub fn find_all_active(&self, conn: &Connection) -> Result<Vec<FeatureFlag>> {
@@ -77,7 +78,6 @@ impl SqliteFlagRepository {
             "SELECT id, key, is_enabled, is_archived, version, updated_at
              FROM feature_flags WHERE is_archived = 0",
         )?;
-
 
         stmt.query_map([], |row| {
             let id_str: String = row.get(0)?;
@@ -90,6 +90,7 @@ impl SqliteFlagRepository {
                 updated_at: row.get(5)?,
                 domain_events: Vec::new(),
             })
-        })?.collect()
+        })?
+        .collect()
     }
 }
