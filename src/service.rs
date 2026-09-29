@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 use crate::cache::FlagCache;
+use crate::domain;
 use crate::handlers::notify_sync_subscribers;
 use crate::repository::SqliteFlagRepository;
 use crate::{db::DbPool, domain::FeatureFlag};
@@ -24,6 +25,9 @@ pub enum ServiceError {
 
     #[error("Failed to acquire connection from pool: {0}")]
     Pool(#[from] r2d2::Error),
+
+    #[error("flag is archived")]
+    Domain(#[from] domain::DomainError),
 }
 
 pub type Result<T> = std::result::Result<T, ServiceError>;
@@ -85,7 +89,10 @@ impl FeatureFlagService {
             .repo
             .find_by_id(&tx, flag_id)?
             .ok_or(ServiceError::FlagNotFound(flag_id))?;
-        flag.toggle(actor_id, new_state);
+        let is_changed = flag.toggle(actor_id, new_state)?;
+        if !is_changed {
+            return Ok(());
+        }
 
         self.repo.save(&tx, &flag)?;
         notify_sync_subscribers(&tx, &flag.domain_events)?;
@@ -103,7 +110,10 @@ impl FeatureFlagService {
             .repo
             .find_by_id(&tx, flag_id)?
             .ok_or(ServiceError::FlagNotFound(flag_id))?;
-        flag.archive(actor_id);
+        let is_changed = flag.archive(actor_id);
+        if !is_changed {
+            return Ok(());
+        }
 
         self.repo.save(&tx, &flag)?;
         notify_sync_subscribers(&tx, &flag.domain_events)?;

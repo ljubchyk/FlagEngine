@@ -17,14 +17,12 @@ impl SqliteFlagRepository {
                 key = excluded.key,
                 is_enabled = excluded.is_enabled,
                 is_archived = excluded.is_archived,
-                version = excluded.version,
                 updated_at = excluded.updated_at",
             params![
                 flag.id.to_string(),
                 flag.key,
                 flag.is_enabled,
                 flag.is_archived,
-                flag.version,
                 flag.updated_at
             ],
         )?;
@@ -44,7 +42,6 @@ impl SqliteFlagRepository {
                 key: row.get(1)?,
                 is_enabled: row.get(2)?,
                 is_archived: row.get(3)?,
-                version: row.get(4)?,
                 updated_at: row.get(5)?,
                 domain_events: Vec::new(),
             })
@@ -65,7 +62,6 @@ impl SqliteFlagRepository {
                 key: row.get(1)?,
                 is_enabled: row.get(2)?,
                 is_archived: row.get(3)?,
-                version: row.get(4)?,
                 updated_at: row.get(5)?,
                 domain_events: Vec::new(),
             })
@@ -86,7 +82,6 @@ impl SqliteFlagRepository {
                 key: row.get(1)?,
                 is_enabled: row.get(2)?,
                 is_archived: row.get(3)?,
-                version: row.get(4)?,
                 updated_at: row.get(5)?,
                 domain_events: Vec::new(),
             })

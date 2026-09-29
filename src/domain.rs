@@ -2,11 +2,17 @@ use serde::{Deserialize, Serialize};
 use std::time::{SystemTime, UNIX_EPOCH};
 use uuid::Uuid;
 
+#[derive(Debug, thiserror::Error)]
+pub enum DomainError {
+    #[error("flag is archived")]
+    Archived,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type")]
 pub enum EventPayload {
     FlagCreated { key: String, is_enabled: bool },
-    FlagToogled { key: String, is_enabled: bool },
+    FlagToggled { key: String, is_enabled: bool },
     FlagArchived { key: String },
 }
 
@@ -14,7 +20,7 @@ impl EventPayload {
     pub fn event_type(&self) -> &'static str {
         match self {
             EventPayload::FlagCreated { .. } => "FlagCreated",
-            EventPayload::FlagToogled { .. } => "FlagToogled",
+            EventPayload::FlagToggled { .. } => "FlagToggled",
             EventPayload::FlagArchived { .. } => "FlagArchived",
         }
     }
@@ -35,7 +41,6 @@ pub struct FeatureFlag {
     pub key: String,
     pub is_enabled: bool,
     pub is_archived: bool,
-    pub version: i64,
     pub updated_at: i64,
     pub domain_events: Vec<DomainEvent>,
 }
@@ -50,7 +55,6 @@ impl FeatureFlag {
             key,
             is_enabled: false,
             is_archived: false,
-            version: 1,
             updated_at: now,
             domain_events: Vec::new(),
         };
@@ -65,32 +69,36 @@ impl FeatureFlag {
         flag
     }
 
-    pub fn toggle(&mut self, actor_id: String, new_state: bool) {
+    pub fn toggle(&mut self, actor_id: String, new_state: bool) -> Result<bool, DomainError> {
         if self.is_archived {
-            return;
+            return Err(DomainError::Archived);
+        }
+
+        if self.is_enabled == new_state {
+            return Ok(false);
         }
 
         self.is_enabled = new_state;
-        self.version += 1;
         self.updated_at = current_time_ms();
 
         self.record_event(
             actor_id,
-            EventPayload::FlagToogled {
+            EventPayload::FlagToggled {
                 key: self.key.clone(),
                 is_enabled: new_state,
             },
         );
+
+        Ok(true)
     }
 
-    pub fn archive(&mut self, actor_id: String) {
+    pub fn archive(&mut self, actor_id: String) -> bool {
         if self.is_archived {
-            return;
+            return false;
         }
 
         self.is_archived = true;
         self.is_enabled = false;
-        self.version += 1;
         self.updated_at = current_time_ms();
 
         self.record_event(
@@ -99,6 +107,8 @@ impl FeatureFlag {
                 key: self.key.clone(),
             },
         );
+
+        true
     }
 
     fn record_event(&mut self, actor_id: String, payload: EventPayload) {
