@@ -88,4 +88,24 @@ impl SqliteFlagRepository {
         })?
         .collect()
     }
+
+    pub fn find_all(&self, conn: &Connection) -> Result<Vec<FeatureFlag>> {
+        let mut stmt = conn.prepare_cached(
+            "SELECT id, key, is_enabled, is_archived, version, updated_at
+             FROM feature_flags WHERE is_archived = 0",
+        )?;
+
+        stmt.query_map([], |row| {
+            let id_str: String = row.get(0)?;
+            Ok(FeatureFlag {
+                id: Uuid::parse_str(&id_str).unwrap_or_default(),
+                key: row.get(1)?,
+                is_enabled: row.get(2)?,
+                is_archived: row.get(3)?,
+                updated_at: row.get(5)?,
+                domain_events: Vec::new(),
+            })
+        })?
+        .collect()
+    }
 }
