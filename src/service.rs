@@ -77,7 +77,6 @@ impl FeatureFlagService {
         notify_sync_subscribers(&tx, &flag.domain_events)?;
 
         tx.commit()?;
-        self.cache.update(&flag.key, flag.is_enabled);
         Ok(flag_id)
     }
 
@@ -98,7 +97,6 @@ impl FeatureFlagService {
         notify_sync_subscribers(&tx, &flag.domain_events)?;
 
         tx.commit()?;
-        self.cache.update(&flag.key, flag.is_enabled);
         Ok(())
     }
 
@@ -119,7 +117,6 @@ impl FeatureFlagService {
         notify_sync_subscribers(&tx, &flag.domain_events)?;
 
         tx.commit()?;
-        self.cache.remove(&flag.key);
         Ok(())
     }
 }

@@ -111,6 +111,23 @@ impl FeatureFlag {
         true
     }
 
+    pub fn restore(
+        id: Uuid,
+        key: String,
+        is_enabled: bool,
+        is_archived: bool,
+        updated_at: i64,
+    ) -> Self {
+        Self {
+            id,
+            key,
+            is_enabled,
+            is_archived,
+            updated_at,
+            domain_events: Vec::new(),
+        }
+    }
+
     fn record_event(&mut self, actor_id: String, payload: EventPayload) {
         self.domain_events.push(DomainEvent {
             id: Uuid::now_v7(),

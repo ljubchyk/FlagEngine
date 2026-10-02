@@ -32,7 +32,6 @@ pub fn init_db(db_path: &str) -> Result<Connection> {
              key TEXT NOT NULL UNIQUE,
              is_enabled BOOLEAN NOT NULL DEFAULT FALSE,
              is_archived BOOLEAN NOT NULL DEFAULT FALSE,
-             version INTEGER NOT NULL,
              updated_at INTEGER NOT NULL
          );
 
