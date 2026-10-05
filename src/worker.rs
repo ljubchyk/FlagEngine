@@ -45,15 +45,15 @@ fn process_pending_messages(conn: &mut Connection, cache: &FlagCache) -> Result<
 
     let mut processed_count = 0;
 
-    for (seq, event) in &rows {
-        match &event {
+    for (seq, event) in rows {
+        match event {
             Ok(event) => {
                 notify_async_subscribers(&event, cache);
-                outbox_repo::mark(&tx, *seq, outbox_repo::OutboxStatus::Completed)?;
+                outbox_repo::mark(&tx, seq, outbox_repo::OutboxStatus::Completed)?;
             }
             Err(e) => {
                 eprintln!("[OutboxWorker] Failed to parse event: {}", e);
-                outbox_repo::mark(&tx, *seq, outbox_repo::OutboxStatus::Failed)?;
+                outbox_repo::mark(&tx, seq, outbox_repo::OutboxStatus::Failed)?;
             }
         }
 
