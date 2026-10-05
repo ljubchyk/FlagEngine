@@ -60,13 +60,14 @@ pub fn fetch_pending(conn: &Connection, limit: u32) -> Result<Vec<(i64, Result<D
     rows.collect()
 }
 
-pub fn mark(tx: &Transaction, seq: i64, status: OutboxStatus) -> Result<()> {
-    let changed = tx.execute(
-        "UPDATE outbox_events SET status = ?2 WHERE seq = ?1",
-        params![seq, status],
-    )?;
-    if changed != 1 {
-        return Err(Error::StatementChangedRows(changed));
+pub fn mark_batch(tx: &Transaction, seqs: &[i64], status: OutboxStatus) -> Result<()> {
+    if seqs.is_empty() {
+        return Ok(());
+    }
+
+    let mut stmt = tx.prepare_cached("UPDATE outbox_events SET status = ?2 WHERE seq = ?1")?;
+    for seq in seqs {
+        stmt.execute(params![seq, status])?;
     }
 
     Ok(())
