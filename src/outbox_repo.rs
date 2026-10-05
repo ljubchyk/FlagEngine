@@ -65,10 +65,89 @@ pub fn mark_batch(tx: &Transaction, seqs: &[i64], status: OutboxStatus) -> Resul
         return Ok(());
     }
 
-    let mut stmt = tx.prepare_cached("UPDATE outbox_events SET status = ?2 WHERE seq = ?1")?;
+    let mut stmt = tx.prepare_cached(
+        "UPDATE outbox_events SET status = ?2 WHERE seq = ?1 AND status = 'Pending'",
+    )?;
+    let mut changed = 0;
     for seq in seqs {
-        stmt.execute(params![seq, status])?;
+        changed += stmt.execute(params![seq, status])?;
+    }
+
+    if changed != seqs.len() {
+        return Err(rusqlite::Error::StatementChangedRows(changed));
     }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::domain::EventPayload;
+
+    fn setup() -> Connection {
+        let conn = super::super::db::init_db(":memory:").unwrap();
+        conn
+    }
+
+    fn event(key: &str, enabled: bool, at: i64) -> DomainEvent {
+        DomainEvent {
+            key: key.into(),
+            actor: "test".into(),
+            occurred_at: at,
+            payload: EventPayload::FlagToggled {
+                is_enabled: enabled,
+            },
+        }
+    }
+
+    #[test]
+    fn enqueue_fetch_mark_roundtrip() {
+        let mut conn = setup();
+
+        let tx = conn.transaction().unwrap();
+        let s1 = enqueue(&tx, &event("a", true, 1)).unwrap();
+        let s2 = enqueue(&tx, &event("b", false, 2)).unwrap();
+        tx.commit().unwrap();
+        assert!(s2 > s1);
+
+        let pending = fetch_pending(&conn, 10).unwrap();
+        assert_eq!(pending.len(), 2);
+        assert_eq!(pending[0].0, s1);
+        assert_eq!(pending[0].1.as_ref().unwrap().key, "a");
+
+        let tx = conn.transaction().unwrap();
+        mark_batch(&tx, &[s1], OutboxStatus::Completed).unwrap();
+        tx.commit().unwrap();
+
+        let pending = fetch_pending(&conn, 10).unwrap();
+        assert_eq!(pending.len(), 1);
+        assert_eq!(pending[0].0, s2);
+    }
+
+    #[test]
+    fn unparseable_payload_keeps_seq_and_can_be_marked_failed() {
+        let mut conn = setup();
+        conn.execute(
+            "INSERT INTO outbox_events (payload, created_at) VALUES ('not json', 1)",
+            [],
+        )
+        .unwrap();
+
+        let pending = fetch_pending(&conn, 10).unwrap();
+        assert_eq!(pending.len(), 1);
+        assert!(pending[0].1.is_err());
+
+        let tx = conn.transaction().unwrap();
+        mark_batch(&tx, &[pending[0].0], OutboxStatus::Failed).unwrap();
+        tx.commit().unwrap();
+        assert!(fetch_pending(&conn, 10).unwrap().is_empty());
+    }
+
+    #[test]
+    fn mark_unknown_seq_is_an_error() {
+        let mut conn = setup();
+        let tx = conn.transaction().unwrap();
+        assert!(mark_batch(&tx, &[999], OutboxStatus::Completed).is_err());
+    }
 }

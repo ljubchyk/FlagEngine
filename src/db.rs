@@ -31,6 +31,7 @@ pub fn init_db(db_path: &str) -> Result<Connection> {
 
          CREATE TABLE IF NOT EXISTS audit_logs (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
+             key TEXT NOT NULL,
              actor TEXT NOT NULL,
              action TEXT NOT NULL,
              payload TEXT NOT NULL,
@@ -38,11 +39,11 @@ pub fn init_db(db_path: &str) -> Result<Connection> {
          );
 
          CREATE INDEX IF NOT EXISTS idx_audit_logs_flag
-         ON audit_logs(flag_key, id);
+         ON audit_logs(key, id);
 
          CREATE TABLE IF NOT EXISTS outbox_events (
              seq INTEGER PRIMARY KEY AUTOINCREMENT,
-             status TEXT NOT NULL CHECK (status IN ('Pending', 'Completed', 'Failed')),
+             status TEXT NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Completed', 'Failed')),
              payload TEXT NOT NULL,
              created_at INTEGER NOT NULL
          );
