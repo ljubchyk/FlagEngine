@@ -13,7 +13,6 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror",
- "uuid",
 ]
 
 [[package]]
@@ -494,7 +493,6 @@ dependencies = [
  "getrandom",
  "js-sys",
  "rand",
- "serde_core",
  "wasm-bindgen",
 ]
 

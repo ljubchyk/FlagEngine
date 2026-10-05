@@ -1,18 +1,18 @@
-use crate::cache::FlagCache;
 use crate::domain::DomainEvent;
+use crate::{cache::FlagCache, repository::SqliteOutboxRepository};
 
 use rusqlite::{Result, Transaction, params};
 
 pub fn handle_audit_log(tx: &Transaction, event: &DomainEvent) -> Result<()> {
     tx.execute(
-        "INSERT INTO audit_logs (id, flag_id, actor_id, action, payload, created_at)
+        "INSERT INTO audit_logs (key, actor, action, payload, created_at)
          VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
         params![
-            event.id.to_string(),
+            event.id,
             event.flag_id.to_string(),
-            event.actor_id,
+            event.actor,
             event.payload.event_type(),
-            serde_json::to_string(&event.payload).unwrap_or_default(),
+            event.payload,
             event.occurred_at
         ],
     )?;
@@ -20,42 +20,28 @@ pub fn handle_audit_log(tx: &Transaction, event: &DomainEvent) -> Result<()> {
 }
 
 pub fn handle_outbox(tx: &Transaction, event: &DomainEvent) -> Result<()> {
-    tx.execute(
-        "INSERT INTO outbox_messages (id, event_type, payload, status, created_at)
-         VALUES (?1, ?2, ?3, 'Pending', ?4)",
-        params![
-            event.id.to_string(),
-            event.payload.event_type(),
-            serde_json::to_string(event).unwrap_or_default(),
-            event.occurred_at
-        ],
-    )?;
+    SqliteOutboxRepository::default().enqueue(tx, event)?;
     Ok(())
 }
 
-pub fn notify_sync_subscribers(tx: &Transaction, events: &[DomainEvent]) -> Result<()> {
-    for event in events {
-        handle_audit_log(tx, event)?;
-        handle_outbox(tx, event)?;
-    }
+pub fn notify_sync_subscribers(tx: &Transaction, event: &DomainEvent) -> Result<()> {
+    handle_audit_log(tx, event)?;
+    handle_outbox(tx, event)?;
+
     Ok(())
 }
 
 pub fn handle_dispatch(event: &DomainEvent) {
-    println!(
-        "🚀 Dispatching event -> Type: {}, Payload: {:?}",
-        event.payload.event_type(),
-        event.payload
-    );
+    println!("🚀 Dispatching event -> Payload: {:?}", event.payload);
 }
 
 pub fn handle_cache(event: &DomainEvent, cache: &FlagCache) {
     match &event.payload {
-        crate::domain::EventPayload::FlagCreated { key, is_enabled }
-        | crate::domain::EventPayload::FlagToggled { key, is_enabled } => {
-            cache.update(key, *is_enabled)
+        crate::domain::EventPayload::FlagCreated { is_enabled }
+        | crate::domain::EventPayload::FlagToggled { is_enabled } => {
+            cache.update(&event.key, *is_enabled)
         }
-        crate::domain::EventPayload::FlagArchived { key } => cache.remove(key),
+        crate::domain::EventPayload::FlagArchived => cache.remove(&event.key),
     }
 }
 

@@ -7,15 +7,11 @@ use crate::repository::SqliteFlagRepository;
 use crate::{db::DbPool, domain::FeatureFlag};
 use rusqlite::TransactionBehavior;
 use thiserror::Error;
-use uuid::Uuid;
 
 #[derive(Error, Debug)]
 pub enum ServiceError {
-    #[error("Feature flag with ID '{0}' was not found")]
-    FlagNotFound(Uuid),
-
     #[error("Feature flag with key '{0}' was not found")]
-    FlagKeyNotFound(String),
+    FlagNotFound(String),
 
     #[error("Feature flag with key '{0}' already exists")]
     DuplicateKey(String),
@@ -60,12 +56,11 @@ impl FeatureFlagService {
         self.cache.is_enabled(key)
     }
 
-    pub fn create_flag(&self, key: String, actor_id: String) -> Result<Uuid> {
+    pub fn create_flag(&self, key: String, actor: String) -> Result<()> {
         let mut conn = self.pool.get()?;
         let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
 
-        let flag = FeatureFlag::new(key.clone(), actor_id);
-        let flag_id = flag.id;
+        let (flag, event) = FeatureFlag::create(key.clone(), actor)?;
 
         self.repo.save(&tx, &flag).map_err(|err| {
             if is_unique_violation(&err) {
@@ -74,49 +69,47 @@ impl FeatureFlagService {
                 ServiceError::Database(err)
             }
         })?;
-        notify_sync_subscribers(&tx, &flag.domain_events)?;
-
-        tx.commit()?;
-        Ok(flag_id)
-    }
-
-    pub fn toggle_flag(&self, flag_id: Uuid, actor_id: String, new_state: bool) -> Result<()> {
-        let mut conn = self.pool.get()?;
-        let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
-
-        let mut flag = self
-            .repo
-            .find_by_id(&tx, flag_id)?
-            .ok_or(ServiceError::FlagNotFound(flag_id))?;
-        let is_changed = flag.toggle(actor_id, new_state)?;
-        if !is_changed {
-            return Ok(());
-        }
-
-        self.repo.save(&tx, &flag)?;
-        notify_sync_subscribers(&tx, &flag.domain_events)?;
+        notify_sync_subscribers(&tx, &event)?;
 
         tx.commit()?;
         Ok(())
     }
 
-    pub fn archive_flag(&self, flag_id: Uuid, actor_id: String) -> Result<()> {
+    pub fn toggle_flag(&self, key: String, enabled: bool, actor: String) -> Result<()> {
         let mut conn = self.pool.get()?;
         let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
 
         let mut flag = self
             .repo
-            .find_by_id(&tx, flag_id)?
-            .ok_or(ServiceError::FlagNotFound(flag_id))?;
-        let is_changed = flag.archive(actor_id);
-        if !is_changed {
-            return Ok(());
+            .find(&tx, &key)?
+            .ok_or(ServiceError::FlagNotFound(key))?;
+
+        if let Some(event) = flag.set_enabled(enabled, actor)? {
+            self.repo.save(&tx, &flag)?;
+            notify_sync_subscribers(&tx, &event)?;
+
+            tx.commit()?;
         }
 
-        self.repo.save(&tx, &flag)?;
-        notify_sync_subscribers(&tx, &flag.domain_events)?;
+        Ok(())
+    }
 
-        tx.commit()?;
+    pub fn archive_flag(&self, key: String, actor: String) -> Result<()> {
+        let mut conn = self.pool.get()?;
+        let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
+
+        let mut flag = self
+            .repo
+            .find(&tx, &key)?
+            .ok_or(ServiceError::FlagNotFound(key))?;
+
+        if let Some(event) = flag.archive(actor) {
+            self.repo.save(&tx, &flag)?;
+            notify_sync_subscribers(&tx, &event)?;
+
+            tx.commit()?;
+        }
+
         Ok(())
     }
 }

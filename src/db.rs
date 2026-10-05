@@ -6,8 +6,8 @@ pub type DbPool = Pool<SqliteConnectionManager>;
 
 pub fn apply_parameters(conn: &Connection) -> Result<()> {
     conn.execute_batch(
-        "PRAGMA foreign_keys = ON;
-         PRAGMA journal_mode = WAL;
+        // "PRAGMA foreign_keys = ON;
+        "PRAGMA journal_mode = WAL;
          PRAGMA synchronous = NORMAL;
          PRAGMA busy_timeout = 5000;",
     )
@@ -22,38 +22,33 @@ pub fn init_db(db_path: &str) -> Result<Connection> {
     let conn = Connection::open(db_path)?;
 
     conn.execute_batch(
-        "PRAGMA journal_mode = WAL;
-         PRAGMA synchronous = NORMAL;
-         PRAGMA busy_timeout = 5000;
-         PRAGMA foreign_keys = ON;
-
-         CREATE TABLE IF NOT EXISTS feature_flags (
-             id TEXT PRIMARY KEY,
-             key TEXT NOT NULL UNIQUE,
+        "CREATE TABLE IF NOT EXISTS feature_flags (
+             key TEXT PRIMARY KEY,
              is_enabled BOOLEAN NOT NULL DEFAULT FALSE,
              is_archived BOOLEAN NOT NULL DEFAULT FALSE,
              updated_at INTEGER NOT NULL
-         );
+         ) WITHOUT ROWID;
 
          CREATE TABLE IF NOT EXISTS audit_logs (
-             id TEXT PRIMARY KEY,
-             flag_id TEXT NOT NULL,
-             actor_id TEXT NOT NULL,
+             id INTEGER PRIMARY KEY AUTOINCREMENT,
+             actor TEXT NOT NULL,
              action TEXT NOT NULL,
              payload TEXT NOT NULL,
              created_at INTEGER NOT NULL
          );
 
-         CREATE TABLE IF NOT EXISTS outbox_messages (
-             id TEXT PRIMARY KEY,
-             event_type TEXT NOT NULL,
-             payload TEXT NOT NULL,
+         CREATE INDEX IF NOT EXISTS idx_audit_logs_flag
+         ON audit_logs(flag_key, id);
+
+         CREATE TABLE IF NOT EXISTS outbox_events (
+             seq INTEGER PRIMARY KEY AUTOINCREMENT,
              status TEXT NOT NULL CHECK (status IN ('Pending', 'Completed', 'Failed')),
+             payload TEXT NOT NULL,
              created_at INTEGER NOT NULL
          );
 
-         CREATE INDEX IF NOT EXISTS idx_outbox_pending 
-         ON outbox_messages(created_at) WHERE status = 'Pending';",
+         CREATE INDEX IF NOT EXISTS idx_outbox_events_pending 
+         ON outbox_events(seq) WHERE status = 'Pending';",
     )?;
 
     Ok(conn)
