@@ -42,8 +42,8 @@ fn process_pending_messages(conn: &mut Connection, cache: &FlagCache) -> Result<
     }
 
     let mut is_processed = false;
-    let mut completed_seqs = Vec::new();
-    let mut failed_seqs = Vec::new();
+    let mut completed_seqs = Vec::with_capacity(rows.len());
+    let mut failed_seqs = Vec::with_capacity(rows.len());
 
     for (seq, event) in rows {
         match event {
