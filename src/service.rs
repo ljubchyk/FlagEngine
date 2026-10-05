@@ -1,10 +1,9 @@
 use std::sync::Arc;
 
 use crate::cache::FlagCache;
-use crate::domain;
 use crate::handlers::notify_sync_subscribers;
-use crate::repository::SqliteFlagRepository;
 use crate::{db::DbPool, domain::FeatureFlag};
+use crate::{domain, flag_repo};
 use rusqlite::TransactionBehavior;
 use thiserror::Error;
 
@@ -39,17 +38,12 @@ fn is_unique_violation(err: &rusqlite::Error) -> bool {
 
 pub struct FeatureFlagService {
     pool: DbPool,
-    repo: SqliteFlagRepository,
     cache: Arc<FlagCache>,
 }
 
 impl FeatureFlagService {
     pub fn new(pool: DbPool, cache: Arc<FlagCache>) -> Self {
-        Self {
-            pool,
-            repo: SqliteFlagRepository::new(),
-            cache,
-        }
+        Self { pool, cache }
     }
 
     pub fn is_enabled(&self, key: &str) -> bool {
@@ -62,7 +56,7 @@ impl FeatureFlagService {
 
         let (flag, event) = FeatureFlag::create(key.clone(), actor)?;
 
-        self.repo.save(&tx, &flag).map_err(|err| {
+        flag_repo::save(&tx, &flag).map_err(|err| {
             if is_unique_violation(&err) {
                 ServiceError::DuplicateKey(key)
             } else {
@@ -79,13 +73,10 @@ impl FeatureFlagService {
         let mut conn = self.pool.get()?;
         let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
 
-        let mut flag = self
-            .repo
-            .find(&tx, &key)?
-            .ok_or(ServiceError::FlagNotFound(key))?;
+        let mut flag = flag_repo::find(&tx, &key)?.ok_or(ServiceError::FlagNotFound(key))?;
 
         if let Some(event) = flag.set_enabled(enabled, actor)? {
-            self.repo.save(&tx, &flag)?;
+            flag_repo::save(&tx, &flag)?;
             notify_sync_subscribers(&tx, &event)?;
 
             tx.commit()?;
@@ -98,13 +89,10 @@ impl FeatureFlagService {
         let mut conn = self.pool.get()?;
         let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
 
-        let mut flag = self
-            .repo
-            .find(&tx, &key)?
-            .ok_or(ServiceError::FlagNotFound(key))?;
+        let mut flag = flag_repo::find(&tx, &key)?.ok_or(ServiceError::FlagNotFound(key))?;
 
         if let Some(event) = flag.archive(actor) {
-            self.repo.save(&tx, &flag)?;
+            flag_repo::save(&tx, &flag)?;
             notify_sync_subscribers(&tx, &event)?;
 
             tx.commit()?;

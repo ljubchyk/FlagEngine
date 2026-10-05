@@ -1,26 +1,16 @@
 use crate::domain::DomainEvent;
-use crate::{cache::FlagCache, repository::SqliteOutboxRepository};
+use crate::outbox_repo;
+use crate::{audit_repo, cache::FlagCache};
 
-use rusqlite::{Result, Transaction, params};
+use rusqlite::{Result, Transaction};
 
 pub fn handle_audit_log(tx: &Transaction, event: &DomainEvent) -> Result<()> {
-    tx.execute(
-        "INSERT INTO audit_logs (key, actor, action, payload, created_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
-        params![
-            event.id,
-            event.flag_id.to_string(),
-            event.actor,
-            event.payload.event_type(),
-            event.payload,
-            event.occurred_at
-        ],
-    )?;
+    audit_repo::append(tx, event)?;
     Ok(())
 }
 
 pub fn handle_outbox(tx: &Transaction, event: &DomainEvent) -> Result<()> {
-    SqliteOutboxRepository::default().enqueue(tx, event)?;
+    outbox_repo::enqueue(tx, event)?;
     Ok(())
 }
 

@@ -182,8 +182,7 @@ mod tests {
 
     #[test]
     fn create_returns_flag_and_event() {
-        let (flag, event) =
-            FeatureFlag::create("checkout".to_owned(), false, "alice".to_owned()).unwrap();
+        let (flag, event) = FeatureFlag::create("checkout".to_owned(), "alice".to_owned()).unwrap();
         assert_eq!(flag.key(), "checkout");
         assert_eq!(event.key, "checkout");
         assert_eq!(event.actor, "alice");
@@ -196,13 +195,12 @@ mod tests {
 
     #[test]
     fn create_with_invalid_key_fails() {
-        assert!(FeatureFlag::create("Bad key".to_owned(), false, "alice".to_owned()).is_err());
+        assert!(FeatureFlag::create("Bad key".to_owned(), "alice".to_owned()).is_err());
     }
 
     #[test]
     fn set_enabled_is_idempotent() {
-        let (mut f, _) =
-            FeatureFlag::create("checkout".to_owned(), false, "alice".to_owned()).unwrap();
+        let (mut f, _) = FeatureFlag::create("checkout".to_owned(), "alice".to_owned()).unwrap();
         assert!(f.set_enabled(false, "alice".to_owned()).unwrap().is_none());
 
         let event = f
@@ -219,8 +217,7 @@ mod tests {
 
     #[test]
     fn archived_flag_cannot_change() {
-        let (mut f, _) =
-            FeatureFlag::create("checkout".to_owned(), false, "alice".to_owned()).unwrap();
+        let (mut f, _) = FeatureFlag::create("checkout".to_owned(), "alice".to_owned()).unwrap();
         assert!(f.archive("alice".to_owned()).is_some());
         assert!(f.archive("alice".to_owned()).is_none());
         assert_eq!(
