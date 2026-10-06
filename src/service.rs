@@ -56,7 +56,7 @@ impl FeatureFlagService {
 
         let (flag, event) = FeatureFlag::create(key.clone(), actor)?;
 
-        flag_repo::save(&tx, &flag).map_err(|err| {
+        flag_repo::insert(&tx, &flag).map_err(|err| {
             if is_unique_violation(&err) {
                 ServiceError::DuplicateKey(key)
             } else {
@@ -76,7 +76,7 @@ impl FeatureFlagService {
         let mut flag = flag_repo::find(&tx, &key)?.ok_or(ServiceError::FlagNotFound(key))?;
 
         if let Some(event) = flag.set_enabled(enabled, actor)? {
-            flag_repo::save(&tx, &flag)?;
+            flag_repo::update(&tx, &flag)?;
             notify_sync_subscribers(&tx, &event)?;
 
             tx.commit()?;
@@ -92,7 +92,7 @@ impl FeatureFlagService {
         let mut flag = flag_repo::find(&tx, &key)?.ok_or(ServiceError::FlagNotFound(key))?;
 
         if let Some(event) = flag.archive(actor) {
-            flag_repo::save(&tx, &flag)?;
+            flag_repo::update(&tx, &flag)?;
             notify_sync_subscribers(&tx, &event)?;
 
             tx.commit()?;
