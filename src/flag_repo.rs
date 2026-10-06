@@ -21,7 +21,7 @@ fn raw_to_flag(row: &Row) -> Result<FeatureFlag> {
 pub fn save(tx: &Transaction, flag: &FeatureFlag) -> Result<()> {
     tx.execute(
         "INSERT INTO feature_flags (key, is_enabled, is_archived, updated_at)
-             VALUES (?1, ?2, ?3, ?4)",
+             VALUES (?1, ?2, ?3, ?4) ON CONFLICT(key) DO UPDATE SET is_enabled = ?2, is_archived = ?3, updated_at = ?4",
         params![
             flag.key(),
             flag.is_enabled(),

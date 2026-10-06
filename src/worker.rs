@@ -20,7 +20,7 @@ pub fn spawn_outbox_worker(
         loop {
             match process_pending_messages(&mut conn, &cache) {
                 Ok(is_processed) => {
-                    if is_processed {
+                    if !is_processed {
                         thread::sleep(poll_interval);
                     }
                 }
@@ -41,7 +41,7 @@ fn process_pending_messages(conn: &mut Connection, cache: &FlagCache) -> Result<
         return Ok(false);
     }
 
-    let mut is_processed = false;
+    let mut processed_count = 0;
     let mut completed_seqs = Vec::with_capacity(rows.len());
     let mut failed_seqs = Vec::with_capacity(rows.len());
 
@@ -57,7 +57,7 @@ fn process_pending_messages(conn: &mut Connection, cache: &FlagCache) -> Result<
             }
         }
 
-        is_processed = true;
+        processed_count += 1;
     }
 
     let tx = conn.transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)?;
@@ -66,5 +66,5 @@ fn process_pending_messages(conn: &mut Connection, cache: &FlagCache) -> Result<
     outbox_repo::mark_batch(&tx, &failed_seqs, outbox_repo::OutboxStatus::Failed)?;
 
     tx.commit()?;
-    Ok(is_processed)
+    Ok(processed_count == 50)
 }

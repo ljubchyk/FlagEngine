@@ -30,7 +30,7 @@ pub type Result<T> = std::result::Result<T, ServiceError>;
 fn is_unique_violation(err: &rusqlite::Error) -> bool {
     match err {
         rusqlite::Error::SqliteFailure(inner, _) => {
-            inner.code == rusqlite::ErrorCode::ConstraintViolation && inner.extended_code == 2067
+            inner.code == rusqlite::ErrorCode::ConstraintViolation && inner.extended_code == 1555
         }
         _ => false,
     }

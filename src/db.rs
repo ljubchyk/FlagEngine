@@ -20,6 +20,7 @@ pub fn create_pool(db_path: &str) -> Result<DbPool, r2d2::Error> {
 
 pub fn init_db(db_path: &str) -> Result<Connection> {
     let conn = Connection::open(db_path)?;
+    apply_parameters(&conn)?;
 
     conn.execute_batch(
         "CREATE TABLE IF NOT EXISTS feature_flags (
