@@ -18,7 +18,7 @@ pub fn create_pool(db_path: &str) -> Result<DbPool, r2d2::Error> {
     Pool::builder().max_size(10).build(manager)
 }
 
-pub fn init_db(db_path: &str) -> Result<Connection> {
+pub fn init(db_path: &str) -> Result<Connection> {
     let conn = Connection::open(db_path)?;
     apply_parameters(&conn)?;
 

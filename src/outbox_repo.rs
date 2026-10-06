@@ -86,7 +86,7 @@ mod tests {
     use crate::domain::EventPayload;
 
     fn setup() -> Connection {
-        let conn = super::super::db::init_db(":memory:").unwrap();
+        let conn = super::super::db::init(":memory:").unwrap();
         conn
     }
 

@@ -10,7 +10,7 @@ mod worker;
 
 use std::{sync::Arc, time::Duration};
 
-use db::init_db;
+use db::init;
 use std::thread;
 
 use crate::{cache::FlagCache, flag_repo::FlagFilter};
@@ -18,7 +18,7 @@ use crate::{cache::FlagCache, flag_repo::FlagFilter};
 fn main() -> rusqlite::Result<()> {
     let db_path = "db.sqlite";
 
-    let conn = init_db(db_path)?;
+    let conn = init(db_path)?;
 
     let cache = Arc::new(FlagCache::new());
     let flags = flag_repo::find_all(&conn, FlagFilter::Active)?;
