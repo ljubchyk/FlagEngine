@@ -23,14 +23,14 @@ pub fn init(db_path: &str) -> Result<Connection> {
     apply_parameters(&conn)?;
 
     conn.execute_batch(
-        "CREATE TABLE IF NOT EXISTS feature_flags (
+        "CREATE TABLE IF NOT EXISTS flags (
              key TEXT PRIMARY KEY,
              is_enabled BOOLEAN NOT NULL DEFAULT FALSE,
              is_archived BOOLEAN NOT NULL DEFAULT FALSE,
              updated_at INTEGER NOT NULL
          ) WITHOUT ROWID;
 
-         CREATE TABLE IF NOT EXISTS audit_logs (
+         CREATE TABLE IF NOT EXISTS audit (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              key TEXT NOT NULL,
              actor TEXT NOT NULL,
@@ -39,18 +39,18 @@ pub fn init(db_path: &str) -> Result<Connection> {
              created_at INTEGER NOT NULL
          );
 
-         CREATE INDEX IF NOT EXISTS idx_audit_logs_flag
-         ON audit_logs(key, id);
+         CREATE INDEX IF NOT EXISTS idx_audit_flag
+         ON audit(key, id);
 
-         CREATE TABLE IF NOT EXISTS outbox_events (
+         CREATE TABLE IF NOT EXISTS outbox (
              seq INTEGER PRIMARY KEY AUTOINCREMENT,
              status TEXT NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Completed', 'Failed')),
              payload TEXT NOT NULL,
              created_at INTEGER NOT NULL
          );
 
-         CREATE INDEX IF NOT EXISTS idx_outbox_events_pending 
-         ON outbox_events(seq) WHERE status = 'Pending';",
+         CREATE INDEX IF NOT EXISTS idx_outbox_pending 
+         ON outbox(seq) WHERE status = 'Pending';",
     )?;
 
     Ok(conn)

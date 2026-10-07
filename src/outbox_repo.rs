@@ -38,7 +38,7 @@ impl ToSql for OutboxStatus {
 
 pub fn enqueue(tx: &Transaction, event: &DomainEvent) -> Result<i64> {
     tx.execute(
-        "INSERT INTO outbox_events (payload, status, created_at) VALUES (?1, 'Pending', ?2)",
+        "INSERT INTO outbox (payload, status, created_at) VALUES (?1, 'Pending', ?2)",
         params![event, event.occurred_at],
     )?;
 
@@ -47,7 +47,7 @@ pub fn enqueue(tx: &Transaction, event: &DomainEvent) -> Result<i64> {
 
 pub fn fetch_pending(conn: &Connection, limit: u32) -> Result<Vec<(i64, Result<DomainEvent>)>> {
     let mut stmt = conn.prepare_cached(
-        "SELECT seq, payload FROM outbox_events WHERE status = 'Pending' ORDER BY seq LIMIT ?1",
+        "SELECT seq, payload FROM outbox WHERE status = 'Pending' ORDER BY seq LIMIT ?1",
     )?;
 
     let rows = stmt.query_map(params![limit], |row| {
@@ -66,7 +66,7 @@ pub fn mark_batch(tx: &Transaction, seqs: &[i64], status: OutboxStatus) -> Resul
     }
 
     let mut stmt = tx.prepare_cached(
-        "UPDATE outbox_events SET status = ?2 WHERE seq = ?1 AND status = 'Pending'",
+        "UPDATE outbox SET status = ?2 WHERE seq = ?1 AND status = 'Pending'",
     )?;
     let mut changed = 0;
     for seq in seqs {
@@ -129,7 +129,7 @@ mod tests {
     fn unparseable_payload_keeps_seq_and_can_be_marked_failed() {
         let mut conn = setup();
         conn.execute(
-            "INSERT INTO outbox_events (payload, created_at) VALUES ('not json', 1)",
+            "INSERT INTO outbox (payload, created_at) VALUES ('not json', 1)",
             [],
         )
         .unwrap();
@@ -153,7 +153,7 @@ mod tests {
 
     fn status_of(conn: &Connection, seq: i64) -> String {
         conn.query_row(
-            "SELECT status FROM outbox_events WHERE seq = ?1",
+            "SELECT status FROM outbox WHERE seq = ?1",
             params![seq],
             |r| r.get(0),
         )
@@ -178,7 +178,7 @@ mod tests {
 
         let (status, created_at): (String, i64) = conn
             .query_row(
-                "SELECT status, created_at FROM outbox_events WHERE seq = ?1",
+                "SELECT status, created_at FROM outbox WHERE seq = ?1",
                 params![seq],
                 |r| Ok((r.get(0)?, r.get(1)?)),
             )
@@ -310,7 +310,7 @@ mod tests {
     fn schema_rejects_unknown_status() {
         let conn = setup();
         let res = conn.execute(
-            "INSERT INTO outbox_events (status, payload, created_at) VALUES ('Bogus', '{}', 1)",
+            "INSERT INTO outbox (status, payload, created_at) VALUES ('Bogus', '{}', 1)",
             [],
         );
         assert!(res.is_err());
