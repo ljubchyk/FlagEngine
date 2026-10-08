@@ -43,7 +43,6 @@ pub fn append(tx: &Transaction, event: &DomainEvent) -> Result<()> {
     Ok(())
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -64,7 +63,14 @@ mod tests {
     }
 
     fn toggled(key: &str, enabled: bool, at: i64) -> DomainEvent {
-        event(key, "alice", EventPayload::FlagToggled { is_enabled: enabled }, at)
+        event(
+            key,
+            "alice",
+            EventPayload::FlagToggled {
+                is_enabled: enabled,
+            },
+            at,
+        )
     }
 
     fn append_committed(conn: &mut Connection, e: &DomainEvent) {
@@ -102,8 +108,14 @@ mod tests {
 
     #[test]
     fn action_names_match_payload_variants() {
-        assert_eq!(action(&EventPayload::FlagCreated { is_enabled: false }), "FlagCreated");
-        assert_eq!(action(&EventPayload::FlagToggled { is_enabled: true }), "FlagToggled");
+        assert_eq!(
+            action(&EventPayload::FlagCreated { is_enabled: false }),
+            "FlagCreated"
+        );
+        assert_eq!(
+            action(&EventPayload::FlagToggled { is_enabled: true }),
+            "FlagToggled"
+        );
         assert_eq!(action(&EventPayload::FlagArchived), "FlagArchived");
     }
 
@@ -131,8 +143,14 @@ mod tests {
     fn append_stores_each_variant_with_matching_action() {
         let mut conn = setup();
         let payloads = [
-            (EventPayload::FlagCreated { is_enabled: false }, "FlagCreated"),
-            (EventPayload::FlagToggled { is_enabled: true }, "FlagToggled"),
+            (
+                EventPayload::FlagCreated { is_enabled: false },
+                "FlagCreated",
+            ),
+            (
+                EventPayload::FlagToggled { is_enabled: true },
+                "FlagToggled",
+            ),
             (EventPayload::FlagArchived, "FlagArchived"),
         ];
         for (i, (p, _)) in payloads.iter().enumerate() {
@@ -176,7 +194,9 @@ mod tests {
         append_committed(&mut conn, &toggled("a", false, 3));
 
         let a: i64 = conn
-            .query_row("SELECT COUNT(*) FROM audit WHERE key = 'a'", [], |r| r.get(0))
+            .query_row("SELECT COUNT(*) FROM audit WHERE key = 'a'", [], |r| {
+                r.get(0)
+            })
             .unwrap();
         assert_eq!(a, 2);
     }

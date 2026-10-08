@@ -51,10 +51,10 @@ impl FlagService {
     }
 
     pub fn create_flag(&self, key: String, actor: String) -> Result<()> {
+        let (flag, event) = Flag::create(key.clone(), actor)?;
+
         let mut conn = self.pool.get()?;
         let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
-
-        let (flag, event) = Flag::create(key.clone(), actor)?;
 
         flag_repo::insert(&tx, &flag).map_err(|err| {
             if is_unique_violation(&err) {
@@ -105,7 +105,7 @@ impl FlagService {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::domain::DomainError;
+    use crate::domain::{DomainError, DomainEvent};
     use crate::{db, handlers, outbox_repo};
     use std::sync::Barrier;
     use std::thread;
@@ -129,7 +129,12 @@ mod tests {
         let cache = Arc::new(FlagCache::new());
         let svc = FlagService::new(pool.clone(), cache.clone());
 
-        Env { svc, pool, cache, _dir: dir }
+        Env {
+            svc,
+            pool,
+            cache,
+            _dir: dir,
+        }
     }
 
     impl Env {
@@ -148,9 +153,12 @@ mod tests {
         /// Емуляція одного проходу outbox-воркера: застосувати події до кешу.
         fn apply_outbox_to_cache(&self) {
             let conn = self.pool.get().unwrap();
-            for (_, event) in outbox_repo::fetch_pending(&conn, 100).unwrap() {
-                handlers::notify_async_subscribers(&event.unwrap(), &self.cache);
-            }
+            let events = outbox_repo::fetch_pending(&conn, 100)
+                .unwrap()
+                .into_iter()
+                .map(|v| v.1.unwrap())
+                .collect::<Vec<DomainEvent>>();
+            handlers::notify_async_subscribers(&events, &self.cache);
         }
 
         fn create(&self, key: &str) {
@@ -183,7 +191,9 @@ mod tests {
     #[test]
     fn create_records_actor_in_audit_log() {
         let env = setup();
-        env.svc.create_flag("checkout".into(), "bob".into()).unwrap();
+        env.svc
+            .create_flag("checkout".into(), "bob".into())
+            .unwrap();
 
         let (actor, action): (String, String) = env
             .pool
@@ -220,7 +230,10 @@ mod tests {
             .svc
             .create_flag("Bad Key".into(), "alice".into())
             .unwrap_err();
-        assert!(matches!(err, ServiceError::Domain(DomainError::InvalidKey(_))));
+        assert!(matches!(
+            err,
+            ServiceError::Domain(DomainError::InvalidKey(_))
+        ));
 
         assert_eq!(env.count("flags"), 0);
         assert_eq!(env.count("audit"), 0);
@@ -242,7 +255,10 @@ mod tests {
             .unwrap_err();
         assert!(matches!(err, ServiceError::Database(_)));
 
-        assert!(env.flag("checkout").is_none(), "flag insert must be rolled back");
+        assert!(
+            env.flag("checkout").is_none(),
+            "flag insert must be rolled back"
+        );
         assert_eq!(env.count("outbox"), 0);
     }
 
@@ -337,7 +353,9 @@ mod tests {
     fn toggle_archived_flag_fails_with_archived_error() {
         let env = setup();
         env.create("checkout");
-        env.svc.archive_flag("checkout".into(), "alice".into()).unwrap();
+        env.svc
+            .archive_flag("checkout".into(), "alice".into())
+            .unwrap();
 
         let err = env
             .svc
@@ -352,7 +370,9 @@ mod tests {
         let env = setup();
         env.create("a");
         env.create("b");
-        env.svc.toggle_flag("a".into(), true, "alice".into()).unwrap();
+        env.svc
+            .toggle_flag("a".into(), true, "alice".into())
+            .unwrap();
 
         assert!(env.flag("a").unwrap().is_enabled());
         assert!(!env.flag("b").unwrap().is_enabled());
@@ -378,7 +398,9 @@ mod tests {
             .toggle_flag("checkout".into(), true, "alice".into())
             .unwrap();
 
-        env.svc.archive_flag("checkout".into(), "alice".into()).unwrap();
+        env.svc
+            .archive_flag("checkout".into(), "alice".into())
+            .unwrap();
 
         let f = env.flag("checkout").unwrap();
         assert!(f.is_archived());
@@ -390,8 +412,12 @@ mod tests {
     fn archive_twice_is_idempotent() {
         let env = setup();
         env.create("checkout");
-        env.svc.archive_flag("checkout".into(), "alice".into()).unwrap();
-        env.svc.archive_flag("checkout".into(), "alice".into()).unwrap();
+        env.svc
+            .archive_flag("checkout".into(), "alice".into())
+            .unwrap();
+        env.svc
+            .archive_flag("checkout".into(), "alice".into())
+            .unwrap();
 
         assert_eq!(env.count("audit"), 2); // created + archived
         assert_eq!(env.count("outbox"), 2);
@@ -402,7 +428,9 @@ mod tests {
         let env = setup();
         env.create("a");
         env.create("b");
-        env.svc.toggle_flag("b".into(), true, "alice".into()).unwrap();
+        env.svc
+            .toggle_flag("b".into(), true, "alice".into())
+            .unwrap();
 
         env.svc.archive_flag("a".into(), "alice".into()).unwrap();
 
@@ -446,7 +474,9 @@ mod tests {
         env.apply_outbox_to_cache();
         assert!(env.svc.is_enabled("checkout"));
 
-        env.svc.archive_flag("checkout".into(), "alice".into()).unwrap();
+        env.svc
+            .archive_flag("checkout".into(), "alice".into())
+            .unwrap();
         env.apply_outbox_to_cache();
         assert!(!env.svc.is_enabled("checkout"));
     }

@@ -65,9 +65,8 @@ pub fn mark_batch(tx: &Transaction, seqs: &[i64], status: OutboxStatus) -> Resul
         return Ok(());
     }
 
-    let mut stmt = tx.prepare_cached(
-        "UPDATE outbox SET status = ?2 WHERE seq = ?1 AND status = 'Pending'",
-    )?;
+    let mut stmt =
+        tx.prepare_cached("UPDATE outbox SET status = ?2 WHERE seq = ?1 AND status = 'Pending'")?;
     let mut changed = 0;
     for seq in seqs {
         changed += stmt.execute(params![seq, status])?;

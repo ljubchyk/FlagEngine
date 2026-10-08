@@ -19,11 +19,8 @@ pub fn spawn_outbox_worker(
     let handle = thread::spawn(move || {
         loop {
             match process_pending_messages(&mut conn, &cache) {
-                Ok(is_processed) => {
-                    if !is_processed {
-                        thread::sleep(poll_interval);
-                    }
-                }
+                Ok(true) => {}
+                Ok(false) => thread::sleep(poll_interval),
                 Err(e) => {
                     eprintln!("[OutboxWorker] Error processing batch: {}", e);
                     thread::sleep(poll_interval);
@@ -42,13 +39,14 @@ fn process_pending_messages(conn: &mut Connection, cache: &FlagCache) -> Result<
     }
 
     let mut processed_count = 0;
+    let mut events = Vec::with_capacity(rows.len());
     let mut completed_seqs = Vec::with_capacity(rows.len());
-    let mut failed_seqs = Vec::with_capacity(rows.len());
+    let mut failed_seqs = Vec::new();
 
     for (seq, event) in rows {
         match event {
             Ok(event) => {
-                notify_async_subscribers(&event, cache);
+                events.push(event);
                 completed_seqs.push(seq);
             }
             Err(e) => {
@@ -60,11 +58,12 @@ fn process_pending_messages(conn: &mut Connection, cache: &FlagCache) -> Result<
         processed_count += 1;
     }
 
-    let tx = conn.transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)?;
+    notify_async_subscribers(&events, cache);
 
+    let tx = conn.transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)?;
     outbox_repo::mark_batch(&tx, &completed_seqs, outbox_repo::OutboxStatus::Completed)?;
     outbox_repo::mark_batch(&tx, &failed_seqs, outbox_repo::OutboxStatus::Failed)?;
-
     tx.commit()?;
+
     Ok(processed_count == 50)
 }

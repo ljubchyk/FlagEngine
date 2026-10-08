@@ -78,9 +78,7 @@ mod tests {
     }
 
     fn flag(key: &str) -> Flag {
-        Flag::create(key.to_owned(), "test".to_owned())
-            .unwrap()
-            .0
+        Flag::create(key.to_owned(), "test".to_owned()).unwrap().0
     }
 
     fn save(conn: &mut Connection, f: &Flag) {
