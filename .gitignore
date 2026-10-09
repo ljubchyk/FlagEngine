@@ -21,4 +21,4 @@ target
 #.idea/
 
 *.sqlite*
-*.sublime-workspace
+*.sublime-workspace.env

@@ -1,0 +1,680 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"Doma",
+				"DomainEvent(use crate::domain::DomainEvent)"
+			],
+			[
+				"ma",
+				"map"
+			],
+			[
+				"le",
+				"len()"
+			],
+			[
+				"is",
+				"is_enabled"
+			],
+			[
+				"ca",
+				"with_capacity"
+			],
+			[
+				"fa",
+				"failed_seqs"
+			],
+			[
+				"pre",
+				"prepare_cached"
+			],
+			[
+				"p",
+				"payload"
+			],
+			[
+				"au",
+				"audit_repo::(use crate::audit_repo)"
+			],
+			[
+				"eve",
+				"EventPayload"
+			],
+			[
+				"fla",
+				"flag_repo::(use crate::flag_repo)"
+			],
+			[
+				"Fla",
+				"FlagArchived"
+			],
+			[
+				"c",
+				"checkout"
+			],
+			[
+				"ke",
+				"key()"
+			],
+			[
+				"un",
+				"unwrap()"
+			],
+			[
+				"re",
+				"repeat(…)"
+			],
+			[
+				"DomainE",
+				"DomainEvent"
+			],
+			[
+				"stat",
+				"Error::StatementChangedRows()"
+			],
+			[
+				"res",
+				"Result<…>"
+			],
+			[
+				"q",
+				"query_map(…)"
+			],
+			[
+				"sqlite",
+				"SqliteOutboxRepository"
+			],
+			[
+				"Dom",
+				"DomainEvent(use crate::domain::DomainEvent)"
+			],
+			[
+				"sta",
+				"starts_with"
+			],
+			[
+				"isdi",
+				"is_ascii_digit()"
+			],
+			[
+				"islow",
+				"is_ascii_lowercase()"
+			],
+			[
+				"mtc",
+				"match"
+			],
+			[
+				"dom",
+				"DomainEvent"
+			],
+			[
+				"uui",
+				"Uuid(use uuid::Uuid)"
+			],
+			[
+				"CO",
+				"COLUMNS = \"id, key, is_enabled, is_archived, updated_at\""
+			],
+			[
+				"F",
+				"FlagFilter"
+			],
+			[
+				"ar",
+				"Archived"
+			],
+			[
+				"err",
+				"Err\tErr(…)"
+			],
+			[
+				"ser",
+				"ServiceError"
+			],
+			[
+				"map",
+				"map_err(…)"
+			],
+			[
+				"con",
+				"ConstraintViolation"
+			],
+			[
+				"rus",
+				"rusqlite::Error::SqliteFailure()"
+			],
+			[
+				"Err",
+				"Error"
+			],
+			[
+				"Error",
+				"Error(use rusqlite::Error)"
+			],
+			[
+				"s",
+				"store(…)"
+			],
+			[
+				"Into",
+				"Into"
+			],
+			[
+				"quer",
+				"query_map(…)"
+			],
+			[
+				"pro",
+				"process_event_async(use crate::handlers::process_event_async)"
+			],
+			[
+				"ha",
+				"handle_dispatch(…)"
+			],
+			[
+				"doma",
+				"DomainEvent"
+			],
+			[
+				"from",
+				"from_str(…)"
+			],
+			[
+				"se",
+				"serde_json::"
+			],
+			[
+				"UU",
+				"Uuid"
+			],
+			[
+				"FlagA",
+				"FlagArchived{}"
+			],
+			[
+				"Eve",
+				"EventPayload::FlagCreated{}"
+			],
+			[
+				"op",
+				"Option<…>"
+			],
+			[
+				"ok",
+				"ok_or(…)"
+			],
+			[
+				"transaction_",
+				"transaction_with_behavior"
+			],
+			[
+				"Db",
+				"DbPool(use crate::db::DbPool)"
+			],
+			[
+				"ex",
+				"expect_err(…)"
+			],
+			[
+				"e",
+				"Error"
+			],
+			[
+				"prepare",
+				"prepare_cached"
+			],
+			[
+				"transaction",
+				"transaction_with_behavior"
+			],
+			[
+				"OK",
+				"Ok()"
+			],
+			[
+				"db",
+				"db_path"
+			],
+			[
+				"Ou",
+				"OutboxWorker(use crate::worker::OutboxWorker)"
+			],
+			[
+				"wa",
+				"WalletEvent"
+			],
+			[
+				"wall",
+				"WalletEvent"
+			],
+			[
+				"for",
+				"format!(…)"
+			],
+			[
+				"Wa",
+				"WalletEvent"
+			],
+			[
+				"mat",
+				"match"
+			],
+			[
+				"imp",
+				"impl-trait\timpl … for … { … }"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "Packages/Rust/Cargo.sublime-build",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					""
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Run (Short)"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Test"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Test (Short)"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Bench"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Clean"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Clippy"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Clippy (Short)"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Check"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Check (Short)"
+				]
+			],
+			[
+				"Packages/Rust/Cargo.sublime-build",
+				"Test"
+			]
+		],
+		[
+			[
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					""
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Run (Short)"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Test"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Test (Short)"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Bench"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Clean"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Clippy"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Clippy (Short)"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Check"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Check (Short)"
+				],
+				[
+					"Packages/Rust/Rust.sublime-build",
+					""
+				],
+				[
+					"Packages/Rust/Rust.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/Rust/Rust.sublime-build",
+					"Build & Run"
+				]
+			],
+			[
+				"Packages/Rust/Cargo.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"upp",
+				"Convert Case: Upper Case"
+			],
+			[
+				"inde",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"rust",
+				"Set Syntax: Rust"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"packa",
+				"Package Control: List Packages"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 266.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/ljubchyk/dev/FlagEngine",
+		"/home/ljubchyk/dev/FlagEngine/src"
+	],
+	"file_history":
+	[
+		"/home/ljubchyk/dev/FlagEngine/src/http.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/cache.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/worker.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/handlers.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/service.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/repo.rs",
+		"/home/ljubchyk/dev/FlagEngine/Cargo.toml",
+		"/home/ljubchyk/Downloads/service.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/audit_repo.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/flag_repo.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/outbox_repo.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/domain.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/db.rs",
+		"/home/ljubchyk/Downloads/audit_repo.rs",
+		"/home/ljubchyk/Downloads/flag_repo.rs",
+		"/home/ljubchyk/Downloads/outbox_repo.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/main.rs",
+		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libsqlite3-sys-0.38.2/src/error.rs",
+		"/home/ljubchyk/Downloads/Номер.csv",
+		"/home/ljubchyk/dev/FlagEngine/src/shared_repo.rs",
+		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rusqlite-0.40.2/src/types/to_sql.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/repository.rs",
+		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rusqlite-0.40.2/src/error.rs",
+		"/home/ljubchyk/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/default.rs",
+		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/r2d2-0.8.10/src/lib.rs",
+		"/home/ljubchyk/dev/FlagEngine/.gitignore",
+		"/home/ljubchyk/dev/hello.py",
+		"/home/ljubchyk/dev/r/src/main.rs",
+		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rusqlite-0.40.2/src/lib.rs",
+		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rusqlite-0.40.2/src/transaction.rs",
+		"/home/ljubchyk/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/result.rs",
+		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rusqlite-0.40.2/src/statement.rs",
+		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.26.0/src/timestamp.rs",
+		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.26.0/src/v7.rs",
+		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.26.0/src/builder.rs",
+		"/home/ljubchyk/dev/vaultrs/domain.rs",
+		"/home/ljubchyk/dev/vaultrs/src/domain.rs",
+		"/home/ljubchyk/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/macros.rs",
+		"/home/ljubchyk/dev/vaultrs/Cargo.toml",
+		"/home/ljubchyk/dev/vaultrs/src/repositories.rs",
+		"/home/ljubchyk/dev/vaultrs/src/main.rs"
+	],
+	"find":
+	{
+		"height": 26.0
+	},
+	"find_in_files":
+	{
+		"height": 98.0,
+		"where_history":
+		[
+			"/home/ljubchyk/dev/FlagEngine/src",
+			"<current file>",
+			"/home/ljubchyk/dev/FlagEngine,<project filters>"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"⁠",
+			"outbox_events",
+			"audit_logs",
+			"feature_flags",
+			"FeatureFlagService",
+			"feature_flags",
+			"audit_logs",
+			"outbox_events",
+			"FeatureFlag",
+			"&self, ",
+			"actor_id",
+			"rusqlite",
+			"fromsql",
+			"from",
+			"Pool",
+			"Database",
+			"thread",
+			"outbox_messages",
+			"new_v7",
+			"new_v4"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"",
+			"outbox",
+			"audit",
+			"flags",
+			"FlagService",
+			"flags",
+			"audit",
+			"outbox",
+			"Flag",
+			"",
+			"actor",
+			"now_v7",
+			""
+		],
+		"reverse": false,
+		"scrollbar_highlights": true,
+		"show_context": true,
+		"use_buffer2": true,
+		"use_gitignore": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 38.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.LSP Log Panel":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"output.diagnostics":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"output.exec":
+	{
+		"height": 443.0,
+		"history":
+		[
+		]
+	},
+	"output.find_results":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"pinned_build_system": "",
+	"project": "FlagEngine.sublime-project",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+		"lsp_show_inlay_hints": false
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

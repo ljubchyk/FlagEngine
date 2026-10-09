@@ -1,8 +1,14 @@
 use axum::{
-    Json, Router, extract::{Path, State}, http::StatusCode, response::{IntoResponse, Response}, routing::{get, post},
+    Json, Router,
+    extract::{Path, Request, State},
+    http::{StatusCode, header},
+    middleware::{self, Next},
+    response::{IntoResponse, Response},
+    routing::{get, post},
 };
-use serde::{ Serialize, Deserialize };
+use serde::{Deserialize, Serialize};
 use std::sync::Arc;
+use subtle::ConstantTimeEq;
 
 use crate::service::{FlagService, ServiceError};
 
@@ -45,15 +51,48 @@ impl IntoResponse for ApiError {
 #[derive(Clone)]
 pub struct AppState {
     pub service: Arc<FlagService>,
+    pub admin_key: Arc<String>,
 }
 
 pub fn router(state: AppState) -> Router {
-    Router::new()
-        .route("/health", get(health))
+    let protected = Router::new()
         .route("/flags", post(create_flag))
         .route("/flags/{key}/toggle", post(toggle_flag))
         .route("/flags/{key}/archive", post(archive_flag))
+        .route_layer(middleware::from_fn_with_state(
+            state.clone(),
+            require_admin_key,
+        ));
+
+    Router::new()
+        .route("/health", get(health))
+        .merge(protected)
         .with_state(state)
+}
+
+async fn require_admin_key(State(state): State<AppState>, req: Request, next: Next) -> Response {
+    let provided = req
+        .headers()
+        .get(header::AUTHORIZATION)
+        .and_then(|value| value.to_str().ok())
+        .and_then(|value| value.strip_prefix("Bearer "));
+
+    let authorized = match provided {
+        Some(key) => bool::from(key.as_bytes().ct_eq(state.admin_key.as_bytes())),
+        None => false,
+    };
+
+    if !authorized {
+        return (
+            StatusCode::UNAUTHORIZED,
+            Json(ErrorBody {
+                error: "unauthorized".to_owned(),
+            }),
+        )
+            .into_response();
+    }
+
+    next.run(req).await
 }
 
 pub async fn health() -> &'static str {
