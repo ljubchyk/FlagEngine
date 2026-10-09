@@ -41,14 +41,12 @@ impl Config {
                 reason: e.to_string(),
             })?;
 
-        let poll_raw = var("FLAGENGINE_POLL_INTERVAL_MS").unwrap_or_else(|| "500".to_owned());
-        let poll_ms = poll_raw
-            .parse::<u64>()
-            .map_err(|e| ConfigError::Invalid {
-                name: "FLAGENGINE_POLL_INTERVAL_MS",
-                value: poll_raw,
-                reason: e.to_string(),
-            })?;
+        let poll_raw = var("FLAGENGINE_POLL_INTERVAL_MS").unwrap_or_else(|| "5000".to_owned());
+        let poll_ms = poll_raw.parse::<u64>().map_err(|e| ConfigError::Invalid {
+            name: "FLAGENGINE_POLL_INTERVAL_MS",
+            value: poll_raw,
+            reason: e.to_string(),
+        })?;
 
         Ok(Self {
             addr,

@@ -1,5 +1,8 @@
 use rusqlite::{Connection, Result};
-use std::sync::Arc;
+use std::sync::{
+    Arc,
+    mpsc::{Receiver, RecvTimeoutError},
+};
 use std::thread::JoinHandle;
 use std::{thread, time::Duration};
 
@@ -12,6 +15,7 @@ pub fn spawn_outbox_worker(
     db_path: &str,
     poll_interval: Duration,
     cache: Arc<FlagCache>,
+    wake_rx: Receiver<()>,
 ) -> Result<JoinHandle<()>> {
     let mut conn = Connection::open(&db_path)?;
     apply_parameters(&conn)?;
@@ -19,12 +23,17 @@ pub fn spawn_outbox_worker(
     let handle = thread::spawn(move || {
         loop {
             match process_pending_messages(&mut conn, &cache) {
-                Ok(true) => {}
-                Ok(false) => thread::sleep(poll_interval),
+                Ok(true) => continue,
+                Ok(false) => {}
                 Err(e) => {
                     eprintln!("[OutboxWorker] Error processing batch: {}", e);
                     thread::sleep(poll_interval);
                 }
+            }
+
+            match wake_rx.recv_timeout(poll_interval) {
+                Ok(()) | Err(RecvTimeoutError::Timeout) => {}
+                Err(RecvTimeoutError::Disconnected) => break, // сервіс зник: зупиняємось
             }
         }
     });

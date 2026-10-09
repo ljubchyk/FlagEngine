@@ -1,11 +1,11 @@
-use std::sync::Arc;
+use rusqlite::TransactionBehavior;
+use std::sync::{Arc, mpsc::SyncSender};
+use thiserror::Error;
 
 use crate::cache::FlagCache;
 use crate::handlers::notify_sync_subscribers;
 use crate::{db::DbPool, domain::Flag};
 use crate::{domain, flag_repo};
-use rusqlite::TransactionBehavior;
-use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum ServiceError {
@@ -39,15 +39,21 @@ fn is_unique_violation(err: &rusqlite::Error) -> bool {
 pub struct FlagService {
     pool: DbPool,
     cache: Arc<FlagCache>,
+    waker: SyncSender<()>,
 }
 
 impl FlagService {
-    pub fn new(pool: DbPool, cache: Arc<FlagCache>) -> Self {
-        Self { pool, cache }
+    pub fn new(pool: DbPool, cache: Arc<FlagCache>, waker: SyncSender<()>) -> Self {
+        Self { pool, cache, waker }
     }
 
     pub fn is_enabled(&self, key: &str) -> bool {
         self.cache.is_enabled(key)
+    }
+
+    fn wake_worker(&self) {
+        // Повний канал означає, що сповіщення вже чекає, тож помилку ігноруємо.
+        let _ = self.waker.try_send(());
     }
 
     pub fn create_flag(&self, key: String, actor: String) -> Result<()> {
@@ -66,6 +72,7 @@ impl FlagService {
         notify_sync_subscribers(&tx, &event)?;
 
         tx.commit()?;
+        self.wake_worker();
         Ok(())
     }
 
@@ -80,6 +87,7 @@ impl FlagService {
             notify_sync_subscribers(&tx, &event)?;
 
             tx.commit()?;
+            self.wake_worker();
         }
 
         Ok(())
@@ -96,6 +104,7 @@ impl FlagService {
             notify_sync_subscribers(&tx, &event)?;
 
             tx.commit()?;
+            self.wake_worker();
         }
 
         Ok(())
@@ -127,7 +136,8 @@ mod tests {
         db::init(path).unwrap();
         let pool = db::create_pool(path).unwrap();
         let cache = Arc::new(FlagCache::new());
-        let svc = FlagService::new(pool.clone(), cache.clone());
+        let (waker, _) = std::sync::mpsc::sync_channel::<()>(1);
+        let svc = FlagService::new(pool.clone(), cache.clone(), waker);
 
         Env {
             svc,

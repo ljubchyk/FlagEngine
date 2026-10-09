@@ -1,5 +1,6 @@
 mod audit_repo;
 mod cache;
+mod config;
 mod db;
 mod domain;
 mod flag_repo;
@@ -8,7 +9,6 @@ mod http;
 mod outbox_repo;
 mod service;
 mod worker;
-mod config;
 
 use std::{sync::Arc, time::Duration};
 
@@ -41,11 +41,13 @@ async fn main() -> Result<(), StartupError> {
             .map(|flag| (flag.key().to_owned(), flag.is_enabled())),
     );
 
-    worker::spawn_outbox_worker(&config.db_path, Duration::from_millis(500), cache.clone())?;
+    let (waker, wake_rx) = std::sync::mpsc::sync_channel::<()>(1);
+
+    worker::spawn_outbox_worker(&config.db_path, Duration::from_millis(5000), cache.clone(), wake_rx)?;
 
     let pool = db::create_pool(&config.db_path)?;
     let state = AppState {
-        service: Arc::new(FlagService::new(pool, cache)),
+        service: Arc::new(FlagService::new(pool, cache, waker)),
         admin_key: Arc::from(config.admin_key),
     };
 
