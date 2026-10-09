@@ -21,7 +21,7 @@ pub enum ServiceError {
     #[error("Failed to acquire connection from pool: {0}")]
     Pool(#[from] r2d2::Error),
 
-    #[error("...")]
+    #[error("{0}")]
     Domain(#[from] domain::DomainError),
 }
 
