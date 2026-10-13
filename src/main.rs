@@ -12,7 +12,7 @@ mod worker;
 
 use std::{sync::Arc, time::Duration};
 
-use tokio::signal::unix::{Signal, SignalKind, signal};
+use tokio::signal::unix::{SignalKind, signal};
 
 use crate::{cache::FlagCache, flag_repo::FlagFilter, http::AppState, service::FlagService};
 
