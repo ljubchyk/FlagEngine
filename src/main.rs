@@ -12,6 +12,8 @@ mod worker;
 
 use std::{sync::Arc, time::Duration};
 
+use tokio::signal::unix::{Signal, SignalKind, signal};
+
 use crate::{cache::FlagCache, flag_repo::FlagFilter, http::AppState, service::FlagService};
 
 #[derive(Debug, thiserror::Error)]
@@ -61,8 +63,20 @@ async fn main() -> Result<(), StartupError> {
     Ok(())
 }
 
+#[cfg(unix)]
 async fn shutdown_signal() {
-    tokio::signal::ctrl_c()
-        .await
-        .expect("failed to listen for ctrl-c")
+    let ctrl_c = tokio::signal::ctrl_c();
+    let mut sigterm = signal(SignalKind::terminate()).expect("failed to listen for SIGTERM");
+    
+    tokio::select! {
+        res = ctrl_c => {
+            res.expect("failed to listen for ctrl-c")
+        }
+        _ = sigterm.recv() => {}
+    }
+}
+
+#[cfg(not(unix))]
+async fn shutdown_signal() {
+    tokio::signal::ctrl_c().await.expect("failed to listen for ctrl-c")
 }
