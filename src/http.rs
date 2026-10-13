@@ -1,13 +1,9 @@
 use axum::{
-    Json, Router,
-    extract::{Path, Request, State},
-    http::{StatusCode, header},
-    middleware::{self, Next},
-    response::{IntoResponse, Response},
-    routing::{get, post},
+    Json, Router, extract::{DefaultBodyLimit, Path, Request, State}, http::{StatusCode, header}, middleware::{self, Next}, response::{IntoResponse, Response}, routing::{get, post},
 };
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
+use tower_http::timeout::TimeoutLayer;
+use std::{sync::Arc, time::Duration};
 use subtle::ConstantTimeEq;
 
 use crate::service::{FlagService, ServiceError};
@@ -67,6 +63,11 @@ pub fn router(state: AppState) -> Router {
     Router::new()
         .route("/health", get(health))
         .merge(protected)
+        .layer(DefaultBodyLimit::max(16 * 1024))
+        .layer(TimeoutLayer::with_status_code(
+            StatusCode::REQUEST_TIMEOUT,
+            Duration::from_secs(10),
+        ))
         .with_state(state)
 }
 
