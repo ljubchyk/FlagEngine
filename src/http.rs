@@ -53,7 +53,8 @@ pub struct AppState {
 pub fn router(state: AppState) -> Router {
     let protected = Router::new()
         .route("/flags", post(create_flag))
-        .route("/flags/{key}/toggle", post(toggle_flag))
+        .route("/flags/{key}/enable", post(enable_flag))
+        .route("/flags/{key}/disable", post(disable_flag))
         .route("/flags/{key}/archive", post(archive_flag))
         .route_layer(middleware::from_fn_with_state(
             state.clone(),
@@ -118,19 +119,36 @@ async fn create_flag(
 }
 
 #[derive(Deserialize)]
-struct ToggleFlagRequest {
-    enabled: bool,
+struct EnableFlagRequest {
     actor: String,
 }
 
-async fn toggle_flag(
+async fn enable_flag(
     State(state): State<AppState>,
     Path(key): Path<String>,
-    Json(body): Json<ToggleFlagRequest>,
+    Json(body): Json<EnableFlagRequest>,
 ) -> Result<StatusCode, ApiError> {
     let service = state.service.clone();
 
-    tokio::task::spawn_blocking(move || service.toggle_flag(key, body.enabled, body.actor))
+    tokio::task::spawn_blocking(move || service.enable_flag(key, body.actor))
+        .await??;
+
+    Ok(StatusCode::NO_CONTENT)
+}
+
+#[derive(Deserialize)]
+struct DisableFlagRequest {
+    actor: String,
+}
+
+async fn disable_flag(
+    State(state): State<AppState>,
+    Path(key): Path<String>,
+    Json(body): Json<DisableFlagRequest>,
+) -> Result<StatusCode, ApiError> {
+    let service = state.service.clone();
+
+    tokio::task::spawn_blocking(move || service.disable_flag(key, body.actor))
         .await??;
 
     Ok(StatusCode::NO_CONTENT)

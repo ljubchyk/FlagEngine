@@ -13,7 +13,8 @@ pub enum DomainError {
 #[serde(tag = "type")]
 pub enum EventPayload {
     FlagCreated { is_enabled: bool },
-    FlagToggled { is_enabled: bool },
+    FlagEnabled,
+    FlagDisabled,
     FlagArchived,
 }
 
@@ -84,27 +85,47 @@ impl Flag {
         Ok((flag, event))
     }
 
-    pub fn set_enabled(
+    pub fn enable(
         &mut self,
-        enabled: bool,
         actor: String,
     ) -> Result<Option<DomainEvent>, DomainError> {
         if self.is_archived {
             return Err(DomainError::Archived);
         }
 
-        if self.is_enabled == enabled {
+        if self.is_enabled {
             return Ok(None);
         }
 
-        self.is_enabled = enabled;
+        self.is_enabled = true;
         self.updated_at = now_ms();
 
         let event = self.event(
             actor,
-            EventPayload::FlagToggled {
-                is_enabled: enabled,
-            },
+            EventPayload::FlagEnabled,
+        );
+
+        Ok(Some(event))
+    }
+
+    pub fn disable(
+        &mut self,
+        actor: String,
+    ) -> Result<Option<DomainEvent>, DomainError> {
+        if self.is_archived {
+            return Err(DomainError::Archived);
+        }
+
+        if !self.is_enabled {
+            return Ok(None);
+        }
+
+        self.is_enabled = false;
+        self.updated_at = now_ms();
+
+        let event = self.event(
+            actor,
+            EventPayload::FlagDisabled,
         );
 
         Ok(Some(event))
@@ -201,15 +222,15 @@ mod tests {
     #[test]
     fn set_enabled_is_idempotent() {
         let (mut f, _) = Flag::create("checkout".to_owned(), "alice".to_owned()).unwrap();
-        assert!(f.set_enabled(false, "alice".to_owned()).unwrap().is_none());
+        assert!(f.disable("alice".to_owned()).unwrap().is_none());
 
         let event = f
-            .set_enabled(true, "alice".to_owned())
+            .enable("alice".to_owned())
             .unwrap()
             .expect("state changed");
         assert!(matches!(
             event.payload,
-            EventPayload::FlagToggled { is_enabled: true }
+            EventPayload::FlagEnabled
         ));
         assert!(f.is_enabled());
         assert_eq!(event.occurred_at, f.updated_at());
@@ -221,7 +242,7 @@ mod tests {
         assert!(f.archive("alice".to_owned()).is_some());
         assert!(f.archive("alice".to_owned()).is_none());
         assert_eq!(
-            f.set_enabled(true, "alice".to_owned()).unwrap_err(),
+            f.enable("alice".to_owned()).unwrap_err(),
             DomainError::Archived
         );
     }
@@ -229,12 +250,12 @@ mod tests {
     #[test]
     fn event_json_format_is_stable() {
         let json = r#"{"key":"checkout","actor":"alice","occurred_at":1,
-                       "payload":{"type":"FlagToggled","is_enabled":true}}"#;
+                       "payload":{"type":"FlagEnabled"}}"#;
         let e: DomainEvent = serde_json::from_str(json).unwrap();
         assert_eq!(e.key, "checkout");
         assert!(matches!(
             e.payload,
-            EventPayload::FlagToggled { is_enabled: true }
+            EventPayload::FlagEnabled
         ));
     }
 }

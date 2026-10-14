@@ -23,7 +23,8 @@ impl FromSql for EventPayload {
 fn action(payload: &EventPayload) -> &'static str {
     match payload {
         EventPayload::FlagCreated { .. } => "FlagCreated",
-        EventPayload::FlagToggled { .. } => "FlagToggled",
+        EventPayload::FlagEnabled => "FlagEnabled",
+        EventPayload::FlagDisabled => "FlagDisabled",
         EventPayload::FlagArchived => "FlagArchived",
     }
 }
@@ -62,13 +63,20 @@ mod tests {
         }
     }
 
-    fn toggled(key: &str, enabled: bool, at: i64) -> DomainEvent {
+    fn enabled(key: &str, at: i64) -> DomainEvent {
         event(
             key,
             "alice",
-            EventPayload::FlagToggled {
-                is_enabled: enabled,
-            },
+            EventPayload::FlagEnabled,
+            at,
+        )
+    }
+
+    fn disabled(key: &str, at: i64) -> DomainEvent {
+        event(
+            key,
+            "alice",
+            EventPayload::FlagDisabled,
             at,
         )
     }
@@ -113,8 +121,8 @@ mod tests {
             "FlagCreated"
         );
         assert_eq!(
-            action(&EventPayload::FlagToggled { is_enabled: true }),
-            "FlagToggled"
+            action(&EventPayload::FlagEnabled),
+            "FlagEnabled"
         );
         assert_eq!(action(&EventPayload::FlagArchived), "FlagArchived");
     }
@@ -124,7 +132,7 @@ mod tests {
     #[test]
     fn append_stores_all_fields() {
         let mut conn = setup();
-        append_committed(&mut conn, &toggled("checkout", true, 1234));
+        append_committed(&mut conn, &enabled("checkout", 1234));
 
         let r = rows(&conn);
         assert_eq!(r.len(), 1);
@@ -132,11 +140,10 @@ mod tests {
         assert!(*id >= 1);
         assert_eq!(key, "checkout");
         assert_eq!(actor, "alice");
-        assert_eq!(act, "FlagToggled");
+        assert_eq!(act, "FlagEnabled");
         assert_eq!(*at, 1234);
         let json: serde_json::Value = serde_json::from_str(payload).unwrap();
-        assert_eq!(json["type"], "FlagToggled");
-        assert_eq!(json["is_enabled"], true);
+        assert_eq!(json["type"], "FlagEnabled");
     }
 
     #[test]
@@ -148,8 +155,8 @@ mod tests {
                 "FlagCreated",
             ),
             (
-                EventPayload::FlagToggled { is_enabled: true },
-                "FlagToggled",
+                EventPayload::FlagEnabled,
+                "FlagEnabled",
             ),
             (EventPayload::FlagArchived, "FlagArchived"),
         ];
@@ -167,9 +174,9 @@ mod tests {
     #[test]
     fn append_is_append_only_and_ids_increase() {
         let mut conn = setup();
-        append_committed(&mut conn, &toggled("a", true, 1));
-        append_committed(&mut conn, &toggled("a", false, 2));
-        append_committed(&mut conn, &toggled("a", true, 3));
+        append_committed(&mut conn, &enabled("a", 1));
+        append_committed(&mut conn, &disabled("a", 2));
+        append_committed(&mut conn, &enabled("a", 3));
 
         let r = rows(&conn);
         assert_eq!(r.len(), 3);
@@ -180,7 +187,7 @@ mod tests {
     #[test]
     fn identical_events_are_not_deduplicated() {
         let mut conn = setup();
-        let e = toggled("a", true, 1);
+        let e = enabled("a", 1);
         append_committed(&mut conn, &e);
         append_committed(&mut conn, &e);
         assert_eq!(count(&conn), 2);
@@ -189,9 +196,9 @@ mod tests {
     #[test]
     fn append_keeps_history_per_key() {
         let mut conn = setup();
-        append_committed(&mut conn, &toggled("a", true, 1));
-        append_committed(&mut conn, &toggled("b", true, 2));
-        append_committed(&mut conn, &toggled("a", false, 3));
+        append_committed(&mut conn, &enabled("a", 1));
+        append_committed(&mut conn, &enabled("b", 2));
+        append_committed(&mut conn, &disabled("a", 3));
 
         let a: i64 = conn
             .query_row("SELECT COUNT(*) FROM audit WHERE key = 'a'", [], |r| {
@@ -205,8 +212,8 @@ mod tests {
     fn multiple_appends_in_one_transaction_commit_together() {
         let mut conn = setup();
         let tx = conn.transaction().unwrap();
-        append(&tx, &toggled("a", true, 1)).unwrap();
-        append(&tx, &toggled("b", true, 2)).unwrap();
+        append(&tx, &enabled("a", 1)).unwrap();
+        append(&tx, &enabled("b", 2)).unwrap();
         tx.commit().unwrap();
         assert_eq!(count(&conn), 2);
     }
@@ -215,7 +222,7 @@ mod tests {
     fn rolled_back_transaction_leaves_no_audit_rows() {
         let mut conn = setup();
         let tx = conn.transaction().unwrap();
-        append(&tx, &toggled("a", true, 1)).unwrap();
+        append(&tx, &enabled("a", 1)).unwrap();
         tx.rollback().unwrap();
         assert_eq!(count(&conn), 0);
     }
@@ -225,7 +232,7 @@ mod tests {
         let mut conn = setup();
         {
             let tx = conn.transaction().unwrap();
-            append(&tx, &toggled("a", true, 1)).unwrap();
+            append(&tx, &enabled("a", 1)).unwrap();
         }
         assert_eq!(count(&conn), 0);
     }
@@ -234,7 +241,7 @@ mod tests {
     fn append_does_not_require_existing_flag() {
         // audit не має FK на flags: лог переживає видалення/відсутність прапорця
         let mut conn = setup();
-        append_committed(&mut conn, &toggled("ghost", true, 1));
+        append_committed(&mut conn, &enabled("ghost", 1));
         assert_eq!(count(&conn), 1);
     }
 
@@ -257,7 +264,7 @@ mod tests {
         let mut conn = setup();
         for p in [
             EventPayload::FlagCreated { is_enabled: true },
-            EventPayload::FlagToggled { is_enabled: false },
+            EventPayload::FlagDisabled,
             EventPayload::FlagArchived,
         ] {
             conn.execute("DELETE FROM audit", []).unwrap();

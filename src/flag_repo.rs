@@ -177,7 +177,7 @@ mod tests {
         let mut f = flag("checkout");
         save(&mut conn, &f);
 
-        f.set_enabled(true, "alice".into()).unwrap().unwrap();
+        f.enable("alice".into()).unwrap().unwrap();
         persist_update(&mut conn, &f);
 
         let found = find(&conn, "checkout").unwrap().unwrap();
@@ -189,7 +189,7 @@ mod tests {
     fn update_persists_archive_and_forces_disabled() {
         let mut conn = setup();
         let mut f = flag("checkout");
-        f.set_enabled(true, "alice".into()).unwrap();
+        f.enable("alice".into()).unwrap();
         save(&mut conn, &f);
 
         f.archive("alice".into()).unwrap();
@@ -211,7 +211,7 @@ mod tests {
         save(&mut conn, &b);
         save(&mut conn, &c);
 
-        a.set_enabled(true, "alice".into()).unwrap().unwrap();
+        a.enable("alice".into()).unwrap().unwrap();
         persist_update(&mut conn, &a);
 
         let b_after = find(&conn, "b").unwrap().unwrap();
@@ -242,7 +242,7 @@ mod tests {
         let mut f = flag("checkout");
         save(&mut conn, &f);
 
-        f.set_enabled(true, "alice".into()).unwrap();
+        f.enable("alice".into()).unwrap();
         let tx = conn.transaction().unwrap();
         update(&tx, &f).unwrap();
         tx.rollback().unwrap();

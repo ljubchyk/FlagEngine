@@ -89,14 +89,21 @@ mod tests {
         conn
     }
 
-    fn event(key: &str, enabled: bool, at: i64) -> DomainEvent {
+    fn enabled_event(key: &str, at: i64) -> DomainEvent {
         DomainEvent {
             key: key.into(),
             actor: "test".into(),
             occurred_at: at,
-            payload: EventPayload::FlagToggled {
-                is_enabled: enabled,
-            },
+            payload: EventPayload::FlagEnabled,
+        }
+    }
+
+    fn disanabled_event(key: &str, at: i64) -> DomainEvent {
+        DomainEvent {
+            key: key.into(),
+            actor: "test".into(),
+            occurred_at: at,
+            payload: EventPayload::FlagDisabled,
         }
     }
 
@@ -105,8 +112,8 @@ mod tests {
         let mut conn = setup();
 
         let tx = conn.transaction().unwrap();
-        let s1 = enqueue(&tx, &event("a", true, 1)).unwrap();
-        let s2 = enqueue(&tx, &event("b", false, 2)).unwrap();
+        let s1 = enqueue(&tx, &enabled_event("a", 1)).unwrap();
+        let s2 = enqueue(&tx, &disanabled_event("b", 2)).unwrap();
         tx.commit().unwrap();
         assert!(s2 > s1);
 
@@ -162,7 +169,7 @@ mod tests {
     fn enqueue_many(conn: &mut Connection, n: i64) -> Vec<i64> {
         let tx = conn.transaction().unwrap();
         let seqs = (1..=n)
-            .map(|i| enqueue(&tx, &event(&format!("flag-{i}"), true, i)).unwrap())
+            .map(|i| enqueue(&tx, &enabled_event(&format!("flag-{i}"), i)).unwrap())
             .collect();
         tx.commit().unwrap();
         seqs
@@ -172,7 +179,7 @@ mod tests {
     fn enqueue_stores_pending_status_and_event_timestamp() {
         let mut conn = setup();
         let tx = conn.transaction().unwrap();
-        let seq = enqueue(&tx, &event("a", true, 42)).unwrap();
+        let seq = enqueue(&tx, &enabled_event("a", 42)).unwrap();
         tx.commit().unwrap();
 
         let (status, created_at): (String, i64) = conn
@@ -258,7 +265,7 @@ mod tests {
         let mut conn = setup();
 
         let tx = conn.transaction().unwrap();
-        enqueue(&tx, &event("a", true, 1)).unwrap();
+        enqueue(&tx, &enabled_event("a", 1)).unwrap();
         drop(tx);
 
         assert!(fetch_pending(&conn, 10).unwrap().is_empty());
@@ -270,7 +277,7 @@ mod tests {
         let tx = conn.transaction().unwrap();
         for payload in [
             EventPayload::FlagCreated { is_enabled: false },
-            EventPayload::FlagToggled { is_enabled: true },
+            EventPayload::FlagEnabled,
             EventPayload::FlagArchived,
         ] {
             let e = DomainEvent {
@@ -295,7 +302,7 @@ mod tests {
         ));
         assert!(matches!(
             events[1].payload,
-            EventPayload::FlagToggled { is_enabled: true }
+            EventPayload::FlagEnabled
         ));
         assert!(matches!(events[2].payload, EventPayload::FlagArchived));
         assert!(

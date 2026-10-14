@@ -76,13 +76,30 @@ impl FlagService {
         Ok(())
     }
 
-    pub fn toggle_flag(&self, key: String, enabled: bool, actor: String) -> Result<()> {
+    pub fn enable_flag(&self, key: String, actor: String) -> Result<()> {
         let mut conn = self.pool.get()?;
         let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
 
         let mut flag = flag_repo::find(&tx, &key)?.ok_or(ServiceError::FlagNotFound(key))?;
 
-        if let Some(event) = flag.set_enabled(enabled, actor)? {
+        if let Some(event) = flag.enable(actor)? {
+            flag_repo::update(&tx, &flag)?;
+            notify_sync_subscribers(&tx, &event)?;
+
+            tx.commit()?;
+            self.wake_worker();
+        }
+
+        Ok(())
+    }
+
+    pub fn disable_flag(&self, key: String, actor: String) -> Result<()> {
+        let mut conn = self.pool.get()?;
+        let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
+
+        let mut flag = flag_repo::find(&tx, &key)?.ok_or(ServiceError::FlagNotFound(key))?;
+
+        if let Some(event) = flag.disable(actor)? {
             flag_repo::update(&tx, &flag)?;
             notify_sync_subscribers(&tx, &event)?;
 
@@ -313,7 +330,7 @@ mod tests {
         let env = setup();
         let err = env
             .svc
-            .toggle_flag("ghost".into(), true, "alice".into())
+            .enable_flag("ghost".into(), "alice".into())
             .unwrap_err();
         assert!(matches!(err, ServiceError::FlagNotFound(ref k) if k == "ghost"));
         assert_eq!(env.count("audit"), 0);
@@ -324,7 +341,7 @@ mod tests {
         let env = setup();
         env.create("checkout");
         env.svc
-            .toggle_flag("checkout".into(), true, "alice".into())
+            .enable_flag("checkout".into(), "alice".into())
             .unwrap();
 
         assert!(env.flag("checkout").unwrap().is_enabled());
@@ -339,7 +356,7 @@ mod tests {
         let before = env.flag("checkout").unwrap().updated_at();
 
         env.svc
-            .toggle_flag("checkout".into(), false, "alice".into())
+            .disable_flag("checkout".into(), "alice".into())
             .unwrap();
 
         assert_eq!(env.count("audit"), 1);
@@ -353,7 +370,7 @@ mod tests {
         env.create("checkout");
         for _ in 0..2 {
             env.svc
-                .toggle_flag("checkout".into(), true, "alice".into())
+                .enable_flag("checkout".into(), "alice".into())
                 .unwrap();
         }
         assert_eq!(env.count("audit"), 2);
@@ -369,7 +386,7 @@ mod tests {
 
         let err = env
             .svc
-            .toggle_flag("checkout".into(), true, "alice".into())
+            .enable_flag("checkout".into(), "alice".into())
             .unwrap_err();
         assert!(matches!(err, ServiceError::Domain(DomainError::Archived)));
         assert!(!env.flag("checkout").unwrap().is_enabled());
@@ -381,7 +398,7 @@ mod tests {
         env.create("a");
         env.create("b");
         env.svc
-            .toggle_flag("a".into(), true, "alice".into())
+            .enable_flag("a".into(), "alice".into())
             .unwrap();
 
         assert!(env.flag("a").unwrap().is_enabled());
@@ -405,7 +422,7 @@ mod tests {
         let env = setup();
         env.create("checkout");
         env.svc
-            .toggle_flag("checkout".into(), true, "alice".into())
+            .enable_flag("checkout".into(), "alice".into())
             .unwrap();
 
         env.svc
@@ -439,7 +456,7 @@ mod tests {
         env.create("a");
         env.create("b");
         env.svc
-            .toggle_flag("b".into(), true, "alice".into())
+            .enable_flag("b".into(), "alice".into())
             .unwrap();
 
         env.svc.archive_flag("a".into(), "alice".into()).unwrap();
@@ -462,7 +479,7 @@ mod tests {
         let env = setup();
         env.create("checkout");
         env.svc
-            .toggle_flag("checkout".into(), true, "alice".into())
+            .enable_flag("checkout".into(), "alice".into())
             .unwrap();
 
         assert!(
@@ -479,7 +496,7 @@ mod tests {
         let env = setup();
         env.create("checkout");
         env.svc
-            .toggle_flag("checkout".into(), true, "alice".into())
+            .enable_flag("checkout".into(), "alice".into())
             .unwrap();
         env.apply_outbox_to_cache();
         assert!(env.svc.is_enabled("checkout"));
