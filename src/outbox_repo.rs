@@ -300,10 +300,7 @@ mod tests {
             events[0].payload,
             EventPayload::FlagCreated { is_enabled: false }
         ));
-        assert!(matches!(
-            events[1].payload,
-            EventPayload::FlagEnabled
-        ));
+        assert!(matches!(events[1].payload, EventPayload::FlagEnabled));
         assert!(matches!(events[2].payload, EventPayload::FlagArchived));
         assert!(
             events

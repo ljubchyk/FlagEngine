@@ -60,7 +60,7 @@ pub fn find_all(conn: &Connection, filter: FlagFilter) -> Result<Vec<Flag>> {
         FlagFilter::All => "",
     };
     let sql = format!(
-        "SELECT key, is_enabled, is_archived, updated_at FROM flags{}",
+        "SELECT key, is_enabled, is_archived, updated_at FROM flags{} ORDER BY key",
         where_closure
     );
     conn.prepare_cached(&sql)?

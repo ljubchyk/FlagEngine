@@ -1,12 +1,21 @@
 use axum::{
-    Json, Router, extract::{DefaultBodyLimit, Path, Request, State}, http::{StatusCode, header}, middleware::{self, Next}, response::{IntoResponse, Response}, routing::{get, post},
+    Json, Router,
+    extract::{DefaultBodyLimit, Path, Query, Request, State},
+    http::{StatusCode, header},
+    middleware::{self, Next},
+    response::{IntoResponse, Response},
+    routing::{get, post},
 };
 use serde::{Deserialize, Serialize};
-use tower_http::timeout::TimeoutLayer;
 use std::{sync::Arc, time::Duration};
 use subtle::ConstantTimeEq;
+use tower_http::timeout::TimeoutLayer;
 
-use crate::service::{FlagService, ServiceError};
+use crate::{
+    domain::Flag,
+    flag_repo::FlagFilter,
+    service::{FlagService, ServiceError},
+};
 
 #[derive(Debug, thiserror::Error)]
 pub enum ApiError {
@@ -15,6 +24,9 @@ pub enum ApiError {
 
     #[error("blocking task failed: {0}")]
     Join(#[from] tokio::task::JoinError),
+
+    #[error("flag '{0}' not found")]
+    NotFound(String),
 }
 
 #[derive(Serialize)]
@@ -25,7 +37,9 @@ struct ErrorBody {
 impl IntoResponse for ApiError {
     fn into_response(self) -> Response {
         let status = match &self {
-            ApiError::Service(ServiceError::FlagNotFound(_)) => StatusCode::NOT_FOUND,
+            ApiError::Service(ServiceError::FlagNotFound(_)) | ApiError::NotFound(_) => {
+                StatusCode::NOT_FOUND
+            }
             ApiError::Service(ServiceError::DuplicateKey(_)) => StatusCode::CONFLICT,
             ApiError::Service(ServiceError::Domain(_)) => StatusCode::BAD_REQUEST,
             ApiError::Service(ServiceError::Database(_) | ServiceError::Pool(_))
@@ -52,7 +66,8 @@ pub struct AppState {
 
 pub fn router(state: AppState) -> Router {
     let protected = Router::new()
-        .route("/flags", post(create_flag))
+        .route("/flags", post(create_flag).get(list_flags))
+        .route("/flags/{key}", post(enable_flag).get(get_flag))
         .route("/flags/{key}/enable", post(enable_flag))
         .route("/flags/{key}/disable", post(disable_flag))
         .route("/flags/{key}/archive", post(archive_flag))
@@ -130,8 +145,7 @@ async fn enable_flag(
 ) -> Result<StatusCode, ApiError> {
     let service = state.service.clone();
 
-    tokio::task::spawn_blocking(move || service.enable_flag(key, body.actor))
-        .await??;
+    tokio::task::spawn_blocking(move || service.enable_flag(key, body.actor)).await??;
 
     Ok(StatusCode::NO_CONTENT)
 }
@@ -148,8 +162,7 @@ async fn disable_flag(
 ) -> Result<StatusCode, ApiError> {
     let service = state.service.clone();
 
-    tokio::task::spawn_blocking(move || service.disable_flag(key, body.actor))
-        .await??;
+    tokio::task::spawn_blocking(move || service.disable_flag(key, body.actor)).await??;
 
     Ok(StatusCode::NO_CONTENT)
 }
@@ -169,4 +182,69 @@ async fn archive_flag(
     tokio::task::spawn_blocking(move || service.archive_flag(key, body.actor)).await??;
 
     Ok(StatusCode::NO_CONTENT)
+}
+
+#[derive(Deserialize, Default, Clone, Copy)]
+#[serde(rename_all = "lowercase")]
+enum StatusQuery {
+    #[default]
+    Active,
+    Archived,
+    All,
+}
+
+#[derive(Deserialize)]
+struct ListFlagsQuery {
+    #[serde(default)]
+    status: StatusQuery,
+}
+
+#[derive(Serialize)]
+struct FlagResponse {
+    key: String,
+    enabled: bool,
+    archived: bool,
+    updated_at: i64,
+}
+
+impl From<&Flag> for FlagResponse {
+    fn from(flag: &Flag) -> Self {
+        Self {
+            key: flag.key().to_owned(),
+            enabled: flag.is_enabled(),
+            archived: flag.is_archived(),
+            updated_at: flag.updated_at(),
+        }
+    }
+}
+
+async fn get_flag(
+    State(state): State<AppState>,
+    Path(key): Path<String>,
+) -> Result<Json<FlagResponse>, ApiError> {
+    let service = state.service.clone();
+
+    let key_clone = key.clone();
+    let flag = tokio::task::spawn_blocking(move || service.find_flag(&key_clone)).await??;
+
+    match flag {
+        Some(flag) => Ok(Json(FlagResponse::from(&flag))),
+        None => Err(ApiError::NotFound(key)),
+    }
+}
+
+async fn list_flags(
+    State(state): State<AppState>,
+    Query(query): Query<ListFlagsQuery>,
+) -> Result<Json<Vec<FlagResponse>>, ApiError> {
+    let filter = match query.status {
+        StatusQuery::Active => FlagFilter::Active,
+        StatusQuery::Archived => FlagFilter::Archived,
+        StatusQuery::All => FlagFilter::All,
+    };
+    let service = state.service.clone();
+
+    let flags = tokio::task::spawn_blocking(move || service.find_flags(filter)).await??;
+
+    Ok(Json(flags.iter().map(FlagResponse::from).collect()))
 }

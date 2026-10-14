@@ -299,6 +299,17 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "src/main.rs",
+			"settings":
+			{
+				"buffer_size": 2166,
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+			]
+		}
 	],
 	"build_system": "Packages/Rust/Cargo.sublime-build",
 	"build_system_choices":
@@ -420,7 +431,7 @@
 			]
 		]
 	],
-	"build_varint": "Test",
+	"build_varint": "",
 	"command_palette":
 	{
 		"height": 0.0,
@@ -473,12 +484,12 @@
 	],
 	"file_history":
 	[
-		"/home/ljubchyk/dev/FlagEngine/src/domain.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/audit_repo.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/flag_repo.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/http.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/cache.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/service.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/http.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/audit_repo.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/domain.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/cache.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/outbox_repo.rs",
 		"/home/ljubchyk/dev/FlagEngine/Cargo.toml",
 		"/home/ljubchyk/dev/FlagEngine/src/main.rs",
@@ -520,7 +531,7 @@
 	],
 	"find":
 	{
-		"height": 38.0
+		"height": 26.0
 	},
 	"find_in_files":
 	{
@@ -537,6 +548,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"FlagResponse",
+			"append_stores_all_fields",
 			"tog",
 			"toggle",
 			"event_json_format_is_stable",
@@ -597,6 +610,57 @@
 		{
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "src/main.rs",
+					"selected": true,
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 2166,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								305,
+								305
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html, text.xml"
+								},
+								{
+									"rhs_empty": true,
+									"selector": "punctuation.accessor"
+								},
+								{
+									"characters": ":.'(",
+									"selector": "meta.tag, source - comment - string.quoted.double.block - string.quoted.single.block - string.unquoted.heredoc",
+									"server": "LSP-rust-analyzer"
+								}
+							],
+							"lsp_active": true,
+							"lsp_uri": "file:///home/ljubchyk/dev/FlagEngine/src/main.rs",
+							"show_definitions": false,
+							"syntax": "Packages/Rust/Rust.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 827.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -670,7 +734,7 @@
 	"project": "FlagEngine.sublime-project",
 	"replace":
 	{
-		"height": 68.0
+		"height": 48.0
 	},
 	"save_all_on_build": true,
 	"select_file":

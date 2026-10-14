@@ -64,21 +64,11 @@ mod tests {
     }
 
     fn enabled(key: &str, at: i64) -> DomainEvent {
-        event(
-            key,
-            "alice",
-            EventPayload::FlagEnabled,
-            at,
-        )
+        event(key, "alice", EventPayload::FlagEnabled, at)
     }
 
     fn disabled(key: &str, at: i64) -> DomainEvent {
-        event(
-            key,
-            "alice",
-            EventPayload::FlagDisabled,
-            at,
-        )
+        event(key, "alice", EventPayload::FlagDisabled, at)
     }
 
     fn append_committed(conn: &mut Connection, e: &DomainEvent) {
@@ -120,10 +110,7 @@ mod tests {
             action(&EventPayload::FlagCreated { is_enabled: false }),
             "FlagCreated"
         );
-        assert_eq!(
-            action(&EventPayload::FlagEnabled),
-            "FlagEnabled"
-        );
+        assert_eq!(action(&EventPayload::FlagEnabled), "FlagEnabled");
         assert_eq!(action(&EventPayload::FlagArchived), "FlagArchived");
     }
 
@@ -154,10 +141,7 @@ mod tests {
                 EventPayload::FlagCreated { is_enabled: false },
                 "FlagCreated",
             ),
-            (
-                EventPayload::FlagEnabled,
-                "FlagEnabled",
-            ),
+            (EventPayload::FlagEnabled, "FlagEnabled"),
             (EventPayload::FlagArchived, "FlagArchived"),
         ];
         for (i, (p, _)) in payloads.iter().enumerate() {

@@ -3,6 +3,7 @@ use std::sync::{Arc, mpsc::SyncSender};
 use thiserror::Error;
 
 use crate::cache::FlagCache;
+use crate::flag_repo::FlagFilter;
 use crate::handlers::notify_sync_subscribers;
 use crate::{db::DbPool, domain::Flag};
 use crate::{domain, flag_repo};
@@ -125,6 +126,16 @@ impl FlagService {
         }
 
         Ok(())
+    }
+
+    pub fn find_flag(&self, key: &str) -> Result<Option<Flag>> {
+        let conn = self.pool.get()?;
+        Ok(flag_repo::find(&conn, key)?)
+    }
+
+    pub fn find_flags(&self, filter: FlagFilter) -> Result<Vec<Flag>> {
+        let conn = self.pool.get()?;
+        Ok(flag_repo::find_all(&conn, filter)?)
     }
 }
 
@@ -397,9 +408,7 @@ mod tests {
         let env = setup();
         env.create("a");
         env.create("b");
-        env.svc
-            .enable_flag("a".into(), "alice".into())
-            .unwrap();
+        env.svc.enable_flag("a".into(), "alice".into()).unwrap();
 
         assert!(env.flag("a").unwrap().is_enabled());
         assert!(!env.flag("b").unwrap().is_enabled());
@@ -455,9 +464,7 @@ mod tests {
         let env = setup();
         env.create("a");
         env.create("b");
-        env.svc
-            .enable_flag("b".into(), "alice".into())
-            .unwrap();
+        env.svc.enable_flag("b".into(), "alice".into()).unwrap();
 
         env.svc.archive_flag("a".into(), "alice".into()).unwrap();
 

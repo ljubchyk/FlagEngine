@@ -45,7 +45,12 @@ async fn main() -> Result<(), StartupError> {
 
     let (waker, wake_rx) = std::sync::mpsc::sync_channel::<()>(1);
 
-    worker::spawn_outbox_worker(&config.db_path, Duration::from_millis(5000), cache.clone(), wake_rx)?;
+    worker::spawn_outbox_worker(
+        &config.db_path,
+        config.poll_interval,
+        cache.clone(),
+        wake_rx,
+    )?;
 
     let pool = db::create_pool(&config.db_path)?;
     let state = AppState {
@@ -53,7 +58,7 @@ async fn main() -> Result<(), StartupError> {
         admin_key: Arc::from(config.admin_key),
     };
 
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
+    let listener = tokio::net::TcpListener::bind(config.addr).await?;
     println!("FlagEngine listening on {}", listener.local_addr()?);
 
     axum::serve(listener, http::router(state))
@@ -67,7 +72,7 @@ async fn main() -> Result<(), StartupError> {
 async fn shutdown_signal() {
     let ctrl_c = tokio::signal::ctrl_c();
     let mut sigterm = signal(SignalKind::terminate()).expect("failed to listen for SIGTERM");
-    
+
     tokio::select! {
         res = ctrl_c => {
             res.expect("failed to listen for ctrl-c")
@@ -78,5 +83,7 @@ async fn shutdown_signal() {
 
 #[cfg(not(unix))]
 async fn shutdown_signal() {
-    tokio::signal::ctrl_c().await.expect("failed to listen for ctrl-c")
+    tokio::signal::ctrl_c()
+        .await
+        .expect("failed to listen for ctrl-c")
 }

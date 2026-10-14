@@ -85,10 +85,7 @@ impl Flag {
         Ok((flag, event))
     }
 
-    pub fn enable(
-        &mut self,
-        actor: String,
-    ) -> Result<Option<DomainEvent>, DomainError> {
+    pub fn enable(&mut self, actor: String) -> Result<Option<DomainEvent>, DomainError> {
         if self.is_archived {
             return Err(DomainError::Archived);
         }
@@ -100,18 +97,12 @@ impl Flag {
         self.is_enabled = true;
         self.updated_at = now_ms();
 
-        let event = self.event(
-            actor,
-            EventPayload::FlagEnabled,
-        );
+        let event = self.event(actor, EventPayload::FlagEnabled);
 
         Ok(Some(event))
     }
 
-    pub fn disable(
-        &mut self,
-        actor: String,
-    ) -> Result<Option<DomainEvent>, DomainError> {
+    pub fn disable(&mut self, actor: String) -> Result<Option<DomainEvent>, DomainError> {
         if self.is_archived {
             return Err(DomainError::Archived);
         }
@@ -123,10 +114,7 @@ impl Flag {
         self.is_enabled = false;
         self.updated_at = now_ms();
 
-        let event = self.event(
-            actor,
-            EventPayload::FlagDisabled,
-        );
+        let event = self.event(actor, EventPayload::FlagDisabled);
 
         Ok(Some(event))
     }
@@ -228,10 +216,7 @@ mod tests {
             .enable("alice".to_owned())
             .unwrap()
             .expect("state changed");
-        assert!(matches!(
-            event.payload,
-            EventPayload::FlagEnabled
-        ));
+        assert!(matches!(event.payload, EventPayload::FlagEnabled));
         assert!(f.is_enabled());
         assert_eq!(event.occurred_at, f.updated_at());
     }
@@ -253,9 +238,6 @@ mod tests {
                        "payload":{"type":"FlagEnabled"}}"#;
         let e: DomainEvent = serde_json::from_str(json).unwrap();
         assert_eq!(e.key, "checkout");
-        assert!(matches!(
-            e.payload,
-            EventPayload::FlagEnabled
-        ));
+        assert!(matches!(e.payload, EventPayload::FlagEnabled));
     }
 }
