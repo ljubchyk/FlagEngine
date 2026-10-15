@@ -13,7 +13,7 @@ pub enum ServiceError {
     #[error("Feature flag with key '{0}' was not found")]
     FlagNotFound(String),
 
-    #[error("Feature flag with key '{0}' already exists")]
+    #[error("Feature flag with key '{0}' already exists (it may be archived)")]
     DuplicateKey(String),
 
     #[error("Database operation failed: {0}")]
