@@ -308,13 +308,16 @@
 	"buffers":
 	[
 		{
-			"file": "src/config.rs",
+			"file": "src/service.rs",
 			"settings":
 			{
-				"buffer_size": 1679,
+				"buffer_size": 15908,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
-			}
+			},
+			"undo_stack":
+			[
+			]
 		}
 	],
 	"build_system": "Packages/Rust/Cargo.sublime-build",
@@ -490,11 +493,12 @@
 	],
 	"file_history":
 	[
+		"/home/ljubchyk/dev/FlagEngine/src/flag_repo.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/service.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/db.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/http.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/main.rs",
 		"/home/ljubchyk/dev/FlagEngine/.env",
-		"/home/ljubchyk/dev/FlagEngine/src/flag_repo.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/audit_repo.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/domain.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/cache.rs",
@@ -507,7 +511,6 @@
 		"/home/ljubchyk/dev/FlagEngine/src/handlers.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/repo.rs",
 		"/home/ljubchyk/Downloads/service.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/db.rs",
 		"/home/ljubchyk/Downloads/audit_repo.rs",
 		"/home/ljubchyk/Downloads/flag_repo.rs",
 		"/home/ljubchyk/Downloads/outbox_repo.rs",
@@ -619,20 +622,20 @@
 			[
 				{
 					"buffer": 0,
-					"file": "src/config.rs",
+					"file": "src/service.rs",
 					"selected": true,
 					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 1679,
+						"buffer_size": 15908,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1081,
+								1081
 							]
 						],
 						"settings":
@@ -654,14 +657,14 @@
 								}
 							],
 							"lsp_active": true,
-							"lsp_uri": "file:///home/ljubchyk/dev/FlagEngine/src/config.rs",
+							"lsp_uri": "file:///home/ljubchyk/dev/FlagEngine/src/service.rs",
 							"show_definitions": false,
 							"syntax": "Packages/Rust/Rust.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 364.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
