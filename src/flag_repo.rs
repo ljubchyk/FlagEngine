@@ -1,5 +1,7 @@
-use crate::domain::Flag;
-use rusqlite::{Connection, OptionalExtension, Result, Row, Transaction, params};
+use crate::{domain::Flag, errors::AppError};
+use rusqlite::{
+    Connection, Error::SqliteFailure, OptionalExtension, Result, Row, Transaction, params,
+};
 
 #[derive(Default)]
 pub enum FlagFilter {
@@ -18,7 +20,7 @@ fn raw_to_flag(row: &Row) -> Result<Flag> {
     ))
 }
 
-pub fn insert(tx: &Transaction, flag: &Flag) -> Result<()> {
+pub fn insert(tx: &Transaction, flag: &Flag) -> Result<(), AppError> {
     tx.execute(
         "INSERT INTO flags (key, is_enabled, is_archived, updated_at)
              VALUES (?1, ?2, ?3, ?4)",
@@ -28,7 +30,16 @@ pub fn insert(tx: &Transaction, flag: &Flag) -> Result<()> {
             flag.is_archived(),
             flag.updated_at()
         ],
-    )?;
+    )
+    .map_err(|err| {
+        if let SqliteFailure(inner, _) = err
+            && inner.code == rusqlite::ErrorCode::ConstraintViolation
+        {
+            return AppError::DuplicateKey(flag.key().to_owned());
+        }
+
+        AppError::Database(err)
+    });
     Ok(())
 }
 

@@ -11,39 +11,19 @@ use std::{sync::Arc, time::Duration};
 use subtle::ConstantTimeEq;
 use tower_http::timeout::TimeoutLayer;
 
-use crate::{
-    domain::Flag,
-    flag_repo::FlagFilter,
-    service::{FlagService, ServiceError},
-};
-
-#[derive(Debug, thiserror::Error)]
-pub enum ApiError {
-    #[error(transparent)]
-    Service(#[from] ServiceError),
-
-    #[error("blocking task failed: {0}")]
-    Join(#[from] tokio::task::JoinError),
-
-    #[error("flag '{0}' not found")]
-    NotFound(String),
-}
+use crate::{domain::Flag, errors::AppError, flag_repo::FlagFilter, service::FlagService};
 
 #[derive(Serialize)]
 struct ErrorBody {
     error: String,
 }
 
-impl IntoResponse for ApiError {
+impl IntoResponse for AppError {
     fn into_response(self) -> Response {
         let status = match &self {
-            ApiError::Service(ServiceError::FlagNotFound(_)) | ApiError::NotFound(_) => {
-                StatusCode::NOT_FOUND
-            }
-            ApiError::Service(ServiceError::DuplicateKey(_)) => StatusCode::CONFLICT,
-            ApiError::Service(ServiceError::Domain(_)) => StatusCode::BAD_REQUEST,
-            ApiError::Service(ServiceError::Database(_) | ServiceError::Pool(_))
-            | ApiError::Join(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            AppError::InvalidKey(_) => StatusCode::BAD_REQUEST,
+            AppError::Archived | AppError::DuplicateKey(_) => StatusCode::CONFLICT,
+            _ => StatusCode::INTERNAL_SERVER_ERROR,
         };
 
         // Внутрішні помилки клієнту не показуємо, лише пишемо в stderr.
@@ -125,7 +105,7 @@ struct CreateFlagRequest {
 async fn create_flag(
     State(state): State<AppState>,
     Json(body): Json<CreateFlagRequest>,
-) -> Result<StatusCode, ApiError> {
+) -> Result<StatusCode, AppError> {
     let service = state.service.clone();
 
     tokio::task::spawn_blocking(move || service.create_flag(body.key, body.actor)).await??;
@@ -142,7 +122,7 @@ async fn enable_flag(
     State(state): State<AppState>,
     Path(key): Path<String>,
     Json(body): Json<EnableFlagRequest>,
-) -> Result<StatusCode, ApiError> {
+) -> Result<StatusCode, AppError> {
     let service = state.service.clone();
 
     tokio::task::spawn_blocking(move || service.enable_flag(key, body.actor)).await??;
@@ -159,7 +139,7 @@ async fn disable_flag(
     State(state): State<AppState>,
     Path(key): Path<String>,
     Json(body): Json<DisableFlagRequest>,
-) -> Result<StatusCode, ApiError> {
+) -> Result<StatusCode, AppError> {
     let service = state.service.clone();
 
     tokio::task::spawn_blocking(move || service.disable_flag(key, body.actor)).await??;
@@ -176,7 +156,7 @@ async fn archive_flag(
     State(state): State<AppState>,
     Path(key): Path<String>,
     Json(body): Json<ArchiveFlagRequest>,
-) -> Result<StatusCode, ApiError> {
+) -> Result<StatusCode, AppError> {
     let service = state.service.clone();
 
     tokio::task::spawn_blocking(move || service.archive_flag(key, body.actor)).await??;
@@ -221,7 +201,7 @@ impl From<&Flag> for FlagResponse {
 async fn get_flag(
     State(state): State<AppState>,
     Path(key): Path<String>,
-) -> Result<Json<FlagResponse>, ApiError> {
+) -> Result<Json<FlagResponse>, AppError> {
     let service = state.service.clone();
 
     let key_clone = key.clone();
@@ -229,14 +209,14 @@ async fn get_flag(
 
     match flag {
         Some(flag) => Ok(Json(FlagResponse::from(&flag))),
-        None => Err(ApiError::NotFound(key)),
+        None => Err(AppError::FlagNotFound(key)),
     }
 }
 
 async fn list_flags(
     State(state): State<AppState>,
     Query(query): Query<ListFlagsQuery>,
-) -> Result<Json<Vec<FlagResponse>>, ApiError> {
+) -> Result<Json<Vec<FlagResponse>>, AppError> {
     let filter = match query.status {
         StatusQuery::Active => FlagFilter::Active,
         StatusQuery::Archived => FlagFilter::Archived,

@@ -4,20 +4,88 @@
 		"selected_items":
 		[
 			[
-				"ke",
-				"key_clone"
-			],
-			[
-				"Err",
-				"Err()"
-			],
-			[
 				"ok",
-				"ok_or(…)"
+				"ok_or"
+			],
+			[
+				"pa",
+				"parse_var(…)"
 			],
 			[
 				"ma",
-				"map_or(…)"
+				"map_err(…)"
+			],
+			[
+				"un",
+				"unwrap_or_else(…)"
+			],
+			[
+				"FromS",
+				"FromStr(use std::str::FromStr)"
+			],
+			[
+				"Flag",
+				"FlagError"
+			],
+			[
+				"Res",
+				"Result(use crate::errors::Result)"
+			],
+			[
+				"fla",
+				"FlagError"
+			],
+			[
+				"Err",
+				"Error(use std::error::Error)"
+			],
+			[
+				"FlagErr",
+				"FlagError(use crate::errors::FlagError)"
+			],
+			[
+				"error",
+				"errors::(use crate::errors)"
+			],
+			[
+				"result",
+				"Result(use rusqlite::Result)"
+			],
+			[
+				"Fla",
+				"FlagError"
+			],
+			[
+				"err",
+				"errors::(use crate::errors)"
+			],
+			[
+				"Re",
+				"RepoError"
+			],
+			[
+				"re",
+				"RepoError"
+			],
+			[
+				"repo",
+				"RepoError(use crate::repo_error::RepoError)"
+			],
+			[
+				"ser",
+				"ServiceError::Database()"
+			],
+			[
+				"map",
+				"map_err(…)"
+			],
+			[
+				"is",
+				"is_primary_key_violation"
+			],
+			[
+				"ke",
+				"key_clone"
 			],
 			[
 				"Pth",
@@ -26,10 +94,6 @@
 			[
 				"fin",
 				"find_flags"
-			],
-			[
-				"re",
-				"recv"
 			],
 			[
 				"si",
@@ -72,10 +136,6 @@
 				"len()"
 			],
 			[
-				"is",
-				"is_enabled"
-			],
-			[
 				"ca",
 				"with_capacity"
 			],
@@ -100,20 +160,8 @@
 				"EventPayload"
 			],
 			[
-				"fla",
-				"flag_repo::(use crate::flag_repo)"
-			],
-			[
-				"Fla",
-				"FlagArchived"
-			],
-			[
 				"c",
 				"checkout"
-			],
-			[
-				"un",
-				"unwrap()"
 			],
 			[
 				"DomainE",
@@ -174,18 +222,6 @@
 			[
 				"ar",
 				"Archived"
-			],
-			[
-				"err",
-				"Err\tErr(…)"
-			],
-			[
-				"ser",
-				"ServiceError"
-			],
-			[
-				"map",
-				"map_err(…)"
 			],
 			[
 				"con",
@@ -307,18 +343,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "src/service.rs",
-			"settings":
-			{
-				"buffer_size": 15908,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			},
-			"undo_stack":
-			[
-			]
-		}
 	],
 	"build_system": "Packages/Rust/Cargo.sublime-build",
 	"build_system_choices":
@@ -436,7 +460,7 @@
 			],
 			[
 				"Packages/Rust/Cargo.sublime-build",
-				"Test"
+				""
 			]
 		]
 	],
@@ -493,28 +517,30 @@
 	],
 	"file_history":
 	[
+		"/home/ljubchyk/dev/FlagEngine/src/errors.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/config.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/domain.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/flag_repo.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/service.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/db.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/http.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/main.rs",
-		"/home/ljubchyk/dev/FlagEngine/.env",
-		"/home/ljubchyk/dev/FlagEngine/src/audit_repo.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/domain.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/cache.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/outbox_repo.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/worker.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/handlers.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/audit_repo.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/main.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/db.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/repo_error.rs",
+		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libsqlite3-sys-0.38.2/src/error.rs",
+		"/home/ljubchyk/dev/FlagEngine/.env",
+		"/home/ljubchyk/dev/FlagEngine/src/cache.rs",
 		"/home/ljubchyk/dev/FlagEngine/Cargo.toml",
 		"/home/ljubchyk/dev/FlagEngine/Cargo.lock",
 		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-1.53.2/src/macros/select.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/config.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/worker.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/handlers.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/repo.rs",
 		"/home/ljubchyk/Downloads/service.rs",
 		"/home/ljubchyk/Downloads/audit_repo.rs",
 		"/home/ljubchyk/Downloads/flag_repo.rs",
 		"/home/ljubchyk/Downloads/outbox_repo.rs",
-		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libsqlite3-sys-0.38.2/src/error.rs",
 		"/home/ljubchyk/Downloads/Номер.csv",
 		"/home/ljubchyk/dev/FlagEngine/src/shared_repo.rs",
 		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rusqlite-0.40.2/src/types/to_sql.rs",
@@ -558,6 +584,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"NotFound",
+			"repo_error\\:\\:",
+			"is_primary_key_violation",
 			"FlagResponse",
 			"append_stores_all_fields",
 			"tog",
@@ -592,6 +621,7 @@
 		"regex": true,
 		"replace_history":
 		[
+			"",
 			"\\.enable\\(",
 			"",
 			"outbox",
@@ -620,57 +650,6 @@
 		{
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "src/service.rs",
-					"selected": true,
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 15908,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1081,
-								1081
-							]
-						],
-						"settings":
-						{
-							"auto_complete_triggers":
-							[
-								{
-									"characters": "<",
-									"selector": "text.html, text.xml"
-								},
-								{
-									"rhs_empty": true,
-									"selector": "punctuation.accessor"
-								},
-								{
-									"characters": ":.'(",
-									"selector": "meta.tag, source - comment - string.quoted.double.block - string.quoted.single.block - string.unquoted.heredoc",
-									"server": "LSP-rust-analyzer"
-								}
-							],
-							"lsp_active": true,
-							"lsp_uri": "file:///home/ljubchyk/dev/FlagEngine/src/service.rs",
-							"show_definitions": false,
-							"syntax": "Packages/Rust/Rust.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 364.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"stack_multiselect": false,
-					"type": "text"
-				}
 			]
 		}
 	],

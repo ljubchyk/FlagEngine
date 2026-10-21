@@ -1,41 +1,12 @@
 use rusqlite::TransactionBehavior;
 use std::sync::{Arc, mpsc::SyncSender};
-use thiserror::Error;
 
 use crate::cache::FlagCache;
+use crate::errors::AppError;
+use crate::flag_repo;
 use crate::flag_repo::FlagFilter;
 use crate::handlers::notify_sync_subscribers;
 use crate::{db::DbPool, domain::Flag};
-use crate::{domain, flag_repo};
-
-#[derive(Error, Debug)]
-pub enum ServiceError {
-    #[error("Feature flag with key '{0}' was not found")]
-    FlagNotFound(String),
-
-    #[error("Feature flag with key '{0}' already exists (it may be archived)")]
-    DuplicateKey(String),
-
-    #[error("Database operation failed: {0}")]
-    Database(#[from] rusqlite::Error),
-
-    #[error("Failed to acquire connection from pool: {0}")]
-    Pool(#[from] r2d2::Error),
-
-    #[error("{0}")]
-    Domain(#[from] domain::DomainError),
-}
-
-pub type Result<T> = std::result::Result<T, ServiceError>;
-
-fn is_unique_violation(err: &rusqlite::Error) -> bool {
-    match err {
-        rusqlite::Error::SqliteFailure(inner, _) => {
-            inner.code == rusqlite::ErrorCode::ConstraintViolation && inner.extended_code == 1555
-        }
-        _ => false,
-    }
-}
 
 pub struct FlagService {
     pool: DbPool,
@@ -57,19 +28,13 @@ impl FlagService {
         let _ = self.waker.try_send(());
     }
 
-    pub fn create_flag(&self, key: String, actor: String) -> Result<()> {
+    pub fn create_flag(&self, key: String, actor: String) -> Result<(), AppError> {
         let (flag, event) = Flag::create(key.clone(), actor)?;
 
         let mut conn = self.pool.get()?;
         let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
 
-        flag_repo::insert(&tx, &flag).map_err(|err| {
-            if is_unique_violation(&err) {
-                ServiceError::DuplicateKey(key)
-            } else {
-                ServiceError::Database(err)
-            }
-        })?;
+        flag_repo::insert(&tx, &flag)?;
         notify_sync_subscribers(&tx, &event)?;
 
         tx.commit()?;
@@ -77,11 +42,11 @@ impl FlagService {
         Ok(())
     }
 
-    pub fn enable_flag(&self, key: String, actor: String) -> Result<()> {
+    pub fn enable_flag(&self, key: String, actor: String) -> Result<(), AppError> {
         let mut conn = self.pool.get()?;
         let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
 
-        let mut flag = flag_repo::find(&tx, &key)?.ok_or(ServiceError::FlagNotFound(key))?;
+        let mut flag = flag_repo::find(&tx, &key)?.ok_or(AppError::FlagNotFound(key))?;
 
         if let Some(event) = flag.enable(actor)? {
             flag_repo::update(&tx, &flag)?;
@@ -94,11 +59,11 @@ impl FlagService {
         Ok(())
     }
 
-    pub fn disable_flag(&self, key: String, actor: String) -> Result<()> {
+    pub fn disable_flag(&self, key: String, actor: String) -> Result<(), AppError> {
         let mut conn = self.pool.get()?;
         let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
 
-        let mut flag = flag_repo::find(&tx, &key)?.ok_or(ServiceError::FlagNotFound(key))?;
+        let mut flag = flag_repo::find(&tx, &key)?.ok_or(AppError::FlagNotFound(key))?;
 
         if let Some(event) = flag.disable(actor)? {
             flag_repo::update(&tx, &flag)?;
@@ -111,11 +76,11 @@ impl FlagService {
         Ok(())
     }
 
-    pub fn archive_flag(&self, key: String, actor: String) -> Result<()> {
+    pub fn archive_flag(&self, key: String, actor: String) -> Result<(), AppError> {
         let mut conn = self.pool.get()?;
         let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
 
-        let mut flag = flag_repo::find(&tx, &key)?.ok_or(ServiceError::FlagNotFound(key))?;
+        let mut flag = flag_repo::find(&tx, &key)?.ok_or(AppError::FlagNotFound(key))?;
 
         if let Some(event) = flag.archive(actor) {
             flag_repo::update(&tx, &flag)?;
@@ -128,12 +93,12 @@ impl FlagService {
         Ok(())
     }
 
-    pub fn find_flag(&self, key: &str) -> Result<Option<Flag>> {
+    pub fn find_flag(&self, key: &str) -> Result<Option<Flag>, AppError> {
         let conn = self.pool.get()?;
         Ok(flag_repo::find(&conn, key)?)
     }
 
-    pub fn find_flags(&self, filter: FlagFilter) -> Result<Vec<Flag>> {
+    pub fn find_flags(&self, filter: FlagFilter) -> Result<Vec<Flag>, AppError> {
         let conn = self.pool.get()?;
         Ok(flag_repo::find_all(&conn, filter)?)
     }
@@ -142,7 +107,7 @@ impl FlagService {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::domain::{DomainError, DomainEvent};
+    use crate::domain::DomainEvent;
     use crate::{db, handlers, outbox_repo};
     use std::sync::Barrier;
     use std::thread;

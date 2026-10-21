@@ -6,7 +6,7 @@ use rusqlite::{
 };
 
 impl ToSql for DomainEvent {
-    fn to_sql(&self) -> Result<ToSqlOutput<'_>> {
+    fn to_sql(&self) -> rusqlite::Result<ToSqlOutput<'_>> {
         let json =
             serde_json::to_string(self).map_err(|e| Error::ToSqlConversionFailure(Box::new(e)))?;
         Ok(ToSqlOutput::from(json))
@@ -26,7 +26,7 @@ pub enum OutboxStatus {
 }
 
 impl ToSql for OutboxStatus {
-    fn to_sql(&self) -> Result<ToSqlOutput<'_>> {
+    fn to_sql(&self) -> rusqlite::Result<ToSqlOutput<'_>> {
         let raw = match self {
             OutboxStatus::Completed => "Completed",
             OutboxStatus::Failed => "Failed",
@@ -65,15 +65,9 @@ pub fn mark_batch(tx: &Transaction, seqs: &[i64], status: OutboxStatus) -> Resul
         return Ok(());
     }
 
-    let mut stmt =
-        tx.prepare_cached("UPDATE outbox SET status = ?2 WHERE seq = ?1 AND status = 'Pending'")?;
-    let mut changed = 0;
+    let mut stmt = tx.prepare_cached("UPDATE outbox SET status = ?2 WHERE seq = ?1")?;
     for seq in seqs {
-        changed += stmt.execute(params![seq, status])?;
-    }
-
-    if changed != seqs.len() {
-        return Err(rusqlite::Error::StatementChangedRows(changed));
+        stmt.execute(params![seq, status])?;
     }
 
     Ok(())

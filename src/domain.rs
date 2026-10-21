@@ -1,13 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::time::{SystemTime, UNIX_EPOCH};
 
-#[derive(Debug, PartialEq, thiserror::Error)]
-pub enum DomainError {
-    #[error("key")]
-    InvalidKey(&'static str),
-    #[error("flag is archived")]
-    Archived,
-}
+use crate::errors::AppError;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type")]
@@ -33,9 +27,9 @@ fn now_ms() -> i64 {
         .as_millis() as i64
 }
 
-fn validate_key(raw: &str) -> Result<(), DomainError> {
+fn validate_key(raw: &str) -> Result<(), AppError> {
     if raw.is_empty() || raw.len() > 64 {
-        return Err(DomainError::InvalidKey("must be 1-64 characters"));
+        return Err(AppError::InvalidKey("must be 1-64 characters"));
     }
 
     let alnum = |c: char| c.is_ascii_lowercase() || c.is_ascii_digit();
@@ -43,12 +37,12 @@ fn validate_key(raw: &str) -> Result<(), DomainError> {
         .chars()
         .all(|c| alnum(c) || matches!(c, '.' | '_' | '-'))
     {
-        return Err(DomainError::InvalidKey(
+        return Err(AppError::InvalidKey(
             "only a-z, 0-9, '.', '_' and '-' are allowed",
         ));
     }
     if !raw.starts_with(alnum) || !raw.ends_with(alnum) {
-        return Err(DomainError::InvalidKey(
+        return Err(AppError::InvalidKey(
             "must start and end with a letter or digit",
         ));
     }
@@ -65,7 +59,7 @@ pub struct Flag {
 }
 
 impl Flag {
-    pub fn create(key: String, actor: String) -> Result<(Self, DomainEvent), DomainError> {
+    pub fn create(key: String, actor: String) -> Result<(Self, DomainEvent), AppError> {
         validate_key(&key)?;
 
         let flag = Self {
@@ -85,9 +79,9 @@ impl Flag {
         Ok((flag, event))
     }
 
-    pub fn enable(&mut self, actor: String) -> Result<Option<DomainEvent>, DomainError> {
+    pub fn enable(&mut self, actor: String) -> Result<Option<DomainEvent>, AppError> {
         if self.is_archived {
-            return Err(DomainError::Archived);
+            return Err(AppError::Archived);
         }
 
         if self.is_enabled {
@@ -102,9 +96,9 @@ impl Flag {
         Ok(Some(event))
     }
 
-    pub fn disable(&mut self, actor: String) -> Result<Option<DomainEvent>, DomainError> {
+    pub fn disable(&mut self, actor: String) -> Result<Option<DomainEvent>, AppError> {
         if self.is_archived {
-            return Err(DomainError::Archived);
+            return Err(AppError::Archived);
         }
 
         if !self.is_enabled {
