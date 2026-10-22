@@ -11,7 +11,7 @@ use std::{sync::Arc, time::Duration};
 use subtle::ConstantTimeEq;
 use tower_http::timeout::TimeoutLayer;
 
-use crate::{domain::Flag, errors::AppError, flag_repo::FlagFilter, service::FlagService};
+use crate::{app_error::AppError, domain::Flag, flag_repo::FlagFilter, service::FlagService};
 
 #[derive(Serialize)]
 struct ErrorBody {

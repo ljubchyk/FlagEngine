@@ -1,8 +1,7 @@
 use rusqlite::TransactionBehavior;
-use std::sync::{Arc, mpsc::SyncSender};
+use std::sync::mpsc::SyncSender;
 
-use crate::cache::FlagCache;
-use crate::errors::AppError;
+use crate::app_error::AppError;
 use crate::flag_repo;
 use crate::flag_repo::FlagFilter;
 use crate::handlers::notify_sync_subscribers;
@@ -10,17 +9,12 @@ use crate::{db::DbPool, domain::Flag};
 
 pub struct FlagService {
     pool: DbPool,
-    cache: Arc<FlagCache>,
     waker: SyncSender<()>,
 }
 
 impl FlagService {
-    pub fn new(pool: DbPool, cache: Arc<FlagCache>, waker: SyncSender<()>) -> Self {
-        Self { pool, cache, waker }
-    }
-
-    pub fn is_enabled(&self, key: &str) -> bool {
-        self.cache.is_enabled(key)
+    pub fn new(pool: DbPool, waker: SyncSender<()>) -> Self {
+        Self { pool, waker }
     }
 
     fn wake_worker(&self) {

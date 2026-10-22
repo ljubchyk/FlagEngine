@@ -14,10 +14,10 @@ impl FlagCache {
         }
     }
 
-    pub fn is_enabled(&self, key: &str) -> bool {
-        let guard = self.flags.load();
-        guard.get(key).copied().unwrap_or(false)
-    }
+    // pub fn is_enabled(&self, key: &str) -> bool {
+    //     let guard = self.flags.load();
+    //     guard.get(key).copied().unwrap_or(false)
+    // }
 
     pub fn apply(&self, events: &[DomainEvent]) {
         if events.is_empty() {

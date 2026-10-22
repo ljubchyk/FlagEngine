@@ -1,4 +1,4 @@
-use crate::{domain::Flag, errors::AppError};
+use crate::{app_error::AppError, domain::Flag};
 use rusqlite::{
     Connection, Error::SqliteFailure, OptionalExtension, Result, Row, Transaction, params,
 };
@@ -39,7 +39,8 @@ pub fn insert(tx: &Transaction, flag: &Flag) -> Result<(), AppError> {
         }
 
         AppError::Database(err)
-    });
+    })?;
+
     Ok(())
 }
 
@@ -53,6 +54,7 @@ pub fn update(tx: &Transaction, flag: &Flag) -> Result<()> {
             flag.updated_at()
         ],
     )?;
+
     Ok(())
 }
 

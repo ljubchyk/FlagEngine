@@ -1,9 +1,9 @@
+mod app_error;
 mod audit_repo;
 mod cache;
 mod config;
 mod db;
 mod domain;
-mod errors;
 mod flag_repo;
 mod handlers;
 mod http;
@@ -48,16 +48,11 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let (waker, wake_rx) = std::sync::mpsc::sync_channel::<()>(1);
 
-    worker::spawn_outbox_worker(
-        &config.db_path,
-        config.poll_interval,
-        cache.clone(),
-        wake_rx,
-    )?;
+    worker::spawn_outbox_worker(&config.db_path, config.poll_interval, cache, wake_rx)?;
 
     let pool = db::create_pool(&config.db_path)?;
     let state = AppState {
-        service: Arc::new(FlagService::new(pool, cache, waker)),
+        service: Arc::new(FlagService::new(pool, waker)),
         admin_key: Arc::from(config.admin_key),
     };
 

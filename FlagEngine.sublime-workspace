@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"con",
+				"CONFLICT = StatusCode(NonZero(NonZeroU16Inner(<pat>)))"
+			],
+			[
 				"ok",
 				"ok_or"
 			],
@@ -224,10 +228,6 @@
 				"Archived"
 			],
 			[
-				"con",
-				"ConstraintViolation"
-			],
-			[
 				"rus",
 				"rusqlite::Error::SqliteFailure()"
 			],
@@ -343,6 +343,286 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "src/http.rs",
+			"settings":
+			{
+				"buffer_size": 6063,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+				[
+					6,
+					1,
+					"left_delete",
+					null,
+					"AQAAAMkBAAAAAAAAyQEAAAAAAAAjAQAALy8gI1tkZXJpdmUoRGVidWcsIHRoaXNlcnJvcjo6RXJyb3IpXQovLyBwdWIgZW51bSBBcGlFcnJvciB7Ci8vICAgICAjW2Vycm9yKHRyYW5zcGFyZW50KV0KLy8gICAgIFNlcnZpY2UoI1tmcm9tXSBTZXJ2aWNlRXJyb3IpLAoKLy8gICAgICNbZXJyb3IoImJsb2NraW5nIHRhc2sgZmFpbGVkOiB7MH0iKV0KLy8gICAgIEpvaW4oI1tmcm9tXSB0b2tpbzo6dGFzazo6Sm9pbkVycm9yKSwKCi8vICAgICAjW2Vycm9yKCJmbGFnICd7MH0nIG5vdCBmb3VuZCIpXQovLyAgICAgTm90Rm91bmQoU3RyaW5nKSwKLy8gfQoK",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAADJAQAAAAAAAOwCAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					14,
+					1,
+					"insert",
+					{
+						"characters": ","
+					},
+					"AQAAAP4LAAAAAAAA/wsAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAD+CwAAAAAAAP4LAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					15,
+					1,
+					"insert",
+					{
+						"characters": " App"
+					},
+					"BAAAAP8LAAAAAAAAAAwAAAAAAAAAAAAAAAwAAAAAAAABDAAAAAAAAAAAAAABDAAAAAAAAAIMAAAAAAAAAAAAAAIMAAAAAAAAAwwAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAD/CwAAAAAAAP8LAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					16,
+					1,
+					"insert_completion",
+					{
+						"completion": "lsp_select_completion {\"index\":7,\"session_name\":\"LSP-rust-analyzer\"}",
+						"format": "command",
+						"keep_prefix": true,
+						"must_insert": false,
+						"query_change_id":
+						[
+							8,
+							15,
+							4
+						],
+						"trigger": "AppError"
+					},
+					"AgAAAAAMAAAAAAAAAAwAAAAAAAADAAAAQXBwAAwAAAAAAAAIDAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAADDAAAAAAAAAMMAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					28,
+					1,
+					"left_delete",
+					null,
+					"AQAAAJMNAAAAAAAAkw0AAAAAAAABAAAAaQ",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACUDQAAAAAAAJQNAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					29,
+					1,
+					"insert",
+					{
+						"characters": "p"
+					},
+					"AQAAAJMNAAAAAAAAlA0AAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACTDQAAAAAAAJMNAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					35,
+					1,
+					"left_delete",
+					null,
+					"AQAAAF4UAAAAAAAAXhQAAAAAAAABAAAAaQ",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABfFAAAAAAAAF8UAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					36,
+					1,
+					"insert",
+					{
+						"characters": "p"
+					},
+					"AQAAAF4UAAAAAAAAXxQAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABeFAAAAAAAAF4UAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					40,
+					1,
+					"left_delete",
+					null,
+					"AQAAAHEVAAAAAAAAcRUAAAAAAAABAAAAaQ",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAByFQAAAAAAAHIVAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					41,
+					1,
+					"insert",
+					{
+						"characters": "p"
+					},
+					"AQAAAHEVAAAAAAAAchUAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABxFQAAAAAAAHEVAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					43,
+					1,
+					"insert",
+					{
+						"characters": "F"
+					},
+					"AQAAAHkVAAAAAAAAehUAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB5FQAAAAAAAHkVAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					44,
+					1,
+					"insert_completion",
+					{
+						"completion": "lsp_select_completion {\"index\":3,\"session_name\":\"LSP-rust-analyzer\"}",
+						"format": "command",
+						"keep_prefix": true,
+						"must_insert": false,
+						"query_change_id":
+						[
+							31,
+							43,
+							1
+						],
+						"trigger": "FlagNotFound"
+					},
+					"AgAAAHkVAAAAAAAAeRUAAAAAAAABAAAARnkVAAAAAAAAhRUAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAB6FQAAAAAAAHoVAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					46,
+					1,
+					"left_delete",
+					null,
+					"AQAAAIUVAAAAAAAAhRUAAAAAAAAIAAAATm90Rm91bmQ",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACFFQAAAAAAAI0VAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					49,
+					1,
+					"left_delete",
+					null,
+					"AQAAAB4WAAAAAAAAHhYAAAAAAAABAAAAaQ",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAfFgAAAAAAAB8WAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					50,
+					1,
+					"insert",
+					{
+						"characters": "p"
+					},
+					"AQAAAB4WAAAAAAAAHxYAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAeFgAAAAAAAB4WAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					80,
+					1,
+					"insert",
+					{
+						"characters": "\n"
+					},
+					"AQAAALMCAAAAAAAAwAIAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACzAgAAAAAAALMCAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					81,
+					1,
+					"paste",
+					null,
+					"AQAAAMACAAAAAAAA8wIAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAADAAgAAAAAAAMACAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					85,
+					1,
+					"insert",
+					{
+						"characters": "Ar"
+					},
+					"AgAAAMoCAAAAAAAAywIAAAAAAAAKAAAASW52YWxpZEtlecsCAAAAAAAAzAIAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAADUAgAAAAAAAMoCAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					86,
+					1,
+					"insert_completion",
+					{
+						"completion": "lsp_select_completion {\"index\":5,\"session_name\":\"LSP-rust-analyzer\"}",
+						"format": "command",
+						"keep_prefix": true,
+						"must_insert": false,
+						"query_change_id":
+						[
+							56,
+							85,
+							2
+						],
+						"trigger": "Archived"
+					},
+					"AgAAAMoCAAAAAAAAygIAAAAAAAACAAAAQXLKAgAAAAAAANICAAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAADMAgAAAAAAAMwCAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					110,
+					2,
+					"left_delete",
+					null,
+					"AgAAALQCAAAAAAAAtAIAAAAAAAA9AAAAICAgICAgICAgICAgQXBwRXJyb3I6OkFyY2hpdmVkKF8pID0+IFN0YXR1c0NvZGU6OkJBRF9SRVFVRVNULLMCAAAAAAAAswIAAAAAAAABAAAACg",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAADxAgAAAAAAALQCAAAAAAAAAAAAAAAA8L8"
+				]
+			]
+		},
+		{
+			"file": "src/flag_repo.rs",
+			"settings":
+			{
+				"buffer_size": 10118,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+				[
+					8,
+					1,
+					"insert",
+					{
+						"characters": "?"
+					},
+					"AQAAAPoDAAAAAAAA+wMAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA+gMAAAAAAAD6AwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					11,
+					1,
+					"insert",
+					{
+						"characters": "\n"
+					},
+					"AQAAAPwDAAAAAAAAAQQAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA/AMAAAAAAAD8AwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					15,
+					1,
+					"insert",
+					{
+						"characters": "\n"
+					},
+					"AgAAAFMFAAAAAAAAWAUAAAAAAAAAAAAA/QMAAAAAAAD9AwAAAAAAAAQAAAAgICAg",
+					"AQAAAAAAAAABAAAAUwUAAAAAAABTBQAAAAAAAAAAAAAAAPC/"
+				]
+			]
+		},
+		{
+			"file": "src/service.rs",
+			"settings":
+			{
+				"buffer_size": 14935,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+			]
+		}
 	],
 	"build_system": "Packages/Rust/Cargo.sublime-build",
 	"build_system_choices":
@@ -396,7 +676,7 @@
 			],
 			[
 				"Packages/Rust/Cargo.sublime-build",
-				"Test"
+				""
 			]
 		],
 		[
@@ -517,17 +797,19 @@
 	],
 	"file_history":
 	[
+		"/home/ljubchyk/dev/FlagEngine/src/service.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/errors.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/config.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/outbox_repo.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/main.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/domain.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/flag_repo.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/service.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/http.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/outbox_repo.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/worker.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/handlers.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/http.rs",
+		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rusqlite-0.40.2/src/lib.rs",
+		"/home/ljubchyk/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/result.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/config.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/worker.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/audit_repo.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/main.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/db.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/repo_error.rs",
 		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libsqlite3-sys-0.38.2/src/error.rs",
@@ -551,9 +833,7 @@
 		"/home/ljubchyk/dev/FlagEngine/.gitignore",
 		"/home/ljubchyk/dev/hello.py",
 		"/home/ljubchyk/dev/r/src/main.rs",
-		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rusqlite-0.40.2/src/lib.rs",
 		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rusqlite-0.40.2/src/transaction.rs",
-		"/home/ljubchyk/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/result.rs",
 		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rusqlite-0.40.2/src/statement.rs",
 		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.26.0/src/timestamp.rs",
 		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.26.0/src/v7.rs",
@@ -584,6 +864,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"AppError::NotFound",
 			"NotFound",
 			"repo_error\\:\\:",
 			"is_primary_key_violation",
@@ -621,6 +902,7 @@
 		"regex": true,
 		"replace_history":
 		[
+			"AppError::FlagNotFound",
 			"",
 			"\\.enable\\(",
 			"",
@@ -650,6 +932,157 @@
 		{
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "src/http.rs",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6063,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5096,
+								5096
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html, text.xml"
+								},
+								{
+									"rhs_empty": true,
+									"selector": "punctuation.accessor"
+								},
+								{
+									"characters": ":.'(",
+									"selector": "meta.tag, source - comment - string.quoted.double.block - string.quoted.single.block - string.unquoted.heredoc",
+									"server": "LSP-rust-analyzer"
+								}
+							],
+							"lsp_active": true,
+							"lsp_uri": "file:///home/ljubchyk/dev/FlagEngine/src/http.rs",
+							"show_definitions": false,
+							"syntax": "Packages/Rust/Rust.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 749.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/flag_repo.rs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10118,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1364,
+								1364
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html, text.xml"
+								},
+								{
+									"rhs_empty": true,
+									"selector": "punctuation.accessor"
+								},
+								{
+									"characters": ":.'(",
+									"selector": "meta.tag, source - comment - string.quoted.double.block - string.quoted.single.block - string.unquoted.heredoc",
+									"server": "LSP-rust-analyzer"
+								}
+							],
+							"lsp_active": true,
+							"lsp_uri": "file:///home/ljubchyk/dev/FlagEngine/src/flag_repo.rs",
+							"show_definitions": false,
+							"syntax": "Packages/Rust/Rust.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 606.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/service.rs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 14935,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1083,
+								1083
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html, text.xml"
+								},
+								{
+									"rhs_empty": true,
+									"selector": "punctuation.accessor"
+								},
+								{
+									"characters": ":.'(",
+									"selector": "meta.tag, source - comment - string.quoted.double.block - string.quoted.single.block - string.unquoted.heredoc",
+									"server": "LSP-rust-analyzer"
+								}
+							],
+							"lsp_active": true,
+							"lsp_uri": "file:///home/ljubchyk/dev/FlagEngine/src/service.rs",
+							"show_definitions": false,
+							"syntax": "Packages/Rust/Rust.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 174.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"stack_multiselect": false,
+					"type": "text"
+				}
 			]
 		}
 	],
