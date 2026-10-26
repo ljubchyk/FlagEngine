@@ -23,7 +23,7 @@ impl FlagService {
     }
 
     pub fn create_flag(&self, key: String, actor: String) -> Result<(), AppError> {
-        let (flag, event) = Flag::create(key.clone(), actor)?;
+        let (flag, event) = Flag::create(key, actor)?;
 
         let mut conn = self.pool.get()?;
         let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;

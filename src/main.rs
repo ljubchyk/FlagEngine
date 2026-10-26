@@ -17,20 +17,6 @@ use tokio::signal::unix::{SignalKind, signal};
 
 use crate::{cache::FlagCache, flag_repo::FlagFilter, http::AppState, service::FlagService};
 
-// #[derive(Debug, thiserror::Error)]
-// enum StartupError {
-//     #[error("configuration error: {0}")]
-//     Config(#[from] config::ConfigError),
-//     #[error("repository error: {0}")]
-//     Repo(#[from] repo_error::RepoError),
-//     #[error("database error: {0}")]
-//     Db(#[from] rusqlite::Error),
-//     #[error("connection pool error: {0}")]
-//     Pool(#[from] r2d2::Error),
-//     #[error("I/O error: {0}")]
-//     Io(#[from] std::io::Error),
-// }
-
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     let config = config::Config::from_env()?;

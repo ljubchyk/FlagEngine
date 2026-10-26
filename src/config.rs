@@ -24,7 +24,7 @@ where
 impl Config {
     pub fn from_env() -> Result<Self, String> {
         let admin_key = var("FLAGENGINE_ADMIN_KEY").ok_or("FLAGENGINE_ADMIN_KEY is required")?;
-        let db_path = var("FLAGENGINE_DB_PATH").ok_or("db.sqlite")?;
+        let db_path = var("FLAGENGINE_DB_PATH").unwrap_or("db.sqlite".to_owned());
         let addr = parse_var::<SocketAddr>("FLAGENGINE_ADDR", "127.0.0.1:3000")?;
         let poll_ms = parse_var::<u64>("FLAGENGINE_POLL_INTERVAL_MS", "5000")?;
 
