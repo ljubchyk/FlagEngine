@@ -11,7 +11,7 @@ use std::{sync::Arc, time::Duration};
 use subtle::ConstantTimeEq;
 use tower_http::timeout::TimeoutLayer;
 
-use crate::{app_error::AppError, domain::Flag, flag_repo::FlagFilter, service::FlagService};
+use crate::{admin, app_error::AppError, domain::Flag, flag_repo::FlagFilter, service::FlagService};
 
 #[derive(Serialize)]
 struct ErrorBody {
@@ -28,6 +28,7 @@ impl IntoResponse for AppError {
             AppError::Database(_) => StatusCode::INTERNAL_SERVER_ERROR,
             AppError::Pool(_) => StatusCode::INTERNAL_SERVER_ERROR,
             AppError::Join(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            AppError::Render(_) => StatusCode::INTERNAL_SERVER_ERROR,
         };
 
         // Внутрішні помилки клієнту не показуємо, лише пишемо в stderr.
@@ -63,6 +64,7 @@ pub fn router(state: AppState) -> Router {
     Router::new()
         .route("/health", get(health))
         .merge(protected)
+        .merge(admin::router())
         .layer(DefaultBodyLimit::max(16 * 1024))
         .layer(TimeoutLayer::with_status_code(
             StatusCode::REQUEST_TIMEOUT,
@@ -168,21 +170,6 @@ async fn archive_flag(
     Ok(StatusCode::NO_CONTENT)
 }
 
-#[derive(Deserialize, Default, Clone, Copy)]
-#[serde(rename_all = "lowercase")]
-enum StatusQuery {
-    #[default]
-    Active,
-    Archived,
-    All,
-}
-
-#[derive(Deserialize)]
-struct ListFlagsQuery {
-    #[serde(default)]
-    status: StatusQuery,
-}
-
 #[derive(Serialize)]
 struct FlagResponse {
     key: String,
@@ -217,18 +204,50 @@ async fn get_flag(
     }
 }
 
+#[derive(Deserialize, Default, Clone, Copy)]
+#[serde(rename_all = "lowercase")]
+pub(crate) enum StatusQuery {
+    #[default]
+    Active,
+    Archived,
+    All,
+}
+
+impl StatusQuery {
+    pub(crate) fn as_str(self) -> &'static str {
+        match self {
+            Self::Active => "active",
+            Self::Archived => "archived",
+            Self::All => "all",
+        }
+    }
+}
+
+#[derive(Deserialize)]
+pub(crate) struct ListFlagsQuery {
+    #[serde(default)]
+    pub(crate) status: StatusQuery,
+}
+
+impl From<StatusQuery> for FlagFilter {
+    fn from(value: StatusQuery) -> Self {
+        match value {
+            StatusQuery::Active => FlagFilter::Active,
+            StatusQuery::Archived => FlagFilter::Archived,
+            StatusQuery::All => FlagFilter::All,
+        }
+    }
+}
+
 async fn list_flags(
     State(state): State<AppState>,
     Query(query): Query<ListFlagsQuery>,
 ) -> Result<Json<Vec<FlagResponse>>, AppError> {
-    let filter = match query.status {
-        StatusQuery::Active => FlagFilter::Active,
-        StatusQuery::Archived => FlagFilter::Archived,
-        StatusQuery::All => FlagFilter::All,
-    };
+    let filter = FlagFilter::from(query.status);
     let service = state.service.clone();
 
     let flags = tokio::task::spawn_blocking(move || service.find_flags(filter)).await??;
 
     Ok(Json(flags.iter().map(FlagResponse::from).collect()))
 }
+

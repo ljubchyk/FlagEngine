@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>FlagEngine</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 52rem; margin: 2rem auto; padding: 0 1rem; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: .5rem; border-bottom: 1px solid #ddd; }
+  .on { color: #1a7f37; } .off { color: #666; } .archived { opacity: .5; }
+  nav a { margin-right: 1rem; } nav a.current { font-weight: bold; }
+</style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>⚑</text></svg>">
+</head>
+<body>
+<h1>FlagEngine</h1>
+<nav>
+  <a href="/admin?status=active"<% if self.status == "active" { %> class="current"<% } %>>Активні</a>
+  <a href="/admin?status=archived"<% if self.status == "archived" { %> class="current"<% } %>>Архівні</a>
+  <a href="/admin?status=all"<% if self.status == "all" { %> class="current"<% } %>>Усі</a>
+</nav>
+<% if self.flags.is_empty() { %>
+  <p>Флагів немає.</p>
+<% } else { %>
+  <table>
+    <tr><th>Ключ</th><th>Стан</th><th>Оновлено (unix ms)</th></tr>
+    <% for flag in &self.flags { %>
+      <tr<% if flag.is_archived() { %> class="archived"<% } %>>
+        <td><%= flag.key() %></td>
+        <td><% if flag.is_enabled() { %><span class="on">увімкнено</span><% } else { %><span class="off">вимкнено</span><% } %></td>
+        <td><%= flag.updated_at() %></td>
+      </tr>
+    <% } %>
+  </table>
+<% } %>
+</body>
+</html>

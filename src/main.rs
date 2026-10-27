@@ -10,6 +10,7 @@ mod http;
 mod outbox_repo;
 mod service;
 mod worker;
+mod admin;
 
 use std::{error::Error, sync::Arc};
 
@@ -19,6 +20,8 @@ use crate::{cache::FlagCache, flag_repo::FlagFilter, http::AppState, service::Fl
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    dotenv::dotenv().ok();
+    
     let config = config::Config::from_env()?;
 
     let conn = db::init(&config.db_path)?;

@@ -4,12 +4,28 @@
 		"selected_items":
 		[
 			[
-				"con",
-				"CONFLICT = StatusCode(NonZero(NonZeroU16Inner(<pat>)))"
+				"un",
+				"unwrap_or"
 			],
 			[
 				"ok",
-				"ok_or"
+				"ok_or(…)"
+			],
+			[
+				"ca",
+				"canonical_reason()"
+			],
+			[
+				"no",
+				"NOT_FOUND = StatusCode(NonZero(NonZeroU16Inner(<pat>)))"
+			],
+			[
+				"Stat",
+				"StatusCode"
+			],
+			[
+				"con",
+				"CONFLICT = StatusCode(NonZero(NonZeroU16Inner(<pat>)))"
 			],
 			[
 				"pa",
@@ -18,10 +34,6 @@
 			[
 				"ma",
 				"map_err(…)"
-			],
-			[
-				"un",
-				"unwrap_or_else(…)"
 			],
 			[
 				"FromS",
@@ -138,10 +150,6 @@
 			[
 				"le",
 				"len()"
-			],
-			[
-				"ca",
-				"with_capacity"
 			],
 			[
 				"fa",
@@ -343,6 +351,14 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "src/config.rs",
+			"settings":
+			{
+				"buffer_size": 1136,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "Packages/Rust/Cargo.sublime-build",
 	"build_system_choices":
@@ -460,7 +476,7 @@
 			],
 			[
 				"Packages/Rust/Cargo.sublime-build",
-				""
+				"Test"
 			]
 		]
 	],
@@ -517,18 +533,18 @@
 	],
 	"file_history":
 	[
+		"/home/ljubchyk/dev/FlagEngine/src/config.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/service.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/http.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/main.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/domain.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/flag_repo.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/http.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/service.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/cache.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/errors.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/outbox_repo.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/handlers.rs",
 		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rusqlite-0.40.2/src/lib.rs",
 		"/home/ljubchyk/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/result.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/config.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/worker.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/audit_repo.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/db.rs",
@@ -654,6 +670,57 @@
 		{
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "src/config.rs",
+					"selected": true,
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 1136,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html, text.xml"
+								},
+								{
+									"rhs_empty": true,
+									"selector": "punctuation.accessor"
+								},
+								{
+									"characters": ":.'(",
+									"selector": "meta.tag, source - comment - string.quoted.double.block - string.quoted.single.block - string.unquoted.heredoc",
+									"server": "LSP-rust-analyzer"
+								}
+							],
+							"lsp_active": true,
+							"lsp_uri": "file:///home/ljubchyk/dev/FlagEngine/src/config.rs",
+							"show_definitions": false,
+							"syntax": "Packages/Rust/Rust.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				}
 			]
 		}
 	],

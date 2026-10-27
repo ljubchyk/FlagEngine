@@ -22,4 +22,7 @@ pub enum AppError {
 
     #[error("blocking task failed: {0}")]
     Join(#[from] tokio::task::JoinError),
+
+    #[error("")]
+    Render(#[from] sailfish::RenderError)
 }
