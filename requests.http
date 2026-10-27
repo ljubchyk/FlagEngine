@@ -1,0 +1,40 @@
+@baseUrl = http://127.0.0.1:3000
+
+POST {{baseUrl}}/flags
+Authorization: Bearer {{$dotenv FLAGENGINE_ADMIN_KEY}}
+Content-Type: application/json
+
+{"key": "checkout13", "actor": "me"}
+
+###
+POST {{baseUrl}}/flags
+Authorization: Bearer {{$dotenv FLAGENGINE_ADMIN_KEY}}
+Content-Type: application/json
+
+{"key": "checkout11", "actor": "me"}
+
+###
+POST {{baseUrl}}/flags
+Authorization: Bearer {{$dotenv FLAGENGINE_ADMIN_KEY}}
+Content-Type: application/json
+
+{"key": "checkout12", "actor": "me"}
+
+###
+POST {{baseUrl}}/admin/flags
+Authorization: Bearer {{$dotenv FLAGENGINE_ADMIN_KEY}}
+Content-Type: application/x-www-form-urlencoded
+
+key=checkout14
+
+###
+POST {{baseUrl}}/admin/flags/checkout/enable
+Authorization: Bearer {{$dotenv FLAGENGINE_ADMIN_KEY}}
+
+###
+POST {{baseUrl}}/admin/flags/checkout/disable
+Authorization: Bearer {{$dotenv FLAGENGINE_ADMIN_KEY}}
+
+###
+POST {{baseUrl}}/admin/flags/checkout/archive
+Authorization: Bearer {{$dotenv FLAGENGINE_ADMIN_KEY}}

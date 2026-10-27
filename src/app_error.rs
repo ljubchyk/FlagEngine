@@ -24,5 +24,5 @@ pub enum AppError {
     Join(#[from] tokio::task::JoinError),
 
     #[error("")]
-    Render(#[from] sailfish::RenderError)
+    Render(#[from] sailfish::RenderError),
 }

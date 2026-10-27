@@ -11,7 +11,9 @@ use std::{sync::Arc, time::Duration};
 use subtle::ConstantTimeEq;
 use tower_http::timeout::TimeoutLayer;
 
-use crate::{admin, app_error::AppError, domain::Flag, flag_repo::FlagFilter, service::FlagService};
+use crate::{
+    admin, app_error::AppError, domain::Flag, flag_repo::FlagFilter, service::FlagService,
+};
 
 #[derive(Serialize)]
 struct ErrorBody {
@@ -20,7 +22,7 @@ struct ErrorBody {
 
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
-        let status = match &self{
+        let status = match &self {
             AppError::InvalidKey(_) => StatusCode::BAD_REQUEST,
             AppError::Archived => StatusCode::CONFLICT,
             AppError::DuplicateKey(_) => StatusCode::CONFLICT,
@@ -34,7 +36,10 @@ impl IntoResponse for AppError {
         // Внутрішні помилки клієнту не показуємо, лише пишемо в stderr.
         let message = if status == StatusCode::INTERNAL_SERVER_ERROR {
             eprintln!("[http] internal error: {self}");
-            status.canonical_reason().unwrap_or("internal server error").to_owned()
+            status
+                .canonical_reason()
+                .unwrap_or("internal server error")
+                .to_owned()
         } else {
             self.to_string()
         };
@@ -250,4 +255,3 @@ async fn list_flags(
 
     Ok(Json(flags.iter().map(FlagResponse::from).collect()))
 }
-
