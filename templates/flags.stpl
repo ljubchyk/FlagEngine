@@ -16,16 +16,17 @@
 <body>
 <h1>FlagEngine</h1>
 
-<nav>
-  <a href="/admin?status=active"<% if self.status == "active" { %> class="current"<% } %>>Активні</a>
-  <a href="/admin?status=archived"<% if self.status == "archived" { %> class="current"<% } %>>Архівні</a>
-  <a href="/admin?status=all"<% if self.status == "all" { %> class="current"<% } %>>Усі</a>
-</nav>
 
 <form method="post" action="/admin/flags">
   <input name="key" placeholder="new-flag-key" required maxlength="64" autofocus>
   <button>Створити</button>
 </form>
+
+<nav>
+  <a href="/admin?status=active"<% if self.status == "active" { %> class="current"<% } %>>Активні</a>
+  <a href="/admin?status=archived"<% if self.status == "archived" { %> class="current"<% } %>>Архівні</a>
+  <a href="/admin?status=all"<% if self.status == "all" { %> class="current"<% } %>>Усі</a>
+</nav>
 
 <% if self.flags.is_empty() { %>
   <p>Флагів немає.</p>
@@ -33,18 +34,18 @@
   <table>
     <tr><th>Ключ</th><th>Стан</th><th>Оновлено (unix ms)</th><th></th></tr>
     <% for flag in &self.flags { %>
-      <tr<% if flag.is_archived() { %> class="archived"<% } %>>
-        <td><%= flag.key() %></td>
-        <td><% if flag.is_enabled() { %><span class="on">увімкнено</span><% } else { %><span class="off">вимкнено</span><% } %></td>
-        <td><%= flag.updated_at() %></td>
+      <tr <% if flag.archived { %> class="archived"<% } %>>
+        <td><%= flag.key %></td>
+        <td><% if flag.enabled { %><span class="on">увімкнено</span><% } else { %><span class="off">вимкнено</span><% } %></td>
+        <td><%= flag.updated_at %></td>
         <td>
-          <% if !flag.is_archived() { %>
-            <% if flag.is_enabled() { %>
-              <form method="post" action="/admin/flags/<%= flag.key() %>/disable"><button>Вимкнути</button></form>
+          <% if !flag.archived { %>
+            <% if flag.enabled { %>
+              <form method="post" action="/admin/flags/<%= flag.key %>/disable"><button>Вимкнути</button></form>
             <% } else { %>
-              <form method="post" action="/admin/flags/<%= flag.key() %>/enable"><button>Увімкнути</button></form>
+              <form method="post" action="/admin/flags/<%= flag.key %>/enable"><button>Увімкнути</button></form>
             <% } %>
-            <form method="post" action="/admin/flags/<%= flag.key() %>/archive"><button>Архівувати</button></form>
+            <form method="post" action="/admin/flags/<%= flag.key %>/archive"><button>Архівувати</button></form>
           <% } %>
         </td>
       </tr>

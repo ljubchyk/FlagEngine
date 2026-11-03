@@ -1,6 +1,7 @@
 use axum::{
     Form, Router, extract::{Path, Query, State}, response::{Html, Redirect}, routing::{get, post},
 };
+use time::OffsetDateTime;
 use sailfish::Template;
 use serde::Deserialize;
 
@@ -20,11 +21,42 @@ pub fn router() -> Router<AppState> {
         .route("/admin/flags/{key}/archive", post(archive_flag))
 }
 
+struct FlagView {
+    key: String,
+    enabled: bool,
+    archived: bool,
+    updated_at: String,
+}
+
+impl From<&Flag> for FlagView {
+    fn from(flag: &Flag) -> Self {
+        let updated_at = match OffsetDateTime::from_unix_timestamp_nanos(i128::from(flag.updated_at()) * 1_000_000) {
+            Ok(dt) => format!(
+                "{:04}-{:02}-{:02} {:02}:{:02}:{:02}UTC",
+                dt.year(),
+                u8::from(dt.month()),
+                dt.day(),
+                dt.hour(),
+                dt.minute(),
+                dt.second(),
+            ),
+            Err(_) => flag.updated_at().to_string(),
+        };
+
+        Self {
+            key: flag.key().to_owned(),
+            enabled: flag.is_enabled(),
+            archived: flag.is_archived(),
+            updated_at: updated_at,
+        }
+    }
+}
+
 #[derive(Template)]
 #[template(path = "flags.stpl")]
-struct FlagsPage {
+struct FlagsView {
     status: &'static str,
-    flags: Vec<Flag>,
+    flags: Vec<FlagView>,
 }
 
 async fn flags_page(
@@ -36,9 +68,9 @@ async fn flags_page(
 
     let flags = tokio::task::spawn_blocking(move || service.find_flags(filter)).await??;
 
-    let page = FlagsPage {
+    let page = FlagsView {
         status: query.status.as_str(),
-        flags,
+        flags: flags.iter().map(FlagView::from).collect(),
     };
     Ok(Html(page.render()?))
 }
