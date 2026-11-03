@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"epi",
+				"eprintln!(…)"
+			],
+			[
 				"Fla",
 				"FlagRow"
 			],
@@ -364,488 +368,846 @@
 	"buffers":
 	[
 		{
-			"file": "src/admin.rs",
+			"file": "src/domain.rs",
 			"settings":
 			{
-				"buffer_size": 3286,
+				"buffer_size": 5974,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			},
 			"undo_stack":
 			[
 				[
-					37,
+					10,
 					1,
-					"insert",
+					"lsp_apply_text_document_edit",
 					{
-						"characters": "\n\n"
+						"edits":
+						[
+							{
+								"newText": "ienabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 14,
+										"line": 55
+									},
+									"start":
+									{
+										"character": 4,
+										"line": 55
+									}
+								}
+							},
+							{
+								"newText": "ienabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 22,
+										"line": 66
+									},
+									"start":
+									{
+										"character": 12,
+										"line": 66
+									}
+								}
+							},
+							{
+								"newText": "ienabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 43,
+										"line": 74
+									},
+									"start":
+									{
+										"character": 33,
+										"line": 74
+									}
+								}
+							},
+							{
+								"newText": "ienabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 26,
+										"line": 86
+									},
+									"start":
+									{
+										"character": 16,
+										"line": 86
+									}
+								}
+							},
+							{
+								"newText": "ienabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 23,
+										"line": 90
+									},
+									"start":
+									{
+										"character": 13,
+										"line": 90
+									}
+								}
+							},
+							{
+								"newText": "ienabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 27,
+										"line": 103
+									},
+									"start":
+									{
+										"character": 17,
+										"line": 103
+									}
+								}
+							},
+							{
+								"newText": "ienabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 23,
+										"line": 107
+									},
+									"start":
+									{
+										"character": 13,
+										"line": 107
+									}
+								}
+							},
+							{
+								"newText": "ienabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 23,
+										"line": 121
+									},
+									"start":
+									{
+										"character": 13,
+										"line": 121
+									}
+								}
+							},
+							{
+								"newText": "ienabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 22,
+										"line": 132
+									},
+									"start":
+									{
+										"character": 12,
+										"line": 132
+									}
+								}
+							},
+							{
+								"newText": "ienabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 23,
+										"line": 143
+									},
+									"start":
+									{
+										"character": 13,
+										"line": 143
+									}
+								}
+							}
+						],
+						"label": null
 					},
-					"AgAAAHYCAAAAAAAAdwIAAAAAAAAAAAAAdwIAAAAAAAB4AgAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAdgIAAAAAAAB2AgAAAAAAAAAAAAAAAPC/"
+					"CgAAADsNAAAAAAAAQw0AAAAAAAAKAAAAaXNfZW5hYmxlZG0MAAAAAAAAdQwAAAAAAAAKAAAAaXNfZW5hYmxlZEgLAAAAAAAAUAsAAAAAAAAKAAAAaXNfZW5hYmxlZPYJAAAAAAAA/gkAAAAAAAAKAAAAaXNfZW5hYmxlZLQJAAAAAAAAvAkAAAAAAAAKAAAAaXNfZW5hYmxlZFwIAAAAAAAAZAgAAAAAAAAKAAAAaXNfZW5hYmxlZBoIAAAAAAAAIggAAAAAAAAKAAAAaXNfZW5hYmxlZBYHAAAAAAAAHgcAAAAAAAAKAAAAaXNfZW5hYmxlZDkGAAAAAAAAQQYAAAAAAAAKAAAAaXNfZW5hYmxlZD4FAAAAAAAARgUAAAAAAAAKAAAAaXNfZW5hYmxlZA",
+					"AQAAAAAAAAABAAAAQAUAAAAAAABABQAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					39,
+					15,
 					1,
-					"",
-					null,
-					"AQAAAHgCAAAAAAAAtgQAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAeAIAAAAAAAB4AgAAAAAAAAAAAAAAAPC/"
+					"lsp_apply_text_document_edit",
+					{
+						"edits":
+						[
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 12,
+										"line": 55
+									},
+									"start":
+									{
+										"character": 4,
+										"line": 55
+									}
+								}
+							},
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 20,
+										"line": 66
+									},
+									"start":
+									{
+										"character": 12,
+										"line": 66
+									}
+								}
+							},
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 41,
+										"line": 74
+									},
+									"start":
+									{
+										"character": 33,
+										"line": 74
+									}
+								}
+							},
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 24,
+										"line": 86
+									},
+									"start":
+									{
+										"character": 16,
+										"line": 86
+									}
+								}
+							},
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 21,
+										"line": 90
+									},
+									"start":
+									{
+										"character": 13,
+										"line": 90
+									}
+								}
+							},
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 25,
+										"line": 103
+									},
+									"start":
+									{
+										"character": 17,
+										"line": 103
+									}
+								}
+							},
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 21,
+										"line": 107
+									},
+									"start":
+									{
+										"character": 13,
+										"line": 107
+									}
+								}
+							},
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 21,
+										"line": 121
+									},
+									"start":
+									{
+										"character": 13,
+										"line": 121
+									}
+								}
+							},
+							{
+								"newText": "",
+								"range":
+								{
+									"end":
+									{
+										"character": 22,
+										"line": 132
+									},
+									"start":
+									{
+										"character": 12,
+										"line": 132
+									}
+								}
+							},
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 21,
+										"line": 143
+									},
+									"start":
+									{
+										"character": 13,
+										"line": 143
+									}
+								}
+							}
+						],
+						"label": null
+					},
+					"CgAAACkNAAAAAAAAMA0AAAAAAAAIAAAAaWVuYWJsZWRdDAAAAAAAAF0MAAAAAAAACgAAAGllbmFibGVkOiA6CwAAAAAAAEELAAAAAAAACAAAAGllbmFibGVk6gkAAAAAAADxCQAAAAAAAAgAAABpZW5hYmxlZKoJAAAAAAAAsQkAAAAAAAAIAAAAaWVuYWJsZWRUCAAAAAAAAFsIAAAAAAAACAAAAGllbmFibGVkFAgAAAAAAAAbCAAAAAAAAAgAAABpZW5hYmxlZBIHAAAAAAAAGQcAAAAAAAAIAAAAaWVuYWJsZWQ3BgAAAAAAAD4GAAAAAAAACAAAAGllbmFibGVkPgUAAAAAAABFBQAAAAAAAAgAAABpZW5hYmxlZA",
+					"AQAAAAAAAAABAAAAPgUAAAAAAAA+BQAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					73,
+					20,
+					1,
+					"lsp_apply_text_document_edit",
+					{
+						"edits":
+						[
+							{
+								"newText": "archived",
+								"range":
+								{
+									"end":
+									{
+										"character": 15,
+										"line": 56
+									},
+									"start":
+									{
+										"character": 4,
+										"line": 56
+									}
+								}
+							},
+							{
+								"newText": "archived",
+								"range":
+								{
+									"end":
+									{
+										"character": 23,
+										"line": 67
+									},
+									"start":
+									{
+										"character": 12,
+										"line": 67
+									}
+								}
+							},
+							{
+								"newText": "archived",
+								"range":
+								{
+									"end":
+									{
+										"character": 27,
+										"line": 82
+									},
+									"start":
+									{
+										"character": 16,
+										"line": 82
+									}
+								}
+							},
+							{
+								"newText": "archived",
+								"range":
+								{
+									"end":
+									{
+										"character": 27,
+										"line": 99
+									},
+									"start":
+									{
+										"character": 16,
+										"line": 99
+									}
+								}
+							},
+							{
+								"newText": "archived",
+								"range":
+								{
+									"end":
+									{
+										"character": 27,
+										"line": 116
+									},
+									"start":
+									{
+										"character": 16,
+										"line": 116
+									}
+								}
+							},
+							{
+								"newText": "archived",
+								"range":
+								{
+									"end":
+									{
+										"character": 24,
+										"line": 120
+									},
+									"start":
+									{
+										"character": 13,
+										"line": 120
+									}
+								}
+							},
+							{
+								"newText": "",
+								"range":
+								{
+									"end":
+									{
+										"character": 25,
+										"line": 133
+									},
+									"start":
+									{
+										"character": 12,
+										"line": 133
+									}
+								}
+							},
+							{
+								"newText": "archived",
+								"range":
+								{
+									"end":
+									{
+										"character": 24,
+										"line": 147
+									},
+									"start":
+									{
+										"character": 13,
+										"line": 147
+									}
+								}
+							}
+						],
+						"label": null
+					},
+					"CAAAAFsNAAAAAAAAYw0AAAAAAAALAAAAaXNfYXJjaGl2ZWRqDAAAAAAAAGoMAAAAAAAADQAAAGlzX2FyY2hpdmVkOiASCwAAAAAAABoLAAAAAAAACwAAAGlzX2FyY2hpdmVk0woAAAAAAADbCgAAAAAAAAsAAABpc19hcmNoaXZlZE8JAAAAAAAAVwkAAAAAAAALAAAAaXNfYXJjaGl2ZWS8BwAAAAAAAMQHAAAAAAAACwAAAGlzX2FyY2hpdmVkUgYAAAAAAABaBgAAAAAAAAsAAABpc19hcmNoaXZlZFEFAAAAAAAAWQUAAAAAAAALAAAAaXNfYXJjaGl2ZWQ",
+					"AQAAAAAAAAABAAAAPgUAAAAAAAA+BQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					30,
+					1,
+					"lsp_apply_text_document_edit",
+					{
+						"edits":
+						[
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 28,
+										"line": 8
+									},
+									"start":
+									{
+										"character": 18,
+										"line": 8
+									}
+								}
+							},
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 26,
+										"line": 74
+									},
+									"start":
+									{
+										"character": 16,
+										"line": 74
+									}
+								}
+							},
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 50,
+										"line": 194
+									},
+									"start":
+									{
+										"character": 40,
+										"line": 194
+									}
+								}
+							}
+						],
+						"label": null
+					},
+					"AwAAANIRAAAAAAAA2REAAAAAAAAKAAAAaXNfZW5hYmxlZPkGAAAAAAAAAAcAAAAAAAAKAAAAaXNfZW5hYmxlZOEAAAAAAAAA6AAAAAAAAAAKAAAAaXNfZW5hYmxlZA",
+					"AQAAAAAAAAABAAAA5QAAAAAAAADlAAAAAAAAAAAAAAAAAPC/"
+				]
+			]
+		},
+		{
+			"contents": "Searching 14 files for \"is_\" (regex)\n\n~/dev/FlagEngine/src/admin.rs:\n   46          Self {\n   47              key: flag.key().to_owned(),\n   48:             enabled: flag.is_enabled(),\n   49:             archived: flag.is_archived(),\n   50              updated_at: updated_at,\n   51          }\n\n~/dev/FlagEngine/src/audit_repo.rs:\n  157  \n  158      #[test]\n  159:     fn append_is_append_only_and_ids_increase() {\n  160          let mut conn = setup();\n  161          append_committed(&mut conn, &enabled(\"a\", 1));\n  ...\n  294          )\n  295          .unwrap();\n  296:         assert!(read_payload(&conn).is_err());\n  297      }\n  298  \n  ...\n  305          )\n  306          .unwrap();\n  307:         assert!(read_payload(&conn).is_err());\n  308      }\n  309  }\n\n~/dev/FlagEngine/src/cache.rs:\n   15      }\n   16  \n   17:     // pub fn is_enabled(&self, key: &str) -> bool {\n   18      //     let guard = self.flags.load();\n   19      //     guard.get(key).copied().unwrap_or(false)\n   ..\n   21  \n   22      pub fn apply(&self, events: &[DomainEvent]) {\n   23:         if events.is_empty() {\n   24              return;\n   25          }\n   ..\n   28          for event in events {\n   29              match &event.payload {\n   30:                 EventPayload::FlagCreated { enabled: is_enabled } => {\n   31:                     map.insert(event.key.clone(), *is_enabled);\n   32                  }\n   33                  EventPayload::FlagEnabled => {\n\n~/dev/FlagEngine/src/config.rs:\n    9  \n   10  fn var(name: &str) -> Option<String> {\n   11:     env::var(name).ok().filter(|value| !value.is_empty())\n   12  }\n   13  \n\n~/dev/FlagEngine/src/domain.rs:\n   29  \n   30  fn validate_key(raw: &str) -> Result<(), AppError> {\n   31:     if raw.is_empty() || raw.len() > 64 {\n   32          return Err(AppError::InvalidKey(\"must be 1-64 characters\"));\n   33      }\n   34  \n   35:     let alnum = |c: char| c.is_ascii_lowercase() || c.is_ascii_digit();\n   36      if !raw\n   37          .chars()\n   ..\n  141      }\n  142  \n  143:     pub fn is_enabled(&self) -> bool {\n  144          self.enabled\n  145      }\n  146  \n  147:     pub fn is_archived(&self) -> bool {\n  148          self.archived\n  149      }\n  ...\n  178              &\"a\".repeat(65),\n  179          ] {\n  180:             assert!(validate_key(bad).is_err(), \"{bad:?} must be reected\");\n  181          }\n  182  \n  183:         assert!(validate_key(\"new-checkout.v2\").is_ok());\n  184      }\n  185  \n  ...\n  199      #[test]\n  200      fn create_with_invalid_key_fails() {\n  201:         assert!(Flag::create(\"Bad key\".to_owned(), \"alice\".to_owned()).is_err());\n  202      }\n  203  \n  204      #[test]\n  205:     fn set_enabled_is_idempotent() {\n  206          let (mut f, _) = Flag::create(\"checkout\".to_owned(), \"alice\".to_owned()).unwrap();\n  207:         assert!(f.disable(\"alice\".to_owned()).unwrap().is_none());\n  208  \n  209          let event = f\n  ...\n  212              .expect(\"state changed\");\n  213          assert!(matches!(event.payload, EventPayload::FlagEnabled));\n  214:         assert!(f.is_enabled());\n  215          assert_eq!(event.occurred_at, f.updated_at());\n  216      }\n  ...\n  219      fn archived_flag_cannot_change() {\n  220          let (mut f, _) = Flag::create(\"checkout\".to_owned(), \"alice\".to_owned()).unwrap();\n  221:         assert!(f.archive(\"alice\".to_owned()).is_some());\n  222:         assert!(f.archive(\"alice\".to_owned()).is_none());\n  223          assert_eq!(\n  224              f.enable(\"alice\".to_owned()).unwrap_err(),\n  ...\n  228  \n  229      #[test]\n  230:     fn event_json_format_is_stable() {\n  231          let json = r#\"{\"key\":\"checkout\",\"actor\":\"alice\",\"occurred_at\":1,\n  232                         \"payload\":{\"type\":\"FlagEnabled\"}}\"#;\n\n~/dev/FlagEngine/src/flag_repo.rs:\n   23  pub fn insert(tx: &Transaction, flag: &Flag) -> Result<(), AppError> {\n   24      tx.execute(\n   25:         \"INSERT INTO flags (key, is_enabled, is_archived, updated_at)\n   26               VALUES (?1, ?2, ?3, ?4)\",\n   27          params![\n   28              flag.key(),\n   29:             flag.is_enabled(),\n   30:             flag.is_archived(),\n   31              flag.updated_at()\n   32          ],\n   ..\n   47  pub fn update(tx: &Transaction, flag: &Flag) -> Result<()> {\n   48      tx.execute(\n   49:         \"UPDATE flags SET is_enabled = ?2, is_archived = ?3, updated_at = ?4 WHERE key = ?1\",\n   50          params![\n   51              flag.key(),\n   52:             flag.is_enabled(),\n   53:             flag.is_archived(),\n   54              flag.updated_at()\n   55          ],\n   ..\n   61  pub fn find(conn: &Connection, key: &str) -> Result<Option<Flag>> {\n   62      conn.prepare_cached(\n   63:         \"SELECT key, is_enabled, is_archived, updated_at FROM flags WHERE key = ?1\",\n   64      )?\n   65      .query_row(params![key], raw_to_flag)\n   ..\n   69  pub fn find_all(conn: &Connection, filter: FlagFilter) -> Result<Vec<Flag>> {\n   70      let where_closure = match filter {\n   71:         FlagFilter::Active => \" WHERE is_archived = 0\",\n   72:         FlagFilter::Archived => \" WHERE is_archived = 1\",\n   73          FlagFilter::All => \"\",\n   74      };\n   75      let sql = format!(\n   76:         \"SELECT key, is_enabled, is_archived, updated_at FROM flags{} ORDER BY key\",\n   77          where_closure\n   78      );\n   ..\n  123          let found = find(&conn, \"checkout\").unwrap().expect(\"flag must exist\");\n  124          assert_eq!(found.key(), \"checkout\");\n  125:         assert!(!found.is_enabled());\n  126:         assert!(!found.is_archived());\n  127          assert_eq!(found.updated_at(), f.updated_at());\n  128      }\n  ...\n  131      fn find_missing_returns_none() {\n  132          let conn = setup();\n  133:         assert!(find(&conn, \"nope\").unwrap().is_none());\n  134      }\n  135  \n  136      #[test]\n  137:     fn find_is_exact_match_not_prefix() {\n  138          let mut conn = setup();\n  139          save(&mut conn, &flag(\"checkout\"));\n  140:         assert!(find(&conn, \"check\").unwrap().is_none());\n  141:         assert!(find(&conn, \"checkout.v2\").unwrap().is_none());\n  142      }\n  143  \n  ...\n  149  \n  150          let tx = conn.transaction().unwrap();\n  151:         assert!(insert(&tx, &flag(\"checkout\")).is_err());\n  152          drop(tx);\n  153  \n  ...\n  157  \n  158      #[test]\n  159:     fn insert_is_not_visible_after_rollback() {\n  160          let mut conn = setup();\n  161          let tx = conn.transaction().unwrap();\n  ...\n  163          tx.rollback().unwrap();\n  164  \n  165:         assert!(find(&conn, \"checkout\").unwrap().is_none());\n  166      }\n  167  \n  ...\n  175  \n  176          let on = find(&conn, \"on\").unwrap().unwrap();\n  177:         assert!(on.is_enabled() && !on.is_archived());\n  178          assert_eq!(on.updated_at(), 10);\n  179  \n  180          let old = find(&conn, \"old\").unwrap().unwrap();\n  181:         assert!(!old.is_enabled() && old.is_archived());\n  182          assert_eq!(old.updated_at(), 20);\n  183      }\n  ...\n  195  \n  196          let found = find(&conn, \"checkout\").unwrap().unwrap();\n  197:         assert!(found.is_enabled());\n  198          assert_eq!(found.updated_at(), f.updated_at());\n  199      }\n  ...\n  210  \n  211          let found = find(&conn, \"checkout\").unwrap().unwrap();\n  212:         assert!(found.is_archived());\n  213:         assert!(!found.is_enabled());\n  214      }\n  215  \n  ...\n  229  \n  230          let b_after = find(&conn, \"b\").unwrap().unwrap();\n  231:         assert!(!b_after.is_enabled(), \"b must stay disabled\");\n  232          assert_eq!(b_after.updated_at(), 1, \"b.updated_at must not change\");\n  233  \n  234          let c_after = find(&conn, \"c\").unwrap().unwrap();\n  235:         assert!(c_after.is_enabled(), \"c must stay enabled\");\n  236          assert_eq!(c_after.updated_at(), 2, \"c.updated_at must not change\");\n  237      }\n  238  \n  239      #[test]\n  240:     fn update_of_missing_key_is_noop() {\n  241          let mut conn = setup();\n  242          save(&mut conn, &flag(\"existing\"));\n  ...\n  245          persist_update(&mut conn, &ghost);\n  246  \n  247:         assert!(find(&conn, \"ghost\").unwrap().is_none());\n  248          let existing = find(&conn, \"existing\").unwrap().unwrap();\n  249:         assert!(!existing.is_enabled());\n  250      }\n  251  \n  252      #[test]\n  253:     fn update_is_not_visible_after_rollback() {\n  254          let mut conn = setup();\n  255          let mut f = flag(\"checkout\");\n  ...\n  261          tx.rollback().unwrap();\n  262  \n  263:         assert!(!find(&conn, \"checkout\").unwrap().unwrap().is_enabled());\n  264      }\n  265  \n  ...\n  273  \n  274      #[test]\n  275:     fn find_all_on_empty_table_is_empty() {\n  276          let conn = setup();\n  277          for filter in [FlagFilter::Active, FlagFilter::Archived, FlagFilter::All] {\n  278:             assert!(find_all(&conn, filter).unwrap().is_empty());\n  279          }\n  280      }\n  281  \n  282      #[test]\n  283:     fn find_all_default_filter_is_active() {\n  284          let mut conn = setup();\n  285          seed_mixed(&mut conn);\n  ...\n  296          let flags = find_all(&conn, FlagFilter::Active).unwrap();\n  297          assert_eq!(keys(&flags), [\"active-off\", \"active-on\"]);\n  298:         assert!(flags.iter().all(|f| !f.is_archived()));\n  299      }\n  300  \n  ...\n  327          persist_update(&mut conn, &f);\n  328  \n  329:         assert!(find_all(&conn, FlagFilter::Active).unwrap().is_empty());\n  330          assert_eq!(find_all(&conn, FlagFilter::Archived).unwrap().len(), 1);\n  331      }\n\n~/dev/FlagEngine/src/http.rs:\n  188          Self {\n  189              key: flag.key().to_owned(),\n  190:             enabled: flag.is_enabled(),\n  191:             archived: flag.is_archived(),\n  192              updated_at: flag.updated_at(),\n  193          }\n\n~/dev/FlagEngine/src/main.rs:\n   33          flags\n   34              .into_iter()\n   35:             .map(|flag| (flag.key().to_owned(), flag.is_enabled())),\n   36      );\n   37  \n\n~/dev/FlagEngine/src/outbox_repo.rs:\n   62  \n   63  pub fn mark_batch(tx: &Transaction, seqs: &[i64], status: OutboxStatus) -> Result<()> {\n   64:     if seqs.is_empty() {\n   65          return Ok(());\n   66      }\n   ..\n  137          let pending = fetch_pending(&conn, 10).unwrap();\n  138          assert_eq!(pending.len(), 1);\n  139:         assert!(pending[0].1.is_err());\n  140  \n  141          let tx = conn.transaction().unwrap();\n  142          mark_batch(&tx, &[pending[0].0], OutboxStatus::Failed).unwrap();\n  143          tx.commit().unwrap();\n  144:         assert!(fetch_pending(&conn, 10).unwrap().is_empty());\n  145      }\n  146  \n  147      #[test]\n  148:     fn mark_unknown_seq_is_an_error() {\n  149          let mut conn = setup();\n  150          let tx = conn.transaction().unwrap();\n  151:         assert!(mark_batch(&tx, &[999], OutboxStatus::Completed).is_err());\n  152      }\n  153  \n  ...\n  189  \n  190      #[test]\n  191:     fn fetch_pending_is_ordered_by_seq_and_respects_limit() {\n  192          let mut conn = setup();\n  193          let seqs = enqueue_many(&mut conn, 5);\n  ...\n  218  \n  219      #[test]\n  220:     fn mark_batch_with_empty_slice_is_noop() {\n  221          let mut conn = setup();\n  222          let tx = conn.transaction().unwrap();\n  ...\n  242  \n  243      #[test]\n  244:     fn failed_batch_rolls_back_when_transaction_is_dropped() {\n  245          let mut conn = setup();\n  246          let seqs = enqueue_many(&mut conn, 1);\n  ...\n  248          let tx = conn.transaction().unwrap();\n  249          // перший seq валідний, другий не існує: batch має провалитись\n  250:         assert!(mark_batch(&tx, &[seqs[0], 999], OutboxStatus::Completed).is_err());\n  251          drop(tx); // без commit -> rollback\n  252  \n  ...\n  263          drop(tx);\n  264  \n  265:         assert!(fetch_pending(&conn, 10).unwrap().is_empty());\n  266      }\n  267  \n  ...\n  311              [],\n  312          );\n  313:         assert!(res.is_err());\n  314      }\n  315  }\n\n~/dev/FlagEngine/src/service.rs:\n  172  \n  173          let f = env.flag(\"checkout\").expect(\"flag must exist\");\n  174:         assert!(!f.is_enabled());\n  175:         assert!(!f.is_archived());\n  176      }\n  177  \n  ...\n  254  \n  255          assert!(\n  256:             env.flag(\"checkout\").is_none(),\n  257              \"flag insert must be rolled back\"\n  258          );\n  ...\n  279  \n  280          let results: Vec<_> = handles.into_iter().map(|h| h.join().unwrap()).collect();\n  281:         let ok = results.iter().filter(|r| r.is_ok()).count();\n  282          let dup = results\n  283              .iter()\n  ...\n  315              .unwrap();\n  316  \n  317:         assert!(env.flag(\"checkout\").unwrap().is_enabled());\n  318          assert_eq!(env.count(\"audit\"), 2); // created + toggled\n  319          assert_eq!(env.count(\"outbox\"), 2);\n  ...\n  321  \n  322      #[test]\n  323:     fn toggle_to_same_state_is_noop_without_events() {\n  324          let env = setup();\n  325          env.create(\"checkout\");\n  ...\n  360              .unwrap_err();\n  361          assert!(matches!(err, ServiceError::Domain(DomainError::Archived)));\n  362:         assert!(!env.flag(\"checkout\").unwrap().is_enabled());\n  363      }\n  364  \n  ...\n  370          env.svc.enable_flag(\"a\".into(), \"alice\".into()).unwrap();\n  371  \n  372:         assert!(env.flag(\"a\").unwrap().is_enabled());\n  373:         assert!(!env.flag(\"b\").unwrap().is_enabled());\n  374      }\n  375  \n  ...\n  399  \n  400          let f = env.flag(\"checkout\").unwrap();\n  401:         assert!(f.is_archived());\n  402:         assert!(!f.is_enabled());\n  403          assert_eq!(env.count(\"audit\"), 3); // created, toggled, archived\n  404      }\n  405  \n  406      #[test]\n  407:     fn archive_twice_is_idempotent() {\n  408          let env = setup();\n  409          env.create(\"checkout\");\n  ...\n  429  \n  430          let b = env.flag(\"b\").unwrap();\n  431:         assert!(!b.is_archived());\n  432:         assert!(b.is_enabled());\n  433      }\n  434  \n  435:     // ---------- is_enabled / cache (eventual consistency) ----------\n  436  \n  437      #[test]\n  438:     fn is_enabled_is_false_for_unknown_flag() {\n  439          let env = setup();\n  440:         assert!(!env.svc.is_enabled(\"ghost\"));\n  441      }\n  442  \n  443      #[test]\n  444:     fn cache_is_updated_only_after_outbox_is_processed() {\n  445          let env = setup();\n  446          env.create(\"checkout\");\n  ...\n  450  \n  451          assert!(\n  452:             !env.svc.is_enabled(\"checkout\"),\n  453              \"cache must not change before the outbox worker runs\"\n  454          );\n  455  \n  456          env.apply_outbox_to_cache();\n  457:         assert!(env.svc.is_enabled(\"checkout\"));\n  458      }\n  459  \n  460      #[test]\n  461:     fn archived_flag_disappears_from_cache_after_outbox_is_processed() {\n  462          let env = setup();\n  463          env.create(\"checkout\");\n  ...\n  466              .unwrap();\n  467          env.apply_outbox_to_cache();\n  468:         assert!(env.svc.is_enabled(\"checkout\"));\n  469  \n  470          env.svc\n  ...\n  472              .unwrap();\n  473          env.apply_outbox_to_cache();\n  474:         assert!(!env.svc.is_enabled(\"checkout\"));\n  475      }\n  476  \n  477:     // ---------- is_unique_violation ----------\n  478  \n  479      #[test]\n  480:     fn is_unique_violation_detects_primary_key_conflict_only() {\n  481          let conn = db::init(\":memory:\").unwrap();\n  482          conn.execute(\"INSERT INTO flags VALUES ('k', 0, 0, 1)\", [])\n  ...\n  485              .execute(\"INSERT INTO flags VALUES ('k', 0, 0, 1)\", [])\n  486              .unwrap_err();\n  487:         assert!(is_unique_violation(&dup));\n  488  \n  489          let not_null = conn\n  490              .execute(\"INSERT INTO flags (key, updated_at) VALUES ('x', NULL)\", [])\n  491              .unwrap_err();\n  492:         assert!(!is_unique_violation(&not_null));\n  493:         assert!(!is_unique_violation(&rusqlite::Error::QueryReturnedNoRows));\n  494      }\n  495  }\n\n~/dev/FlagEngine/src/worker.rs:\n   44  fn process_pending_messages(conn: &mut Connection, cache: &FlagCache) -> Result<bool> {\n   45      let rows = outbox_repo::fetch_pending(conn, 50)?;\n   46:     if rows.is_empty() {\n   47          return Ok(false);\n   48      }\n\n111 matches across 11 files\n",
+			"settings":
+			{
+				"buffer_size": 16337,
+				"line_ending": "Unix",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "src/flag_repo.rs",
+			"settings":
+			{
+				"buffer_size": 10087,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+				[
+					9,
 					1,
 					"left_delete",
 					null,
-					"AQAAAAQDAAAAAAAABAMAAAAAAAALAAAALCBpc286IGJvb2w",
-					"AQAAAAAAAAABAAAABAMAAAAAAAAPAwAAAAAAAAAAAAAAAPC/"
+					"AQAAABUCAAAAAAAAFQIAAAAAAAADAAAAaXNf",
+					"AQAAAAAAAAABAAAAGAIAAAAAAAAVAgAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					80,
+					14,
 					1,
 					"left_delete",
 					null,
-					"AQAAAK4DAAAAAAAArgMAAAAAAAAdAAAAaWYgaXNvIHsgKCdUJywgIloiKSB9IGVsc2UgeyA",
-					"AQAAAAAAAAABAAAArgMAAAAAAADLAwAAAAAAAAAAAAAAAPC/"
+					"AQAAAB4CAAAAAAAAHgIAAAAAAAADAAAAaXNf",
+					"AQAAAAAAAAABAAAAIQIAAAAAAAAeAgAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					83,
-					1,
+					22,
+					3,
 					"left_delete",
 					null,
-					"AgAAALwDAAAAAAAAvAMAAAAAAAABAAAAfbsDAAAAAAAAuwMAAAAAAAABAAAAIA",
-					"AQAAAAAAAAABAAAAvQMAAAAAAAC9AwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					93,
-					1,
-					"insert",
-					{
-						"characters": " "
-					},
-					"AQAAAOQDAAAAAAAA5QMAAAAAAAAFAAAAe3NlcH0",
-					"AQAAAAAAAAABAAAA6QMAAAAAAADkAwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					97,
-					1,
-					"insert",
-					{
-						"characters": "UTC"
-					},
-					"AwAAAPYDAAAAAAAA9wMAAAAAAAAIAAAAe3N1ZmZpeH33AwAAAAAAAPgDAAAAAAAAAAAAAPgDAAAAAAAA+QMAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAA9gMAAAAAAAD+AwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					100,
-					1,
-					"insert",
-					{
-						"characters": "\n"
-					},
-					"AgAAAJUDAAAAAAAAlQMAAAAAAAAnAAAACiAgICBsZXQgKHNlcCwgc3VmZml4KSA9ICgnICcsICIgVVRDIik7lQMAAAAAAACaAwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAvAMAAAAAAACVAwAAAAAAAAAAAAAAgHdA"
-				],
-				[
-					107,
-					2,
-					"left_delete",
-					null,
-					"AwAAAHgCAAAAAAAAeAIAAAAAAACQAAAALy8vIGBpc28gPSB0cnVlYDogYDIwMjYtMTAtMzFUMTQ6MDU6MTJaYCAo0LTQu9GPINCw0YLRgNC40LHRg9GC0LAgYGRhdGV0aW1lYCksCi8vLyDRltC90LDQutGI0LUgYDIwMjYtMTAtMzEgMTQ6MDU6MTIgVVRDYCAo0LTQu9GPINC/0L7QutCw0LfRgykuIAMAAAAAAAAgAwAAAAAAAAQAAAAgICAgdwIAAAAAAAB3AgAAAAAAAAEAAAAK",
-					"AQAAAAAAAAABAAAA7gIAAAAAAAB4AgAAAAAAAAAAAAAAAAAA"
-				],
-				[
-					128,
-					1,
-					"insert",
-					{
-						"characters": "\nuse"
-					},
-					"BAAAAHEAAAAAAAAAcgAAAAAAAAAAAAAAcgAAAAAAAABzAAAAAAAAAAAAAABzAAAAAAAAAHQAAAAAAAAAAAAAAHQAAAAAAAAAdQAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAcQAAAAAAAABxAAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					129,
-					1,
-					"insert",
-					{
-						"characters": " time::"
-					},
-					"BwAAAHUAAAAAAAAAdgAAAAAAAAAAAAAAdgAAAAAAAAB3AAAAAAAAAAAAAAB3AAAAAAAAAHgAAAAAAAAAAAAAAHgAAAAAAAAAeQAAAAAAAAAAAAAAeQAAAAAAAAB6AAAAAAAAAAAAAAB6AAAAAAAAAHsAAAAAAAAAAAAAAHsAAAAAAAAAfAAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAdQAAAAAAAAB1AAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					130,
-					1,
-					"paste",
-					null,
-					"AQAAAHwAAAAAAAAAigAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAfAAAAAAAAAB8AAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					131,
-					1,
-					"insert",
-					{
-						"characters": ";"
-					},
-					"AQAAAIoAAAAAAAAAiwAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAigAAAAAAAACKAAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					136,
-					1,
-					"insert",
-					{
-						"characters": "\n\n"
-					},
-					"AgAAAAAEAAAAAAAAAQQAAAAAAAAAAAAAAQQAAAAAAAACBAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAAAQAAAAAAAAABAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					137,
-					1,
-					"paste",
-					null,
-					"AQAAAAIEAAAAAAAAiQUAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAAgQAAAAAAAACBAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					142,
-					1,
-					"insert",
-					{
-						"characters": "Row"
-					},
-					"AwAAACIEAAAAAAAAIwQAAAAAAAAIAAAAUmVzcG9uc2UjBAAAAAAAACQEAAAAAAAAAAAAACQEAAAAAAAAJQQAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAIgQAAAAAAAAqBAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					149,
-					1,
-					"paste",
-					null,
-					"AQAAAI0EAAAAAAAAlAQAAAAAAAAMAAAARmxhZ1Jlc3BvbnNl",
-					"AQAAAAAAAAABAAAAjQQAAAAAAACZBAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					157,
-					1,
-					"insert",
-					{
-						"characters": " "
-					},
-					"AQAAAFsFAAAAAAAAXAUAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAWwUAAAAAAABbBQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					159,
-					1,
-					"insert",
-					{
-						"characters": "from"
-					},
-					"BAAAAFsFAAAAAAAAXAUAAAAAAAAAAAAAXAUAAAAAAABdBQAAAAAAAAAAAABdBQAAAAAAAF4FAAAAAAAAAAAAAF4FAAAAAAAAXwUAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAWwUAAAAAAABbBQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					163,
-					1,
-					"insert_completion",
-					{
-						"completion": "format_utc",
-						"format": "text",
-						"keep_prefix": false,
-						"must_insert": false,
-						"trigger": "format_utc"
-					},
-					"AgAAAFsFAAAAAAAAWwUAAAAAAAAEAAAAZnJvbVsFAAAAAAAAZQUAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAXwUAAAAAAABfBQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					167,
-					1,
-					"cut",
-					null,
-					"AQAAAGYFAAAAAAAAZgUAAAAAAAARAAAAZmxhZy51cGRhdGVkX2F0KCk",
-					"AQAAAAAAAAABAAAAZgUAAAAAAAB3BQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					168,
-					1,
-					"left_delete",
-					null,
-					"AQAAAGUFAAAAAAAAZQUAAAAAAAABAAAAIA",
-					"AQAAAAAAAAABAAAAZgUAAAAAAABmBQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					169,
-					1,
-					"insert",
-					{
-						"characters": "()"
-					},
-					"AgAAAGUFAAAAAAAAZgUAAAAAAAAAAAAAZgUAAAAAAABnBQAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAZQUAAAAAAABlBQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					171,
-					1,
-					"paste",
-					null,
-					"AQAAAGYFAAAAAAAAdwUAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAZgUAAAAAAABmBQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					185,
-					1,
-					"insert",
-					{
-						"characters": "Str"
-					},
-					"AwAAAHAEAAAAAAAAcQQAAAAAAAADAAAAaTY0cQQAAAAAAAByBAAAAAAAAAAAAAByBAAAAAAAAHMEAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAcwQAAAAAAABwBAAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					186,
-					1,
-					"insert_completion",
-					{
-						"completion": "String",
-						"format": "text",
-						"keep_prefix": false,
-						"must_insert": false,
-						"trigger": "String"
-					},
-					"AgAAAHAEAAAAAAAAcAQAAAAAAAADAAAAU3RycAQAAAAAAAB2BAAAAAAAAAAAAAA",
+					"AwAAAHIEAAAAAAAAcgQAAAAAAAABAAAAX3EEAAAAAAAAcQQAAAAAAAABAAAAc3AEAAAAAAAAcAQAAAAAAAABAAAAaQ",
 					"AQAAAAAAAAABAAAAcwQAAAAAAABzBAAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					191,
-					2,
-					"left_delete",
-					null,
-					"AgAAAAIEAAAAAAAAAgQAAAAAAAAUAAAAI1tkZXJpdmUoU2VyaWFsaXplKV0BBAAAAAAAAAEEAAAAAAAAAQAAAAo",
-					"AQAAAAAAAAABAAAAFgQAAAAAAAACBAAAAAAAAAAAAAAAAAAA"
-				],
-				[
-					208,
-					1,
-					"insert",
-					{
-						"characters": "R"
-					},
-					"AQAAAPAFAAAAAAAA8QUAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAA8AUAAAAAAADwBQAAAAAAAAAAAAAAAGNA"
-				],
-				[
-					209,
-					1,
-					"insert_completion",
-					{
-						"completion": "FlagRow",
-						"format": "text",
-						"keep_prefix": false,
-						"must_insert": false,
-						"trigger": "FlagRow"
-					},
-					"AgAAAOwFAAAAAAAA7AUAAAAAAAAFAAAARmxhZ1LsBQAAAAAAAPMFAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAA8QUAAAAAAADxBQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					221,
-					1,
-					"insert",
-					{
-						"characters": ":"
-					},
-					"AQAAAIQHAAAAAAAAhQcAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAhAcAAAAAAACEBwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					226,
-					1,
-					"insert",
-					{
-						"characters": " "
-					},
-					"AQAAAIUHAAAAAAAAhgcAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAhQcAAAAAAACFBwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					227,
-					1,
-					"paste",
-					null,
-					"AQAAAIYHAAAAAAAAiwcAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAhgcAAAAAAACGBwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					228,
-					1,
-					"insert",
-					{
-						"characters": ".it"
-					},
-					"AwAAAIsHAAAAAAAAjAcAAAAAAAAAAAAAjAcAAAAAAACNBwAAAAAAAAAAAACNBwAAAAAAAI4HAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAiwcAAAAAAACLBwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					232,
-					1,
-					"insert_completion",
-					{
-						"completion": "iter",
-						"format": "text",
-						"keep_prefix": false,
-						"must_insert": false,
-						"trigger": "iter"
-					},
-					"AgAAAIwHAAAAAAAAjAcAAAAAAAACAAAAaXSMBwAAAAAAAJAHAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAjgcAAAAAAACOBwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					233,
-					1,
-					"insert",
-					{
-						"characters": "()"
-					},
-					"AgAAAJAHAAAAAAAAkQcAAAAAAAAAAAAAkQcAAAAAAACSBwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAkAcAAAAAAACQBwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					236,
-					1,
-					"insert",
-					{
-						"characters": ".ma"
-					},
-					"AwAAAJIHAAAAAAAAkwcAAAAAAAAAAAAAkwcAAAAAAACUBwAAAAAAAAAAAACUBwAAAAAAAJUHAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAkgcAAAAAAACSBwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					237,
-					1,
-					"insert_completion",
-					{
-						"completion": "map",
-						"format": "text",
-						"keep_prefix": false,
-						"must_insert": false,
-						"trigger": "map"
-					},
-					"AgAAAJMHAAAAAAAAkwcAAAAAAAACAAAAbWGTBwAAAAAAAJYHAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAlQcAAAAAAACVBwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					238,
-					1,
-					"insert",
-					{
-						"characters": ")"
-					},
-					"AQAAAJYHAAAAAAAAlwcAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAlgcAAAAAAACWBwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					239,
+					28,
 					1,
 					"left_delete",
 					null,
-					"AQAAAJYHAAAAAAAAlgcAAAAAAAABAAAAKQ",
-					"AQAAAAAAAAABAAAAlwcAAAAAAACXBwAAAAAAAAAAAAAAAPC/"
+					"AQAAAH4EAAAAAAAAfgQAAAAAAAADAAAAaXNf",
+					"AQAAAAAAAAABAAAAfgQAAAAAAACBBAAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					240,
+					33,
 					1,
-					"insert",
-					{
-						"characters": "()"
-					},
-					"AgAAAJYHAAAAAAAAlwcAAAAAAAAAAAAAlwcAAAAAAACYBwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAlgcAAAAAAACWBwAAAAAAAAAAAAAAAPC/"
+					"left_delete",
+					null,
+					"AQAAAMgFAAAAAAAAyAUAAAAAAAADAAAAaXNf",
+					"AQAAAAAAAAABAAAAywUAAAAAAADIBQAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					242,
+					38,
 					1,
-					"insert",
-					{
-						"characters": "Fla"
-					},
-					"AwAAAJcHAAAAAAAAmAcAAAAAAAAAAAAAmAcAAAAAAACZBwAAAAAAAAAAAACZBwAAAAAAAJoHAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAlwcAAAAAAACXBwAAAAAAAAAAAAAAAPC/"
+					"left_delete",
+					null,
+					"AQAAANEFAAAAAAAA0QUAAAAAAAADAAAAaXNf",
+					"AQAAAAAAAAABAAAA0QUAAAAAAADUBQAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					244,
+					46,
 					1,
-					"insert_completion",
-					{
-						"completion": "FlagRow",
-						"format": "text",
-						"keep_prefix": false,
-						"must_insert": false,
-						"trigger": "FlagRow"
-					},
-					"AgAAAJcHAAAAAAAAlwcAAAAAAAADAAAARmxhlwcAAAAAAACeBwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAmgcAAAAAAACaBwAAAAAAAAAAAAAAAPC/"
+					"left_delete",
+					null,
+					"AQAAAH8HAAAAAAAAfwcAAAAAAAADAAAAaXNf",
+					"AQAAAAAAAAABAAAAfwcAAAAAAACCBwAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					245,
+					50,
 					1,
-					"insert",
-					{
-						"characters": "::"
-					},
-					"AgAAAJ4HAAAAAAAAnwcAAAAAAAAAAAAAnwcAAAAAAACgBwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAngcAAAAAAACeBwAAAAAAAAAAAAAAAPC/"
+					"left_delete",
+					null,
+					"AQAAAIgHAAAAAAAAiAcAAAAAAAADAAAAaXNf",
+					"AQAAAAAAAAABAAAAiAcAAAAAAACLBwAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					247,
+					55,
 					1,
-					"insert_completion",
-					{
-						"completion": "from",
-						"format": "text",
-						"keep_prefix": false,
-						"must_insert": true,
-						"trigger": "from"
-					},
-					"AQAAAKAHAAAAAAAApAcAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAoAcAAAAAAACgBwAAAAAAAAAAAAAAAPC/"
+					"left_delete",
+					null,
+					"AQAAAOEGAAAAAAAA4QYAAAAAAAADAAAAaXNf",
+					"AQAAAAAAAAABAAAA5AYAAAAAAADhBgAAAAAAAAAAAAAAAPC/"
 				],
 				[
-					251,
+					60,
 					1,
-					"insert",
-					{
-						"characters": ".co"
-					},
-					"AwAAAKUHAAAAAAAApgcAAAAAAAAAAAAApgcAAAAAAACnBwAAAAAAAAAAAACnBwAAAAAAAKgHAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAApQcAAAAAAAClBwAAAAAAAAAAAAAAAHdA"
-				],
+					"left_delete",
+					null,
+					"AQAAABgHAAAAAAAAGAcAAAAAAAADAAAAaXNf",
+					"AQAAAAAAAAABAAAAGAcAAAAAAAAbBwAAAAAAAAAAAAAAAPC/"
+				]
+			]
+		},
+		{
+			"file": "requests.http",
+			"settings":
+			{
+				"buffer_size": 954,
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+			]
+		},
+		{
+			"file": "src/cache.rs",
+			"settings":
+			{
+				"buffer_size": 1493,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
 				[
-					252,
 					1,
-					"insert_completion",
+					1,
+					"lsp_apply_text_document_edit",
 					{
-						"completion": "collect",
-						"format": "text",
-						"keep_prefix": false,
-						"must_insert": false,
-						"trigger": "collect"
+						"edits":
+						[
+							{
+								"newText": "enabled: ",
+								"range":
+								{
+									"end":
+									{
+										"character": 44,
+										"line": 29
+									},
+									"start":
+									{
+										"character": 44,
+										"line": 29
+									}
+								}
+							}
+						],
+						"label": null
 					},
-					"AgAAAKYHAAAAAAAApgcAAAAAAAACAAAAY2+mBwAAAAAAAK0HAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAqAcAAAAAAACoBwAAAAAAAAAAAAAAAPC/"
-				],
+					"AQAAAPQCAAAAAAAA/QIAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/"
+				]
+			]
+		},
+		{
+			"file": "src/audit_repo.rs",
+			"settings":
+			{
+				"buffer_size": 9275,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
 				[
-					253,
 					1,
-					"insert",
+					1,
+					"lsp_apply_text_document_edit",
 					{
-						"characters": "()"
+						"edits":
+						[
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 58,
+										"line": 109
+									},
+									"start":
+									{
+										"character": 48,
+										"line": 109
+									}
+								}
+							},
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 54,
+										"line": 140
+									},
+									"start":
+									{
+										"character": 44,
+										"line": 140
+									}
+								}
+							},
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 50,
+										"line": 249
+									},
+									"start":
+									{
+										"character": 40,
+										"line": 249
+									}
+								}
+							}
+						],
+						"label": null
 					},
-					"AgAAAK0HAAAAAAAArgcAAAAAAAAAAAAArgcAAAAAAACvBwAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAArQcAAAAAAACtBwAAAAAAAAAAAAAAAPC/"
+					"AwAAADkdAAAAAAAAQB0AAAAAAAAKAAAAaXNfZW5hYmxlZOUPAAAAAAAA7A8AAAAAAAAKAAAAaXNfZW5hYmxlZPwLAAAAAAAAAwwAAAAAAAAKAAAAaXNfZW5hYmxlZA",
+					"AQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/"
+				]
+			]
+		},
+		{
+			"file": "src/outbox_repo.rs",
+			"settings":
+			{
+				"buffer_size": 9480,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+				[
+					1,
+					1,
+					"lsp_apply_text_document_edit",
+					{
+						"edits":
+						[
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 50,
+										"line": 272
+									},
+									"start":
+									{
+										"character": 40,
+										"line": 272
+									}
+								}
+							},
+							{
+								"newText": "enabled",
+								"range":
+								{
+									"end":
+									{
+										"character": 50,
+										"line": 294
+									},
+									"start":
+									{
+										"character": 40,
+										"line": 294
+									}
+								}
+							}
+						],
+						"label": null
+					},
+					"AgAAAL0iAAAAAAAAxCIAAAAAAAAKAAAAaXNfZW5hYmxlZDwgAAAAAAAAQyAAAAAAAAAKAAAAaXNfZW5hYmxlZA",
+					"AQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/"
 				]
 			]
 		}
@@ -1040,11 +1402,12 @@
 	],
 	"file_history":
 	[
+		"/home/ljubchyk/dev/FlagEngine/src/db.rs",
+		"/home/ljubchyk/dev/FlagEngine/src/admin.rs",
 		"/home/ljubchyk/dev/FlagEngine/templates/flags.stpl",
 		"/home/ljubchyk/dev/FlagEngine/src/http.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/domain.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/flag_repo.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/admin.rs",
 		"/home/ljubchyk/dev/FlagEngine/requests.http",
 		"/home/ljubchyk/dev/FlagEngine/requests.rest",
 		"/home/ljubchyk/dev/FlagEngine/src/main.rs",
@@ -1060,7 +1423,6 @@
 		"/home/ljubchyk/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/result.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/worker.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/audit_repo.rs",
-		"/home/ljubchyk/dev/FlagEngine/src/db.rs",
 		"/home/ljubchyk/dev/FlagEngine/src/repo_error.rs",
 		"/home/ljubchyk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libsqlite3-sys-0.38.2/src/error.rs",
 		"/home/ljubchyk/dev/FlagEngine/.env",
@@ -1113,6 +1475,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"is_",
+			"is",
+			"is_",
 			"is",
 			"flag\\.",
 			"flag.",
@@ -1159,6 +1524,7 @@
 		"regex": true,
 		"replace_history":
 		[
+			"",
 			"@baseUrl",
 			" {{key}}",
 			"app_error::",
@@ -1194,34 +1560,335 @@
 			[
 				{
 					"buffer": 0,
-					"file": "src/admin.rs",
-					"selected": true,
+					"file": "src/domain.rs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3286,
+						"buffer_size": 5974,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1047,
-								1050
+								297,
+								297
 							]
 						],
 						"settings":
 						{
-							"lsp_uri": "file:///home/ljubchyk/dev/FlagEngine/src/admin.rs",
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html, text.xml"
+								},
+								{
+									"rhs_empty": true,
+									"selector": "punctuation.accessor"
+								},
+								{
+									"characters": ":.'(",
+									"selector": "meta.tag, source - comment - string.quoted.double.block - string.quoted.single.block - string.unquoted.heredoc",
+									"server": "LSP-rust-analyzer"
+								}
+							],
+							"lsp_active": true,
+							"lsp_uri": "file:///home/ljubchyk/dev/FlagEngine/src/domain.rs",
+							"show_definitions": false,
 							"syntax": "Packages/Rust/Rust.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 538.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 16337,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions": "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",
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html, text.xml"
+								},
+								{
+									"rhs_empty": true,
+									"selector": "punctuation.accessor"
+								}
+							],
+							"detect_indentation": false,
+							"line_numbers": false,
+							"lsp_uri": "buffer:110",
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([^ \t].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 2159.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/flag_repo.rs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10087,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2237,
+								2237
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html, text.xml"
+								},
+								{
+									"rhs_empty": true,
+									"selector": "punctuation.accessor"
+								},
+								{
+									"characters": ":.'(",
+									"selector": "meta.tag, source - comment - string.quoted.double.block - string.quoted.single.block - string.unquoted.heredoc",
+									"server": "LSP-rust-analyzer"
+								}
+							],
+							"lsp_active": true,
+							"lsp_uri": "file:///home/ljubchyk/dev/FlagEngine/src/flag_repo.rs",
+							"show_definitions": false,
+							"syntax": "Packages/Rust/Rust.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1349.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "requests.http",
+					"selected": true,
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 954,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								661,
+								661
+							]
+						],
+						"settings":
+						{
+							"lsp_uri": "file:///home/ljubchyk/dev/FlagEngine/requests.http",
+							"syntax": "Packages/REST Client/REST.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/cache.rs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1493,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html, text.xml"
+								},
+								{
+									"rhs_empty": true,
+									"selector": "punctuation.accessor"
+								},
+								{
+									"characters": ":.'(",
+									"selector": "meta.tag, source - comment - string.quoted.double.block - string.quoted.single.block - string.unquoted.heredoc",
+									"server": "LSP-rust-analyzer"
+								}
+							],
+							"lsp_active": true,
+							"lsp_uri": "file:///home/ljubchyk/dev/FlagEngine/src/cache.rs",
+							"show_definitions": false,
+							"syntax": "Packages/Rust/Rust.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/audit_repo.rs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9275,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html, text.xml"
+								},
+								{
+									"rhs_empty": true,
+									"selector": "punctuation.accessor"
+								},
+								{
+									"characters": ":.'(",
+									"selector": "meta.tag, source - comment - string.quoted.double.block - string.quoted.single.block - string.unquoted.heredoc",
+									"server": "LSP-rust-analyzer"
+								}
+							],
+							"lsp_active": true,
+							"lsp_uri": "file:///home/ljubchyk/dev/FlagEngine/src/audit_repo.rs",
+							"show_definitions": false,
+							"syntax": "Packages/Rust/Rust.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/outbox_repo.rs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9480,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html, text.xml"
+								},
+								{
+									"rhs_empty": true,
+									"selector": "punctuation.accessor"
+								},
+								{
+									"characters": ":.'(",
+									"selector": "meta.tag, source - comment - string.quoted.double.block - string.quoted.single.block - string.unquoted.heredoc",
+									"server": "LSP-rust-analyzer"
+								}
+							],
+							"lsp_active": true,
+							"lsp_uri": "file:///home/ljubchyk/dev/FlagEngine/src/outbox_repo.rs",
+							"show_definitions": false,
+							"syntax": "Packages/Rust/Rust.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
 					"stack_multiselect": false,
 					"type": "text"
 				}
@@ -1298,7 +1965,7 @@
 	"project": "FlagEngine.sublime-project",
 	"replace":
 	{
-		"height": 48.0
+		"height": 68.0
 	},
 	"save_all_on_build": true,
 	"select_file":

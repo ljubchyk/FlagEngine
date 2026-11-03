@@ -27,7 +27,9 @@ impl FlagCache {
         let mut map = HashMap::clone(&self.flags.load());
         for event in events {
             match &event.payload {
-                EventPayload::FlagCreated { enabled: is_enabled } => {
+                EventPayload::FlagCreated {
+                    enabled: is_enabled,
+                } => {
                     map.insert(event.key.clone(), *is_enabled);
                 }
                 EventPayload::FlagEnabled => {

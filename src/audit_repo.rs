@@ -1,8 +1,7 @@
 use crate::domain::{DomainEvent, EventPayload};
 use rusqlite::{
-    Error, Result, ToSql, Transaction, params,
-    types::ToSqlOutput,
-    types::{FromSql, FromSqlError, FromSqlResult, ValueRef},
+    Connection, Error, Result, ToSql, Transaction, params,
+    types::{FromSql, FromSqlError, FromSqlResult, ToSqlOutput, ValueRef},
 };
 
 impl ToSql for EventPayload {
@@ -42,6 +41,33 @@ pub fn append(tx: &Transaction, event: &DomainEvent) -> Result<()> {
         ],
     )?;
     Ok(())
+}
+
+pub fn find_by_key(
+    conn: &Connection,
+    key: &str,
+    before: Option<i64>,
+    limit: u32,
+) -> Result<Vec<(i64, DomainEvent)>> {
+    conn.prepare_cached(
+        "SELECT id, key, actor, payload, created_at
+        FROM audit
+        WHERE key = ?1 AND id < ?2
+        ORDER BY id DESC
+        LIMIT ?3",
+    )?
+    .query_map(params![key, before.unwrap_or(i64::MAX), limit], |row| {
+        Ok((
+            row.get(0)?,
+            DomainEvent {
+                key: row.get(1)?,
+                actor: row.get(2)?,
+                payload: row.get(3)?,
+                occurred_at: row.get(4)?,
+            },
+        ))
+    })?
+    .collect()
 }
 
 #[cfg(test)]
@@ -137,10 +163,7 @@ mod tests {
     fn append_stores_each_variant_with_matching_action() {
         let mut conn = setup();
         let payloads = [
-            (
-                EventPayload::FlagCreated { enabled: false },
-                "FlagCreated",
-            ),
+            (EventPayload::FlagCreated { enabled: false }, "FlagCreated"),
             (EventPayload::FlagEnabled, "FlagEnabled"),
             (EventPayload::FlagArchived, "FlagArchived"),
         ];

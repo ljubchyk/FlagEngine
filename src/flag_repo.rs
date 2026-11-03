@@ -59,11 +59,9 @@ pub fn update(tx: &Transaction, flag: &Flag) -> Result<()> {
 }
 
 pub fn find(conn: &Connection, key: &str) -> Result<Option<Flag>> {
-    conn.prepare_cached(
-        "SELECT key, enabled, archived, updated_at FROM flags WHERE key = ?1",
-    )?
-    .query_row(params![key], raw_to_flag)
-    .optional()
+    conn.prepare_cached("SELECT key, enabled, archived, updated_at FROM flags WHERE key = ?1")?
+        .query_row(params![key], raw_to_flag)
+        .optional()
 }
 
 pub fn find_all(conn: &Connection, filter: FlagFilter) -> Result<Vec<Flag>> {

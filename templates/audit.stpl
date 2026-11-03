@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>FlagEngine: історія</title>
+<link rel="icon" href="data:,">
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 52rem; margin: 2rem auto; padding: 0 1rem; }
+  table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+  th, td { text-align: left; padding: .5rem; border-bottom: 1px solid #ddd; }
+</style>
+</head>
+<body>
+<h1>Історія: <%= self.flag.key %></h1>
+<p>
+  <a href="/admin">← До списку</a> ·
+  стан:
+  <% if self.flag.archived { %>архівований<% } else if self.flag.enabled { %>увімкнений<% } else { %>вимкнений<% } %>
+</p>
+
+<% if self.events.is_empty() { %>
+  <p>Подій немає.</p>
+<% } else { %>
+  <table>
+    <tr><th>Час (UTC)</th><th>Хто</th><th>Що сталося</th></tr>
+    <% for event in &self.events { %>
+      <tr>
+        <td><time><%= event.created_at %></time></td>
+        <td><%= event.actor %></td>
+        <td><%= event.action %></td>
+      </tr>
+    <% } %>
+  </table>
+  <% if let Some(before) = self.next_before { %>
+    <p><a href="/admin/flags/<%= self.flag.key %>/history?before=<%= before %>">Далі →</a></p>
+  <% } %>
+<% } %>
+
+<script>
+  document.querySelectorAll('time[datetime]').forEach(function (el) {
+    el.title = new Date(el.dateTime).toLocaleString();
+  });
+</script>
+</body>
+</html>

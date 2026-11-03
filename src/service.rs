@@ -2,10 +2,17 @@ use rusqlite::TransactionBehavior;
 use std::sync::mpsc::SyncSender;
 
 use crate::app_error::AppError;
-use crate::flag_repo;
+use crate::domain::DomainEvent;
 use crate::flag_repo::FlagFilter;
 use crate::handlers::notify_sync_subscribers;
+use crate::{audit_repo, flag_repo};
 use crate::{db::DbPool, domain::Flag};
+
+#[derive(Debug)]
+pub struct AuditPage {
+    pub events: Vec<DomainEvent>,
+    pub next_before: Option<i64>,
+}
 
 pub struct FlagService {
     pool: DbPool,
@@ -95,6 +102,29 @@ impl FlagService {
     pub fn find_flags(&self, filter: FlagFilter) -> Result<Vec<Flag>, AppError> {
         let conn = self.pool.get()?;
         Ok(flag_repo::find_all(&conn, filter)?)
+    }
+
+    pub fn find_audit(
+        &self,
+        key: &str,
+        before: Option<i64>,
+        limit: u32,
+    ) -> Result<AuditPage, AppError> {
+        let conn = self.pool.get()?;
+        let limit = limit.clamp(1, 100);
+
+        let mut audit = audit_repo::find_by_key(&conn, key, before, limit + 1)?;
+        let next_before = if audit.len() > limit as usize {
+            audit.truncate(limit as usize);
+            audit.last().map(|(id, _)| *id)
+        } else {
+            None
+        };
+
+        Ok(AuditPage {
+            events: audit.into_iter().map(|(_, event)| event).collect(),
+            next_before,
+        })
     }
 }
 
