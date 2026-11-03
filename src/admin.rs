@@ -22,7 +22,7 @@ pub fn router() -> Router<AppState> {
         .route("/admin/flags/{key}/enable", post(enable_flag))
         .route("/admin/flags/{key}/disable", post(disable_flag))
         .route("/admin/flags/{key}/archive", post(archive_flag))
-        .route("/admin/flags/{key}/audit", get(audit_page))
+        .route("/admin/flags/{key}/audit", get(audit_flag))
 }
 
 fn format_utc(ms: i64) -> String {
@@ -48,32 +48,6 @@ struct FlagView {
     updated_at: String,
 }
 
-impl From<&Flag> for FlagView {
-    fn from(flag: &Flag) -> Self {
-        let updated_at = match OffsetDateTime::from_unix_timestamp_nanos(
-            i128::from(flag.updated_at()) * 1_000_000,
-        ) {
-            Ok(dt) => format!(
-                "{:04}-{:02}-{:02} {:02}:{:02}:{:02}UTC",
-                dt.year(),
-                u8::from(dt.month()),
-                dt.day(),
-                dt.hour(),
-                dt.minute(),
-                dt.second(),
-            ),
-            Err(_) => flag.updated_at().to_string(),
-        };
-
-        Self {
-            key: flag.key().to_owned(),
-            enabled: flag.is_enabled(),
-            archived: flag.is_archived(),
-            updated_at: updated_at,
-        }
-    }
-}
-
 #[derive(Template)]
 #[template(path = "flags.stpl")]
 struct FlagsView {
@@ -92,7 +66,12 @@ async fn flags_page(
 
     let page = FlagsView {
         status: query.status.as_str(),
-        flags: flags.iter().map(FlagView::from).collect(),
+        flags: flags.iter().map(|f| FlagView {
+            key: f.key().to_owned(),
+            enabled: f.is_enabled(),
+            archived: f.is_archived(),
+            updated_at: format_utc(f.updated_at()),
+        }).collect(),
     };
     Ok(Html(page.render()?))
 }
@@ -155,12 +134,12 @@ struct EventView {
 #[derive(Template)]
 #[template(path = "audit.stpl")]
 struct AuditView {
-    flag: FlagView,
+    flag: Flag,
     events: Vec<EventView>,
     next_before: Option<i64>,
 }
 
-async fn audit_page(
+async fn audit_flag(
     State(state): State<AppState>,
     Path(key): Path<String>,
     Query(query): Query<AuditQuery>,
@@ -186,7 +165,7 @@ async fn audit_page(
     };
 
     let page = AuditView {
-        flag: FlagView::from(&flag),
+        flag,
         events: audit
             .events
             .iter()

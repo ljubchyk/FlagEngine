@@ -11,11 +11,11 @@
 </style>
 </head>
 <body>
-<h1>Історія: <%= self.flag.key %></h1>
+<h1>Історія: <%= self.flag.key() %></h1>
 <p>
   <a href="/admin">← До списку</a> ·
   стан:
-  <% if self.flag.archived { %>архівований<% } else if self.flag.enabled { %>увімкнений<% } else { %>вимкнений<% } %>
+  <% if self.flag.is_archived() { %>архівований<% } else if self.flag.is_enabled() { %>увімкнений<% } else { %>вимкнений<% } %>
 </p>
 
 <% if self.events.is_empty() { %>
@@ -32,7 +32,7 @@
     <% } %>
   </table>
   <% if let Some(before) = self.next_before { %>
-    <p><a href="/admin/flags/<%= self.flag.key %>/audit?before=<%= before %>">Далі →</a></p>
+    <p><a href="/admin/flags/<%= self.flag.key() %>/audit?before=<%= before %>">Далі →</a></p>
   <% } %>
 <% } %>
 

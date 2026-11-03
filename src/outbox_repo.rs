@@ -38,8 +38,8 @@ impl ToSql for OutboxStatus {
 
 pub fn enqueue(tx: &Transaction, event: &DomainEvent) -> Result<i64> {
     tx.execute(
-        "INSERT INTO outbox (payload, status, created_at) VALUES (?1, 'Pending', ?2)",
-        params![event, event.occurred_at],
+        "INSERT INTO outbox (payload, status) VALUES (?1, 'Pending')",
+        params![event],
     )?;
 
     Ok(tx.last_insert_rowid())

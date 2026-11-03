@@ -19,23 +19,13 @@ impl FromSql for EventPayload {
     }
 }
 
-fn action(payload: &EventPayload) -> &'static str {
-    match payload {
-        EventPayload::FlagCreated { .. } => "FlagCreated",
-        EventPayload::FlagEnabled => "FlagEnabled",
-        EventPayload::FlagDisabled => "FlagDisabled",
-        EventPayload::FlagArchived => "FlagArchived",
-    }
-}
-
 pub fn append(tx: &Transaction, event: &DomainEvent) -> Result<()> {
     tx.execute(
-        "INSERT INTO audit (key, actor, action, payload, created_at)
-         VALUES (?1, ?2, ?3, ?4, ?5)",
+        "INSERT INTO audit (key, actor, payload, created_at)
+         VALUES (?1, ?2, ?3, ?4)",
         params![
             event.key,
             event.actor,
-            action(&event.payload),
             event.payload,
             event.occurred_at
         ],

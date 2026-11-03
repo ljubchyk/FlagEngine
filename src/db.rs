@@ -34,7 +34,6 @@ pub fn init(db_path: &str) -> Result<Connection> {
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              key TEXT NOT NULL,
              actor TEXT NOT NULL,
-             action TEXT NOT NULL,
              payload TEXT NOT NULL,
              created_at INTEGER NOT NULL
          );
@@ -45,8 +44,7 @@ pub fn init(db_path: &str) -> Result<Connection> {
          CREATE TABLE IF NOT EXISTS outbox (
              seq INTEGER PRIMARY KEY AUTOINCREMENT,
              status TEXT NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Completed', 'Failed')),
-             payload TEXT NOT NULL,
-             created_at INTEGER NOT NULL
+             payload TEXT NOT NULL
          );
 
          CREATE INDEX IF NOT EXISTS idx_outbox_pending 
