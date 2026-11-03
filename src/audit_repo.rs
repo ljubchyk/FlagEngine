@@ -107,7 +107,7 @@ mod tests {
     #[test]
     fn action_names_match_payload_variants() {
         assert_eq!(
-            action(&EventPayload::FlagCreated { is_enabled: false }),
+            action(&EventPayload::FlagCreated { enabled: false }),
             "FlagCreated"
         );
         assert_eq!(action(&EventPayload::FlagEnabled), "FlagEnabled");
@@ -138,7 +138,7 @@ mod tests {
         let mut conn = setup();
         let payloads = [
             (
-                EventPayload::FlagCreated { is_enabled: false },
+                EventPayload::FlagCreated { enabled: false },
                 "FlagCreated",
             ),
             (EventPayload::FlagEnabled, "FlagEnabled"),
@@ -247,7 +247,7 @@ mod tests {
     fn payload_roundtrips_through_sql() {
         let mut conn = setup();
         for p in [
-            EventPayload::FlagCreated { is_enabled: true },
+            EventPayload::FlagCreated { enabled: true },
             EventPayload::FlagDisabled,
             EventPayload::FlagArchived,
         ] {

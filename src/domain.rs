@@ -6,7 +6,7 @@ use crate::app_error::AppError;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type")]
 pub enum EventPayload {
-    FlagCreated { is_enabled: bool },
+    FlagCreated { enabled: bool },
     FlagEnabled,
     FlagDisabled,
     FlagArchived,
@@ -53,8 +53,8 @@ fn validate_key(raw: &str) -> Result<(), AppError> {
 #[derive(Debug, Clone)]
 pub struct Flag {
     key: String,
-    is_enabled: bool,
-    is_archived: bool,
+    enabled: bool,
+    archived: bool,
     updated_at: i64,
 }
 
@@ -64,15 +64,15 @@ impl Flag {
 
         let flag = Self {
             key,
-            is_enabled: false,
-            is_archived: false,
+            enabled: false,
+            archived: false,
             updated_at: now_ms(),
         };
 
         let event = flag.event(
             actor,
             EventPayload::FlagCreated {
-                is_enabled: flag.is_enabled,
+                enabled: flag.enabled,
             },
         );
 
@@ -80,15 +80,15 @@ impl Flag {
     }
 
     pub fn enable(&mut self, actor: String) -> Result<Option<DomainEvent>, AppError> {
-        if self.is_archived {
+        if self.archived {
             return Err(AppError::Archived);
         }
 
-        if self.is_enabled {
+        if self.enabled {
             return Ok(None);
         }
 
-        self.is_enabled = true;
+        self.enabled = true;
         self.updated_at = now_ms();
 
         let event = self.event(actor, EventPayload::FlagEnabled);
@@ -97,15 +97,15 @@ impl Flag {
     }
 
     pub fn disable(&mut self, actor: String) -> Result<Option<DomainEvent>, AppError> {
-        if self.is_archived {
+        if self.archived {
             return Err(AppError::Archived);
         }
 
-        if !self.is_enabled {
+        if !self.enabled {
             return Ok(None);
         }
 
-        self.is_enabled = false;
+        self.enabled = false;
         self.updated_at = now_ms();
 
         let event = self.event(actor, EventPayload::FlagDisabled);
@@ -114,12 +114,12 @@ impl Flag {
     }
 
     pub fn archive(&mut self, actor: String) -> Option<DomainEvent> {
-        if self.is_archived {
+        if self.archived {
             return None;
         }
 
-        self.is_archived = true;
-        self.is_enabled = false;
+        self.archived = true;
+        self.enabled = false;
         self.updated_at = now_ms();
 
         let event = self.event(actor, EventPayload::FlagArchived);
@@ -130,8 +130,8 @@ impl Flag {
     pub(crate) fn restore(key: String, enabled: bool, archived: bool, updated_at: i64) -> Self {
         Self {
             key,
-            is_enabled: enabled,
-            is_archived: archived,
+            enabled,
+            archived,
             updated_at,
         }
     }
@@ -141,11 +141,11 @@ impl Flag {
     }
 
     pub fn is_enabled(&self) -> bool {
-        self.is_enabled
+        self.enabled
     }
 
     pub fn is_archived(&self) -> bool {
-        self.is_archived
+        self.archived
     }
 
     pub fn updated_at(&self) -> i64 {
@@ -192,7 +192,7 @@ mod tests {
         assert_eq!(event.occurred_at, flag.updated_at());
         assert!(matches!(
             event.payload,
-            EventPayload::FlagCreated { is_enabled: false }
+            EventPayload::FlagCreated { enabled: false }
         ))
     }
 

@@ -25,8 +25,8 @@ pub fn init(db_path: &str) -> Result<Connection> {
     conn.execute_batch(
         "CREATE TABLE IF NOT EXISTS flags (
              key TEXT PRIMARY KEY,
-             is_enabled BOOLEAN NOT NULL DEFAULT FALSE,
-             is_archived BOOLEAN NOT NULL DEFAULT FALSE,
+             enabled BOOLEAN NOT NULL DEFAULT FALSE,
+             archived BOOLEAN NOT NULL DEFAULT FALSE,
              updated_at INTEGER NOT NULL
          ) WITHOUT ROWID;
 

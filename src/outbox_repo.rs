@@ -270,7 +270,7 @@ mod tests {
         let mut conn = setup();
         let tx = conn.transaction().unwrap();
         for payload in [
-            EventPayload::FlagCreated { is_enabled: false },
+            EventPayload::FlagCreated { enabled: false },
             EventPayload::FlagEnabled,
             EventPayload::FlagArchived,
         ] {
@@ -292,7 +292,7 @@ mod tests {
 
         assert!(matches!(
             events[0].payload,
-            EventPayload::FlagCreated { is_enabled: false }
+            EventPayload::FlagCreated { enabled: false }
         ));
         assert!(matches!(events[1].payload, EventPayload::FlagEnabled));
         assert!(matches!(events[2].payload, EventPayload::FlagArchived));
