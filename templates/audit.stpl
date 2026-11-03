@@ -32,7 +32,7 @@
     <% } %>
   </table>
   <% if let Some(before) = self.next_before { %>
-    <p><a href="/admin/flags/<%= self.flag.key %>/history?before=<%= before %>">Далі →</a></p>
+    <p><a href="/admin/flags/<%= self.flag.key %>/audit?before=<%= before %>">Далі →</a></p>
   <% } %>
 <% } %>
 
