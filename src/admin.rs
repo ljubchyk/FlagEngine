@@ -31,13 +31,12 @@ fn format_utc(ms: i64) -> String {
     };
 
     format!(
-        "{:04}-{:02}-{:02} {:02}:{:02}:{:02} UTC",
+        "{:04}-{:02}-{:02} {:02}:{:02}",
         dt.year(),
         u8::from(dt.month()),
         dt.day(),
         dt.hour(),
         dt.minute(),
-        dt.second(),
     )
 }
 
@@ -51,21 +50,17 @@ struct FlagView {
 #[derive(Template)]
 #[template(path = "flags.stpl")]
 struct FlagsView {
-    status: &'static str,
     flags: Vec<FlagView>,
 }
 
 async fn flags_page(
     State(state): State<AppState>,
-    Query(query): Query<ListFlagsQuery>,
 ) -> Result<Html<String>, AppError> {
     let service = state.service.clone();
-    let filter = FlagFilter::from(query.status);
 
-    let flags = tokio::task::spawn_blocking(move || service.find_flags(filter)).await??;
+    let flags = tokio::task::spawn_blocking(move || service.find_flags(FlagFilter::All)).await??;
 
     let page = FlagsView {
-        status: query.status.as_str(),
         flags: flags.iter().map(|f| FlagView {
             key: f.key().to_owned(),
             enabled: f.is_enabled(),
