@@ -218,16 +218,6 @@ pub(crate) enum StatusQuery {
     All,
 }
 
-impl StatusQuery {
-    pub(crate) fn as_str(self) -> &'static str {
-        match self {
-            Self::Active => "active",
-            Self::Archived => "archived",
-            Self::All => "all",
-        }
-    }
-}
-
 #[derive(Deserialize)]
 pub(crate) struct ListFlagsQuery {
     #[serde(default)]

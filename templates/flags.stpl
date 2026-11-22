@@ -206,8 +206,8 @@
         <a href="file:///flags/new" class="btn-primary">+ New Flag</a>
     </div>
     <div class="tabs">
-        <button class="tab active" data-status="active">Active</button>
-        <button class="tab" data-status="archived">Archived</button>
+        <button class="tab active" data-status="true">Active</button>
+        <button class="tab" data-status="false">Archived</button>
         <button class="tab" data-status="all">All</button>
         <input id="q" type="search" class="search" placeholder="Search by key..." value="">
     </div>
@@ -224,28 +224,40 @@
         <tbody>
           <% for flag in &self.flags { %>
             <!-- Активний прапорець -->
-            <tr data-key="enable_onboarding_v2" data-status="active">
-                <td class="key">
+            <tr data-key="<%= flag.key %>" data-status="<%= !flag.archived %>" <% if flag.archived { %>hidden<% } %>>
+                <td class="key<% if flag.archived { %>-archived<% } %>">
                   <%= flag.key %>
                 </td>
                 <td class="status">
-                <% if flag.enabled { %>
-                  On  
-                <% } else { %>
-                  Off
-                <% } %>
+                    <% if flag.archived { %>
+                        Archived
+                    <% } else if flag.enabled { %>
+                        On  
+                    <% } else { %>
+                        Off
+                    <% } %>
                 </td>
-                <td class="updated">2026-11-04 12:30</td>
+                <td class="updated">
+                    <%= flag.updated_at %>
+                </td>
                 <td class="actions">
-                    <form method="POST" action="file:///flags/enable_onboarding_v2/disable">
-                        <button>turn off</button>
-                    </form>
-                    <form method="POST" action="file:///flags/enable_onboarding_v2/archive">
-                        <button>archive</button>
-                    </form>
+                    <% if !flag.archived { %>
+                        <% if flag.enabled { %>
+                            <form method="POST" action="/admin/flags/<%= flag.key %>/disable">
+                                <button>turn off</button>
+                            </form>
+                        <% } else { %>
+                            <form method="POST" action="/admin/flags/<%= flag.key %>/enable">
+                                <button>turn on</button>
+                            </form>
+                        <% } %>
+                        <form method="POST" action="/admin/flags/<%= flag.key %>/archive">
+                            <button>archive</button>
+                        </form>
+                    <% } %>
                 </td>
             </tr>
-          <% } %></td>
+          <% } %>
 
             <!-- Архівований прапорець -->
             <!-- <tr data-key="old_search_algorithm_v1" data-status="archived" hidden>
@@ -263,7 +275,7 @@
     </table>
 
     <script>
-        let status = "active";
+        let status = true;
         const tabs = document.querySelectorAll(".tab");
         const rows = document.querySelectorAll("tr[data-key]");
 

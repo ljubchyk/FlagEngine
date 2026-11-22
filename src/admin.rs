@@ -12,7 +12,7 @@ use crate::{
     app_error::AppError::{self, FlagNotFound},
     domain::{DomainEvent, EventPayload, Flag},
     flag_repo::FlagFilter,
-    http::{AppState, ListFlagsQuery},
+    http::AppState,
 };
 
 pub fn router() -> Router<AppState> {
