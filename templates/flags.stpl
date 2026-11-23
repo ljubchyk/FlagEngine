@@ -206,9 +206,9 @@
         <a href="file:///flags/new" class="btn-primary">+ New Flag</a>
     </div>
     <div class="tabs">
-        <button class="tab active" data-status="true">Active</button>
-        <button class="tab" data-status="false">Archived</button>
-        <button class="tab" data-status="all">All</button>
+        <button class="tab active" data-status="0">Active</button>
+        <button class="tab" data-status="1">Archived</button>
+        <button class="tab" data-status="2">All</button>
         <input id="q" type="search" class="search" placeholder="Search by key..." value="">
     </div>
 
@@ -223,8 +223,7 @@
         </thead>
         <tbody>
           <% for flag in &self.flags { %>
-            <!-- Активний прапорець -->
-            <tr data-key="<%= flag.key %>" data-status="<%= !flag.archived %>" <% if flag.archived { %>hidden<% } %>>
+            <tr data-key="<%= flag.key %>" <% if flag.archived { %> data-status= "1" hidden<% } else { %> data-status= "0" <% } %>>
                 <td class="key<% if flag.archived { %>-archived<% } %>">
                   <%= flag.key %>
                 </td>
@@ -275,14 +274,14 @@
     </table>
 
     <script>
-        let status = true;
+        let status = "0";
         const tabs = document.querySelectorAll(".tab");
         const rows = document.querySelectorAll("tr[data-key]");
 
         function filter() {
             const text = q.value.trim().toLowerCase();
             for (const row of rows) {
-                const byStatus = status === "all" || row.dataset.status === status;
+                const byStatus = status === "2" || row.dataset.status === status;
                 const byKey = row.dataset.key.includes(text);
                 row.hidden = !(byStatus && byKey);
             }
