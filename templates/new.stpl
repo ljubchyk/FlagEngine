@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="uk" style="scrollbar-gutter: stable;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlagEngine - New flag</title>
+    <link rel="icon" href="data:,">
+    <style>
+        body {
+            font-family: monospace;
+            color: #111;
+            background: #fff;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .back {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #111;
+        }
+
+        form {
+            max-width: 480px;
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"] {
+            font-family: monospace;
+            font-size: 13px;
+            box-sizing: border-box;
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #111;
+            border-radius: 3px;
+            outline: none;
+            background: #fff;
+            color: #111;
+        }
+
+        input[type="text"]:focus {
+            background: #f4f4f4;
+        }
+
+        .hint {
+            font-size: 11px;
+            color: #555;
+            margin: 8px 0 0;
+            line-height: 1.5;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            font-family: monospace;
+            background: #111;
+            color: #fff;
+            padding: 6px 12px;
+            border: 1px solid #111;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: #fff;
+            color: #111;
+        }
+
+        .cancel {
+            font-size: 11px;
+            color: #111;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>New flag</h1>
+        <a href="/admin" class="back">&larr; Flags</a>
+    </div>
+
+    <form method="POST" action="/admin/flags">
+        <label for="key">Key</label>
+        <input id="key" name="key" type="text" autofocus autocomplete="off" spellcheck="false">
+        <p class="hint">
+            1-64 characters: a-z, 0-9, ".", "_" and "-".<br>
+            Must start and end with a letter or digit.<br>
+            The key cannot be changed later and cannot be reused after archiving.
+        </p>
+        <div class="actions">
+            <button type="submit" class="btn-primary">Create</button>
+            <a href="/admin" class="cancel">Cancel</a>
+        </div>
+    </form>
+</body>
+</html>

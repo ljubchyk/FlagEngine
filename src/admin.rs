@@ -19,6 +19,7 @@ pub fn router() -> Router<AppState> {
     Router::new()
         .route("/admin", get(flags_page))
         .route("/admin/flags", post(create_flag))
+        .route("/admin/flags/new", get(new_flag_page))
         .route("/admin/flags/{key}/enable", post(enable_flag))
         .route("/admin/flags/{key}/disable", post(disable_flag))
         .route("/admin/flags/{key}/archive", post(archive_flag))
@@ -113,6 +114,14 @@ async fn archive_flag(
     let service = state.service.clone();
     tokio::task::spawn_blocking(move || service.archive_flag(key, "admin".to_owned())).await??;
     Ok(Redirect::to("/admin"))
+}
+
+#[derive(Template)]
+#[template(path = "new.stpl")]
+struct NewFlagView;
+
+async fn new_flag_page() -> Result<Html<String>, AppError> {
+    Ok(Html(NewFlagView.render()?))
 }
 
 #[derive(Deserialize)]

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///home/ljubchyk/templates/untitled1.html -->
-<html lang="uk" style="scrollbar-gutter: stable;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="uk" style="scrollbar-gutter: stable;">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flagvane - Feature Flags</title>
+    <title>FlagEngine - Flags</title>
+    <link rel="icon" href="data:,">
     <style>
         body {
             font-family: monospace;
@@ -14,61 +15,11 @@
             padding: 0 20px;
         }
 
-        .tabs {
-            display: flex;
-            margin-bottom: 0;
-            padding-left: 4px;
-            display: flex;
-            gap: 2px;
-        }
-
-        .tab {
-            font-family: monospace;
-            font-size: 11px;
-            text-transform: uppercase;
-            background: #fff;
-            border: 1px solid #111;
-            /*border-bottom: 1px solid #111;*/
-            padding: 6px 14px;
-            cursor: pointer;
-            text-decoration: none;
-            color: #111;
-            font-weight: 600;
-            border-top-left-radius: 3px;
-            border-top-right-radius: 3px;
-            position: relative;
-            top: 1px;
-        }
-
-        .tab.active {
-            background: #f4f4f4;
-        }
-
-        .tab:hover:not(.active) {
-            background: #f4f4f4;
-        }
-
-        .search {
-            font-family: monospace;
-            font-size: 12px;
-            padding: 6px 8px;
-            border: 1px solid #111;
-            border-top-left-radius: 3px;
-            border-top-right-radius: 3px;
-            margin-left: 4px;
-            outline: none;
-            background: #fff;
-            color: #111;
-            width: 200px;
-            position: relative;
-            top: 1px;
-        }
-
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 20px;
         }
 
         h1 {
@@ -77,104 +28,6 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-        }
-
-        .flags-table {
-            width: 100%;
-            table-layout: fixed; 
-            border-spacing: 0px;
-            font-size: 13px;
-            text-align: left;
-            border: 1px solid #111;
-        }
-
-        .flags-table th, .flags-table td {
-            padding: 8px 10px;
-            border-bottom: 1px solid #ddd;
-            vertical-align: middle;
-        }
-
-        .flags-table th {
-            font-weight: 700;
-            color: #111;
-            background: #f4f4f4;
-            border-bottom: 1px solid #111;
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 0.5px;
-        }
-
-        th.key {
-        }
-
-        td.key {
-            font-size: 12px;
-            color: #111;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 100%;
-        }
-
-        .key-archived {
-            font-size: 12px;
-            color: #111;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 100%;
-            text-decoration: line-through;
-        }
-
-        th.status {
-            width: 110px;
-        }
-
-        td.status {
-            font-family: monospace;
-            font-size: 12px;
-            color: #111;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 100%;
-        }
-
-        th.updated {
-            width: 150px;
-        }
-
-        td.updated {
-
-        }
-
-        th.actions {
-            width: 150px;
-            text-align: right; 
-        }
-
-        td.actions { 
-            text-align: right; 
-        }
-
-        td.actions form { 
-            display: inline; 
-        }
-
-        td.actions button {
-            background: none; 
-            border: none; 
-            cursor: pointer; 
-            font-size: 11px;
-            font-family: inherit;
-            color: #111;
-            padding: 0;
-            text-decoration: underline;
-        }
-
-        td.actions button:hover {
-            color: #000;
-            font-weight: bold;
         }
 
         .btn-primary {
@@ -188,117 +41,250 @@
             font-weight: 600;
             text-transform: uppercase;
         }
-        .btn-primary:hover { 
-            background: #fff; 
-            color: #111; 
+
+        .btn-primary:hover {
+            background: #fff;
+            color: #111;
+        }
+
+        /* Tabs and search: one line, no boxes */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid #111;
+        }
+
+        .tab {
+            font-family: monospace;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 8px 0;
+            margin-bottom: -1px;
+            cursor: pointer;
+            color: #777;
+        }
+
+        .tab:hover {
+            color: #111;
+        }
+
+        .tab.active {
+            color: #111;
+            border-bottom-color: #111;
+        }
+
+        .divider {
+            width: 1px;
+            height: 16px;
+            background: #ccc;
+        }
+
+        .search {
+            font-family: monospace;
+            font-size: 12px;
+            flex: 1;
+            padding: 8px 0;
+            border: none;
+            outline: none;
+            background: none;
+            color: #111;
+        }
+
+        .search::placeholder {
+            color: #999;
+        }
+
+        /* Table: horizontal lines only */
+        table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e5e5;
+            vertical-align: middle;
         }
 
         th {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #777;
+            background: white;
             position: sticky;
             top: 0px;
+        }
+
+        th.status { width: 90px; }
+        th.updated { width: 150px; }
+        th.actions { width: 150px; text-align: right; }
+        td.actions { text-align: right; }
+
+        td.key {
+            font-size: 12px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        td.key.archived {
+            text-decoration: line-through;
+            color: #777;
+        }
+
+        td.status {
+            font-size: 12px;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            margin-right: 6px;
+            background: #ccc;
+        }
+
+        .dot.on { background: #111; }
+
+        td.updated {
+            font-size: 12px;
+            color: #555;
+        }
+
+        td.actions form {
+            display: inline;
+            margin-left: 12px;
+        }
+
+        td.actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-family: inherit;
+            color: #111;
+            padding: 0;
+            text-decoration: underline;
+        }
+
+        td.actions button:hover {
+            font-weight: bold;
+        }
+
+        .empty {
+            padding: 24px 0;
+            font-size: 12px;
+            color: #777;
         }
     </style>
 </head>
 <body>
-
     <div class="header">
         <h1>Flags</h1>
-        <a href="file:///flags/new" class="btn-primary">+ New Flag</a>
+        <a href="admin/flags/new" class="btn-primary">+ New Flag</a>
     </div>
-    <div class="tabs">
+
+    <div class="toolbar">
         <button class="tab active" data-status="0">Active</button>
         <button class="tab" data-status="1">Archived</button>
         <button class="tab" data-status="2">All</button>
-        <input id="q" type="search" class="search" placeholder="Search by key..." value="">
+        <span class="divider"></span>
+        <input id="q" type="search" class="search" placeholder="Search by key..." autocomplete="off" spellcheck="false">
     </div>
 
-    <table class="flags-table">
+    <table>
         <thead>
             <tr>
-                <th class="key">Key</th>
+                <th>Key</th>
                 <th class="status">Status</th>
                 <th class="updated">Updated (UTC)</th>
                 <th class="actions">Action</th>
             </tr>
         </thead>
         <tbody>
-          <% for flag in &self.flags { %>
-            <tr data-key="<%= flag.key %>" <% if flag.archived { %> data-status= "1" hidden<% } else { %> data-status= "0" <% } %>>
-                <td class="key<% if flag.archived { %>-archived<% } %>">
-                  <%= flag.key %>
-                </td>
-                <td class="status">
-                    <% if flag.archived { %>
-                        Archived
-                    <% } else if flag.enabled { %>
-                        On  
-                    <% } else { %>
-                        Off
-                    <% } %>
-                </td>
-                <td class="updated">
-                    <%= flag.updated_at %>
-                </td>
-                <td class="actions">
-                    <% if !flag.archived { %>
-                        <% if flag.enabled { %>
-                            <form method="POST" action="/admin/flags/<%= flag.key %>/disable">
-                                <button>turn off</button>
-                            </form>
-                        <% } else { %>
-                            <form method="POST" action="/admin/flags/<%= flag.key %>/enable">
-                                <button>turn on</button>
-                            </form>
-                        <% } %>
-                        <form method="POST" action="/admin/flags/<%= flag.key %>/archive">
-                            <button>archive</button>
-                        </form>
-                    <% } %>
-                </td>
-            </tr>
-          <% } %>
-
-            <!-- Архівований прапорець -->
-            <!-- <tr data-key="old_search_algorithm_v1" data-status="archived" hidden>
-                <td class="key-archived">old_search_algorithm_v1</td>
-                <td class="status">Archived</td>
-                <td class="updated">2026-10-15 09:00</td>
-                <td class="actions">
-                    <form method="POST" action="file:///flags/old_search_algorithm_v1/archive">
-                        <button type="submit">restore</button>
-                    </form>
-                </td>
-            </tr> -->
-
+            <% for flag in &self.flags {
+                if flag.archived { %>
+                    <tr data-key="<%= flag.key %>" data-status="1" hidden>
+                        <td class="key archived">
+                            <%= flag.key %>
+                        </td>
+                        <td class="status">Archived</td>
+                        <td class="updated">
+                            <%= flag.updated_at %>
+                        </td>
+                        <td class="actions"></td>
+                    </tr>
+                <% } else { %>
+                    <tr data-key="<%= flag.key %>" data-status="0">
+                        <td class="key">
+                            <%= flag.key %>
+                        </td>
+                        <td class="status">
+                            <% if flag.enabled { %>
+                                <span class="dot on"></span>On
+                            <% } else { %>
+                                <span class="dot"></span>Off
+                            <% } %>
+                        </td>
+                        <td class="updated">
+                            <%= flag.updated_at %>
+                        </td>
+                        <td class="actions">
+                            <% if flag.enabled { %>
+                                <form method="POST" action="/admin/flags/<%= flag.key %>/disable"><button>turn off</button></form>
+                            <% } else { %>
+                                <form method="POST" action="/admin/flags/<%= flag.key %>/enable"><button>turn on</button></form>
+                            <% } %>
+                            <form method="POST" action="/admin/flags/<%= flag.key %>/archive"><button>archive</button></form>
+                        </td>
+                    </tr>
+                <% } %>
+            <% } %>
         </tbody>
     </table>
+    <div class="empty" id="empty" hidden>No flags found.</div>
 
     <script>
-        let status = "0";
+        const q = document.getElementById("q");
         const tabs = document.querySelectorAll(".tab");
         const rows = document.querySelectorAll("tr[data-key]");
+        const empty = document.getElementById("empty");
+        let status = "0";
 
         function filter() {
             const text = q.value.trim().toLowerCase();
+            let shown = 0;
             for (const row of rows) {
                 const byStatus = status === "2" || row.dataset.status === status;
                 const byKey = row.dataset.key.includes(text);
                 row.hidden = !(byStatus && byKey);
+                if (!row.hidden) shown++;
             }
+            empty.hidden = shown !== 0;
         }
 
-        for (const t of tabs) t.onclick = () => { 
-            status = t.dataset.status; 
-            for (const t of tabs) {
-                t.classList.toggle("active", t.dataset.status === status); 
-            }
-            filter(); 
-        };
+        for (const t of tabs) {
+            t.onclick = () => {
+                status = t.dataset.status;
+                for (const x of tabs) x.classList.toggle("active", x.dataset.status === status);
+                filter();
+            };
+        }
 
         q.oninput = filter;
-
-    document.addEventListener("DOMContentLoaded", () => {
         q.value = "";
-    })
+        filter();
     </script>
-</body></html>
+</body>
+</html>

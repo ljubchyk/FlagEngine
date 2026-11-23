@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<!-- saved from url=(0046)file:///home/ljubchyk/templates/untitled1.html -->
+<html lang="uk" style="scrollbar-gutter: stable;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flagvane - Feature Flags</title>
+    <style>
+        body {
+            font-family: monospace;
+            color: #111;
+            background: #fff;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 0;
+            padding-left: 4px;
+            display: flex;
+            gap: 2px;
+        }
+
+        .tab {
+            font-family: monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            background: #fff;
+            border: 1px solid #111;
+            /*border-bottom: 1px solid #111;*/
+            padding: 6px 14px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #111;
+            font-weight: 600;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            position: relative;
+            top: 1px;
+        }
+
+        .tab.active {
+            background: #f4f4f4;
+        }
+
+        .tab:hover:not(.active) {
+            background: #f4f4f4;
+        }
+
+        .search {
+            font-family: monospace;
+            font-size: 12px;
+            padding: 6px 8px;
+            border: 1px solid #111;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            margin-left: 4px;
+            outline: none;
+            background: #fff;
+            color: #111;
+            width: 200px;
+            position: relative;
+            top: 1px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .flags-table {
+            width: 100%;
+            table-layout: fixed; 
+            border-spacing: 0px;
+            font-size: 13px;
+            text-align: left;
+            border: 1px solid #111;
+        }
+
+        .flags-table th, .flags-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: middle;
+        }
+
+        .flags-table th {
+            font-weight: 700;
+            color: #111;
+            background: #f4f4f4;
+            border-bottom: 1px solid #111;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        th.key {
+        }
+
+        td.key {
+            font-size: 12px;
+            color: #111;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
+        }
+
+        .key-archived {
+            font-size: 12px;
+            color: #111;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
+            text-decoration: line-through;
+        }
+
+        th.status {
+            width: 110px;
+        }
+
+        td.status {
+            font-family: monospace;
+            font-size: 12px;
+            color: #111;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
+        }
+
+        th.updated {
+            width: 150px;
+        }
+
+        td.updated {
+
+        }
+
+        th.actions {
+            width: 150px;
+            text-align: right; 
+        }
+
+        td.actions { 
+            text-align: right; 
+        }
+
+        td.actions form { 
+            display: inline; 
+        }
+
+        td.actions button {
+            background: none; 
+            border: none; 
+            cursor: pointer; 
+            font-size: 11px;
+            font-family: inherit;
+            color: #111;
+            padding: 0;
+            text-decoration: underline;
+        }
+
+        td.actions button:hover {
+            color: #000;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #111;
+            color: #fff;
+            padding: 6px 12px;
+            border: 1px solid #111;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .btn-primary:hover { 
+            background: #fff; 
+            color: #111; 
+        }
+
+        th {
+            position: sticky;
+            top: 0px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Flags</h1>
+        <a href="file:///flags/new" class="btn-primary">+ New Flag</a>
+    </div>
+    <div class="tabs">
+        <button class="tab active" data-status="0">Active</button>
+        <button class="tab" data-status="1">Archived</button>
+        <button class="tab" data-status="2">All</button>
+        <input id="q" type="search" class="search" placeholder="Search by key..." value="">
+    </div>
+
+    <table class="flags-table">
+        <thead>
+            <tr>
+                <th class="key">Key</th>
+                <th class="status">Status</th>
+                <th class="updated">Updated (UTC)</th>
+                <th class="actions">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+          <% for flag in &self.flags { %>
+            <tr data-key="<%= flag.key %>" <% if flag.archived { %> data-status= "1" hidden<% } else { %> data-status= "0" <% } %>>
+                <td class="key<% if flag.archived { %>-archived<% } %>">
+                  <%= flag.key %>
+                </td>
+                <td class="status">
+                    <% if flag.archived { %>
+                        Archived
+                    <% } else if flag.enabled { %>
+                        On  
+                    <% } else { %>
+                        Off
+                    <% } %>
+                </td>
+                <td class="updated">
+                    <%= flag.updated_at %>
+                </td>
+                <td class="actions">
+                    <% if !flag.archived { %>
+                        <% if flag.enabled { %>
+                            <form method="POST" action="/admin/flags/<%= flag.key %>/disable">
+                                <button>turn off</button>
+                            </form>
+                        <% } else { %>
+                            <form method="POST" action="/admin/flags/<%= flag.key %>/enable">
+                                <button>turn on</button>
+                            </form>
+                        <% } %>
+                        <form method="POST" action="/admin/flags/<%= flag.key %>/archive">
+                            <button>archive</button>
+                        </form>
+                    <% } %>
+                </td>
+            </tr>
+          <% } %>
+
+        </tbody>
+    </table>
+
+    <script>
+        let status = "0";
+        const tabs = document.querySelectorAll(".tab");
+        const rows = document.querySelectorAll("tr[data-key]");
+
+        function filter() {
+            const text = q.value.trim().toLowerCase();
+            for (const row of rows) {
+                const byStatus = status === "2" || row.dataset.status === status;
+                const byKey = row.dataset.key.includes(text);
+                row.hidden = !(byStatus && byKey);
+            }
+        }
+
+        for (const t of tabs) t.onclick = () => { 
+            status = t.dataset.status; 
+            for (const t of tabs) {
+                t.classList.toggle("active", t.dataset.status === status); 
+            }
+            filter(); 
+        };
+
+        q.oninput = filter;
+
+    document.addEventListener("DOMContentLoaded", () => {
+        q.value = "";
+    })
+    </script>
+</body></html>
