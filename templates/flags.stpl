@@ -15,6 +15,7 @@
             font-family: monospace;
             color: #111;
             background: #fff;
+            /*background: #fcfcfc;*/
             max-width: 900px;
             margin: 40px auto;
             padding: 0 20px;
@@ -66,7 +67,7 @@
         .tab {
             font-family: monospace;
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 400;
             text-transform: uppercase;
             background: none;
             border: none;
@@ -74,17 +75,19 @@
             /*padding: 8px 0;*/
             margin-bottom: -1px;
             cursor: pointer;
-            color: #777;
+            color: #595959;
             align-self: stretch;
             padding: 0;
         }
 
         .tab:hover {
             color: #111;
+            font-weight: 600;
         }
 
         .tab.active {
             color: #111;
+            font-weight: 600;
             border-bottom-color: #111;
         }
 
@@ -108,7 +111,7 @@
         }
 
         .search::placeholder {
-            color: #999;
+            color: #595959;
         }
 
         /* Table: horizontal lines only */
@@ -122,19 +125,24 @@
 
         th, td {
             padding: 10px 0;
-            border-bottom: 1px solid #e5e5e5;
             vertical-align: middle;
+        }
+
+        td {
+            border-bottom: 1px solid #e5e5e5;
         }
 
         th {
             position: sticky;
             top: 0;
             background: #fff;
+            /*background: #fcfcfc;*/
             font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: #777;
+            color: #595959;
+            box-shadow: inset 0 -1px 0 #e5e5e5;
         }
 
         th.status { width: 90px; }
@@ -152,7 +160,7 @@
         td.key a {
             color: #111;
             text-decoration: none;
-            border-bottom: 1px dotted #999;
+            border-bottom: 1px dotted #595959;
         }
 
         td.key a:hover {
@@ -160,7 +168,7 @@
         }
 
         td.key.archived a {
-            color: #777;
+            color: #595959;
             text-decoration: line-through;
             border-bottom: none;
         }
@@ -175,18 +183,20 @@
 
         .dot {
             display: inline-block;
-            width: 7px;
-            height: 7px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             margin-right: 6px;
-            background: #ccc;
+            background: #8e8e8e;
+            border: 1px solid #595959; 
+            background: transparent;
         }
 
         .dot.on { background: #111; }
 
         td.updated {
             font-size: 12px;
-            color: #555;
+            color: #595959;
         }
 
         td.actions form {
@@ -212,7 +222,7 @@
         .empty {
             padding: 24px 0;
             font-size: 12px;
-            color: #777;
+            color: #595959;
         }
     </style>
 </head>
