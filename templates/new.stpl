@@ -6,6 +6,11 @@
     <title>FlagEngine - New flag</title>
     <link rel="icon" href="data:,">
     <style>
+        :root {
+            --header-h: 28px;
+            --sub-h: 32px;
+        }
+
         body {
             font-family: monospace;
             color: #111;
@@ -19,7 +24,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            /*margin-bottom: 20px;*/
+            height: var(--header-h);
         }
 
         h1 {
@@ -39,6 +45,7 @@
 
         form {
             max-width: 480px;
+            margin-top: calc(var(--sub-h) / 2 - 7px);
         }
 
         label {

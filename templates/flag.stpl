@@ -6,6 +6,11 @@
     <title>FlagEngine - <%= self.flag.key() %></title>
     <link rel="icon" href="data:,">
     <style>
+        :root {
+            --header-h: 28px;
+            --sub-h: 32px;
+        }
+
         body {
             font-family: monospace;
             color: #111;
@@ -19,7 +24,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            /*margin-bottom: 8px;*/
+            height: var(--header-h);
         }
 
         h1 {
@@ -42,8 +48,12 @@
             align-items: center;
             gap: 16px;
             font-size: 12px;
-            padding-bottom: 12px;
+            /*padding-bottom: 12px;
+            border-bottom: 1px solid #111;*/
+            height: var(--sub-h);
+            box-sizing: border-box;
             border-bottom: 1px solid #111;
+            margin-bottom: 4px;
         }
 
         .meta .key {

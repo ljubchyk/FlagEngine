@@ -6,6 +6,11 @@
     <title>FlagEngine - Flags</title>
     <link rel="icon" href="data:,">
     <style>
+        :root {
+            --header-h: 28px;
+            --sub-h: 32px;
+        }
+
         body {
             font-family: monospace;
             color: #111;
@@ -19,7 +24,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            /*margin-bottom: 20px;*/
+            height: var(--header-h);
         }
 
         h1 {
@@ -47,12 +53,14 @@
             color: #111;
         }
 
-        /* Tabs and search: one line, no boxes */
         .toolbar {
             display: flex;
             align-items: center;
             gap: 16px;
             border-bottom: 1px solid #111;
+            height: var(--sub-h);
+            box-sizing: border-box;
+            margin-bottom: 4px;
         }
 
         .tab {
@@ -63,10 +71,12 @@
             background: none;
             border: none;
             border-bottom: 2px solid transparent;
-            padding: 8px 0;
+            /*padding: 8px 0;*/
             margin-bottom: -1px;
             cursor: pointer;
             color: #777;
+            align-self: stretch;
+            padding: 0;
         }
 
         .tab:hover {
@@ -88,11 +98,13 @@
             font-family: monospace;
             font-size: 12px;
             flex: 1;
-            padding: 8px 0;
+            /*padding: 8px 0;*/
             border: none;
             outline: none;
             background: none;
             color: #111;
+            align-self: stretch;
+            padding: 0;
         }
 
         .search::placeholder {
