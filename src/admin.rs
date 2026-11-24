@@ -192,7 +192,7 @@ async fn audit_flag(
             .find_flag(&key)?
             .ok_or_else(|| FlagNotFound(key.clone()))?;
 
-        let audit = service.find_audit(&key, query.before, 1)?;
+        let audit = service.find_audit(&key, query.before, 20)?;
 
         Ok::<_, AppError>((flag, audit))
     })

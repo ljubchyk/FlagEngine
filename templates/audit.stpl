@@ -109,7 +109,7 @@
 <body>
     <div class="header">
         <h1>History</h1>
-        <a href="/admin" class="back">&larr; Flags</a>
+        <a href="/admin/flags/<%= self.flag.key() %>" class="back">&larr; Flag</a>
     </div>
 
     <div class="meta">
