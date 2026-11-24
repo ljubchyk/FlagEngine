@@ -1,0 +1,146 @@
+:root {
+    --header-h: 28px;
+    --sub-h: 32px;
+
+    --bg: #fff;
+    --surface-hover: #f4f4f4;
+    --ink: #111;
+    --muted: #595959;
+    --line: #e5e5e5;
+    --divider: #ccc;
+
+    --font: monospace;
+}
+
+body {
+    font-family: var(--font);
+    color: var(--ink);
+    background: var(--bg);
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: var(--header-h);
+}
+
+h1 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.back {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.btn-primary {
+    font-family: var(--font);
+    background: var(--ink);
+    color: var(--bg);
+    padding: 6px 12px;
+    border: 1px solid var(--ink);
+    border-radius: 3px;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: var(--bg);
+    color: var(--ink);
+}
+
+.meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    height: var(--sub-h);
+    box-sizing: border-box;
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 4px;
+}
+
+.meta .key {
+    font-weight: 700;
+}
+
+.dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 6px;
+    border: 1px solid var(--muted);
+    background: transparent;
+}
+
+.dot.on {
+    background: var(--ink);
+    border-color: var(--ink);
+}
+
+/* Table: horizontal lines only */
+table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: left;
+}
+
+th, td {
+    padding: 10px 0;
+    vertical-align: middle;
+}
+
+td {
+    border-bottom: 1px solid var(--line);
+}
+
+th {
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    box-shadow: inset 0 -1px 0 var(--line);
+}
+
+th.time { width: 170px; }
+th.actor { width: 150px; }
+
+td.time, td.actor {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.more {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.empty {
+    padding: 24px 0;
+    font-size: 12px;
+    color: var(--muted);
+}

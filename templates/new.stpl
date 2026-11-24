@@ -6,42 +6,7 @@
     <title>FlagEngine - New flag</title>
     <link rel="icon" href="data:,">
     <style>
-        :root {
-            --header-h: 28px;
-            --sub-h: 32px;
-        }
-
-        body {
-            font-family: monospace;
-            color: #111;
-            background: #fff;
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            /*margin-bottom: 20px;*/
-            height: var(--header-h);
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .back {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: #111;
-        }
+        <% include!("styles.stpl"); %>
 
         form {
             max-width: 480px;
@@ -58,25 +23,25 @@
         }
 
         input[type="text"] {
-            font-family: monospace;
+            font-family: var(--font);
             font-size: 13px;
             box-sizing: border-box;
             width: 100%;
             padding: 8px 10px;
-            border: 1px solid #111;
+            border: 1px solid var(--ink);
             border-radius: 3px;
             outline: none;
-            background: #fff;
-            color: #111;
+            background: var(--bg);
+            color: var(--ink);
         }
 
         input[type="text"]:focus {
-            background: #f4f4f4;
+            background: var(--surface-hover);
         }
 
         .hint {
             font-size: 11px;
-            color: #595959;
+            color: var(--muted);
             margin: 8px 0 0;
             line-height: 1.5;
         }
@@ -88,27 +53,9 @@
             margin-top: 20px;
         }
 
-        .btn-primary {
-            font-family: monospace;
-            background: #111;
-            color: #fff;
-            padding: 6px 12px;
-            border: 1px solid #111;
-            border-radius: 3px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            cursor: pointer;
-        }
-
-        .btn-primary:hover {
-            background: #fff;
-            color: #111;
-        }
-
         .cancel {
             font-size: 11px;
-            color: #111;
+            color: var(--ink);
         }
     </style>
 </head>
