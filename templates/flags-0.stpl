@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="uk" style="scrollbar-gutter: stable;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlagEngine - Flags</title>
+    <link rel="icon" href="data:,">
+    <style>
+        body {
+            font-family: monospace;
+            color: #111;
+            background: #fff;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: #111;
+            color: #fff;
+            padding: 6px 12px;
+            border: 1px solid #111;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .btn-primary:hover {
+            background: #fff;
+            color: #111;
+        }
+
+        /* Tabs and search: one line, no boxes */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid #111;
+        }
+
+        .tab {
+            font-family: monospace;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 8px 0;
+            margin-bottom: -1px;
+            cursor: pointer;
+            color: #777;
+        }
+
+        .tab:hover {
+            color: #111;
+        }
+
+        .tab.active {
+            color: #111;
+            border-bottom-color: #111;
+        }
+
+        .divider {
+            width: 1px;
+            height: 16px;
+            background: #ccc;
+        }
+
+        .search {
+            font-family: monospace;
+            font-size: 12px;
+            flex: 1;
+            padding: 8px 0;
+            border: none;
+            outline: none;
+            background: none;
+            color: #111;
+        }
+
+        .search::placeholder {
+            color: #999;
+        }
+
+        /* Table: horizontal lines only */
+        table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e5e5;
+            vertical-align: middle;
+        }
+
+        th {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #777;
+            background: white;
+            position: sticky;
+            top: 0px;
+        }
+
+        th.status { width: 90px; }
+        th.updated { width: 150px; }
+        th.actions { width: 150px; text-align: right; }
+        td.actions { text-align: right; }
+
+        td.key {
+            font-size: 12px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        td.key.archived {
+            text-decoration: line-through;
+            color: #777;
+        }
+
+        td.status {
+            font-size: 12px;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            margin-right: 6px;
+            background: #ccc;
+        }
+
+        .dot.on { background: #111; }
+
+        td.updated {
+            font-size: 12px;
+            color: #555;
+        }
+
+        td.actions form {
+            display: inline;
+            margin-left: 12px;
+        }
+
+        td.actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-family: inherit;
+            color: #111;
+            padding: 0;
+            text-decoration: underline;
+        }
+
+        td.actions button:hover {
+            font-weight: bold;
+        }
+
+        .empty {
+            padding: 24px 0;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Flags</h1>
+        <a href="admin/flags/new" class="btn-primary">+ New Flag</a>
+    </div>
+
+    <div class="toolbar">
+        <button class="tab active" data-status="0">Active</button>
+        <button class="tab" data-status="1">Archived</button>
+        <button class="tab" data-status="2">All</button>
+        <span class="divider"></span>
+        <input id="q" type="search" class="search" placeholder="Search by key..." autocomplete="off" spellcheck="false">
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Key</th>
+                <th class="status">Status</th>
+                <th class="updated">Updated (UTC)</th>
+                <th class="actions">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for flag in &self.flags {
+                if flag.archived { %>
+                    <tr data-key="<%= flag.key %>" data-status="1" hidden>
+                        <td class="key archived">
+                            <a href="admin/flags/<%= flag.key %>/audit"><%= flag.key %></a>
+                        </td>
+                        <td class="status">Archived</td>
+                        <td class="updated">
+                            <%= flag.updated_at %>
+                        </td>
+                        <td class="actions"></td>
+                    </tr>
+                <% } else { %>
+                    <tr data-key="<%= flag.key %>" data-status="0">
+                        <td class="key">
+                            <%= flag.key %>
+                        </td>
+                        <td class="status">
+                            <% if flag.enabled { %>
+                                <span class="dot on"></span>On
+                            <% } else { %>
+                                <span class="dot"></span>Off
+                            <% } %>
+                        </td>
+                        <td class="updated">
+                            <%= flag.updated_at %>
+                        </td>
+                        <td class="actions">
+                            <% if flag.enabled { %>
+                                <form method="POST" action="/admin/flags/<%= flag.key %>/disable"><button>turn off</button></form>
+                            <% } else { %>
+                                <form method="POST" action="/admin/flags/<%= flag.key %>/enable"><button>turn on</button></form>
+                            <% } %>
+                            <form method="POST" action="/admin/flags/<%= flag.key %>/archive"><button>archive</button></form>
+                        </td>
+                    </tr>
+                <% } %>
+            <% } %>
+        </tbody>
+    </table>
+    <div class="empty" id="empty" hidden>No flags found.</div>
+
+    <script>
+        const q = document.getElementById("q");
+        const tabs = document.querySelectorAll(".tab");
+        const rows = document.querySelectorAll("tr[data-key]");
+        const empty = document.getElementById("empty");
+        let status = "0";
+
+        function filter() {
+            const text = q.value.trim().toLowerCase();
+            let shown = 0;
+            for (const row of rows) {
+                const byStatus = status === "2" || row.dataset.status === status;
+                const byKey = row.dataset.key.includes(text);
+                row.hidden = !(byStatus && byKey);
+                if (!row.hidden) shown++;
+            }
+            empty.hidden = shown !== 0;
+        }
+
+        for (const t of tabs) {
+            t.onclick = () => {
+                status = t.dataset.status;
+                for (const x of tabs) x.classList.toggle("active", x.dataset.status === status);
+                filter();
+            };
+        }
+
+        q.oninput = filter;
+        q.value = "";
+        filter();
+    </script>
+</body>
+</html>

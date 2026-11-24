@@ -1,45 +1,152 @@
-<!doctype html>
-<html lang="uk">
+<!DOCTYPE html>
+<html lang="uk" style="scrollbar-gutter: stable;">
 <head>
-<meta charset="utf-8">
-<title>FlagEngine: історія</title>
-<link rel="icon" href="data:,">
-<style>
-  body { font-family: system-ui, sans-serif; max-width: 52rem; margin: 2rem auto; padding: 0 1rem; }
-  table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-  th, td { text-align: left; padding: .5rem; border-bottom: 1px solid #ddd; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlagEngine - History</title>
+    <link rel="icon" href="data:,">
+    <style>
+        body {
+            font-family: monospace;
+            color: #111;
+            background: #fff;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .back {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #111;
+        }
+
+        .meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #111;
+        }
+
+        .meta .key {
+            font-weight: 700;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            margin-right: 6px;
+            background: #ccc;
+        }
+
+        .dot.on { background: #111; }
+
+        table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        th {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #777;
+        }
+
+        th.time { width: 170px; }
+        th.actor { width: 150px; }
+
+        td.time, td.actor {
+            font-size: 12px;
+            color: #555;
+        }
+
+        .more {
+            display: inline-block;
+            margin-top: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #111;
+        }
+
+        .empty {
+            padding: 24px 0;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
 </head>
 <body>
-<h1>Історія: <%= self.flag.key() %></h1>
-<p>
-  <a href="/admin">← До списку</a> ·
-  стан:
-  <% if self.flag.is_archived() { %>архівований<% } else if self.flag.is_enabled() { %>увімкнений<% } else { %>вимкнений<% } %>
-</p>
+    <div class="header">
+        <h1>History</h1>
+        <a href="/admin" class="back">&larr; Flags</a>
+    </div>
 
-<% if self.events.is_empty() { %>
-  <p>Подій немає.</p>
-<% } else { %>
-  <table>
-    <tr><th>Час (UTC)</th><th>Хто</th><th>Що сталося</th></tr>
-    <% for event in &self.events { %>
-      <tr>
-        <td><time><%= event.created_at %></time></td>
-        <td><%= event.actor %></td>
-        <td><%= event.action %></td>
-      </tr>
+    <div class="meta">
+        <span class="key"><%= self.flag.key() %></span>
+        <% if self.flag.is_archived() { %>
+            <span>Archived</span>
+        <% } else if self.flag.is_enabled() { %>
+            <span><span class="dot on"></span>On</span>
+        <% } else { %>
+            <span><span class="dot"></span>Off</span>
+        <% } %>
+    </div>
+
+    <% if self.events.is_empty() { %>
+        <div class="empty">No events yet.</div>
+    <% } else { %>
+        <table>
+            <thead>
+                <tr>
+                    <th class="time">Time (UTC)</th>
+                    <th class="actor">Actor</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for event in &self.events { %>
+                    <tr>
+                        <td class="time"><%= event.created_at %></td>
+                        <td class="actor"><%= event.actor %></td>
+                        <td><%= event.action %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+        <% if let Some(before) = self.next_before { %>
+            <a class="more" href="/admin/flags/<%= self.flag.key() %>/audit?before=<%= before %>">Older &rarr;</a>
+        <% } %>
     <% } %>
-  </table>
-  <% if let Some(before) = self.next_before { %>
-    <p><a href="/admin/flags/<%= self.flag.key() %>/audit?before=<%= before %>">Далі →</a></p>
-  <% } %>
-<% } %>
-
-<script>
-  document.querySelectorAll('time[datetime]').forEach(function (el) {
-    el.title = new Date(el.dateTime).toLocaleString();
-  });
-</script>
 </body>
 </html>

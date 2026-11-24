@@ -115,14 +115,14 @@
         }
 
         th {
+            position: sticky;
+            top: 0;
+            background: #fff;
             font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: #777;
-            background: white;
-            position: sticky;
-            top: 0px;
         }
 
         th.status { width: 90px; }
@@ -137,9 +137,24 @@
             white-space: nowrap;
         }
 
-        td.key.archived {
-            text-decoration: line-through;
+        td.key a {
+            color: #111;
+            text-decoration: none;
+            border-bottom: 1px dotted #999;
+        }
+
+        td.key a:hover {
+            border-bottom: 1px solid #111;
+        }
+
+        td.key.archived a {
             color: #777;
+            text-decoration: line-through;
+            border-bottom: none;
+        }
+
+        td.key.archived a:hover {
+            color: #111;
         }
 
         td.status {
@@ -192,7 +207,7 @@
 <body>
     <div class="header">
         <h1>Flags</h1>
-        <a href="admin/flags/new" class="btn-primary">+ New Flag</a>
+        <a href="/admin/flags/new" class="btn-primary">+ New Flag</a>
     </div>
 
     <div class="toolbar">
@@ -213,43 +228,33 @@
             </tr>
         </thead>
         <tbody>
-            <% for flag in &self.flags {
-                if flag.archived { %>
-                    <tr data-key="<%= flag.key %>" data-status="1" hidden>
-                        <td class="key archived">
-                            <%= flag.key %>
-                        </td>
-                        <td class="status">Archived</td>
-                        <td class="updated">
-                            <%= flag.updated_at %>
-                        </td>
-                        <td class="actions"></td>
-                    </tr>
-                <% } else { %>
-                    <tr data-key="<%= flag.key %>" data-status="0">
-                        <td class="key">
-                            <%= flag.key %>
-                        </td>
-                        <td class="status">
-                            <% if flag.enabled { %>
-                                <span class="dot on"></span>On
-                            <% } else { %>
-                                <span class="dot"></span>Off
-                            <% } %>
-                        </td>
-                        <td class="updated">
-                            <%= flag.updated_at %>
-                        </td>
-                        <td class="actions">
+            <% for flag in &self.flags { %>
+                <tr data-key="<%= flag.key %>" <% if flag.archived { %>data-status="1" hidden<% } else { %>data-status="0"<% } %>>
+                    <td class="key<% if flag.archived { %> archived<% } %>">
+                        <a href="/admin/flags/<%= flag.key %>"><%= flag.key %></a>
+                    </td>
+                    <td class="status">
+                        <% if flag.archived { %>
+                            Archived
+                        <% } else if flag.enabled { %>
+                            <span class="dot on"></span>On
+                        <% } else { %>
+                            <span class="dot"></span>Off
+                        <% } %>
+                    </td>
+                    <td class="updated"><%= flag.updated_at %></td>
+                    <td class="actions">
+                        <% if !flag.archived { %>
                             <% if flag.enabled { %>
                                 <form method="POST" action="/admin/flags/<%= flag.key %>/disable"><button>turn off</button></form>
                             <% } else { %>
                                 <form method="POST" action="/admin/flags/<%= flag.key %>/enable"><button>turn on</button></form>
                             <% } %>
-                            <form method="POST" action="/admin/flags/<%= flag.key %>/archive"><button>archive</button></form>
-                        </td>
-                    </tr>
-                <% } %>
+                            <form method="POST" action="/admin/flags/<%= flag.key %>/archive"
+                                onsubmit="return confirm('Archive this flag? It cannot be restored and the key cannot be reused.')"><button>archive</button></form>
+                        <% } %>
+                    </td>
+                </tr>
             <% } %>
         </tbody>
     </table>
