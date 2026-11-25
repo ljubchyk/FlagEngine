@@ -39,9 +39,9 @@
         }
 
         .tab.active {
-            color: var(--ink);
             font-weight: 600;
             border-bottom-color: var(--ink);
+            color: var(--ink);
         }
 
         .divider {
@@ -66,53 +66,54 @@
             color: var(--muted);
         }
 
-        th.status { width: 90px; }
-        th.updated { width: 150px; }
-        th.actions { width: 150px; text-align: right; }
-        td.actions { text-align: right; }
+        .col-status { width: 90px; }
+        .col-updated { width: 150px; }
+        .col-actions { width: 150px; text-align: right; }
 
-        td.key {
-            font-size: 12px;
+        .cell-actions { text-align: right; }
+
+        .cell-key {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
 
-        td.key a {
+        .flag-key {
+            font-size: 12px;
             color: var(--ink);
             text-decoration: none;
             border-bottom: 1px dotted var(--muted);
         }
 
-        td.key a:hover {
+        .flag-key:hover {
             border-bottom: 1px solid var(--ink);
         }
 
-        td.key.archived a {
+        .flag-key.archived {
             color: var(--muted);
             text-decoration: line-through;
             border-bottom: none;
         }
 
-        td.key.archived a:hover {
+        .flag-key.archived:hover {
             color: var(--ink);
         }
 
-        td.status {
+        .cell-status {
             font-size: 12px;
         }
 
-        td.updated {
+        .cell-updated {
             font-size: 12px;
             color: var(--muted);
         }
 
-        td.actions form {
+        .flag-action-form {
             display: inline;
             margin-left: 12px;
         }
 
-        td.actions button {
+        .flag-action-button {
             background: none;
             border: none;
             cursor: pointer;
@@ -123,7 +124,7 @@
             text-decoration: underline;
         }
 
-        td.actions button:hover {
+        .flag-action-button:hover {
             font-weight: bold;
         }
     </style>
@@ -135,9 +136,9 @@
     </div>
 
     <div class="toolbar">
-        <button class="tab active" data-status="0">Active</button>
-        <button class="tab" data-status="1">Archived</button>
-        <button class="tab" data-status="2">All</button>
+        <button class="tab active" data-tab data-status="0">Active</button>
+        <button class="tab" data-tab data-status="1">Archived</button>
+        <button class="tab" data-tab data-status="2">All</button>
         <span class="divider"></span>
         <input id="q" type="search" class="search" placeholder="Search by key..." autocomplete="off" spellcheck="false">
     </div>
@@ -146,36 +147,33 @@
         <thead>
             <tr>
                 <th>Key</th>
-                <th class="status">Status</th>
-                <th class="updated">Updated (UTC)</th>
-                <th class="actions">Action</th>
+                <th class="col-status">Status</th>
+                <th class="col-updated">Updated (UTC)</th>
+                <th class="col-actions">Action</th>
             </tr>
         </thead>
         <tbody>
-            <% for flag in &self.flags { %>
-                <tr data-key="<%= flag.key %>" <% if flag.archived { %>data-status="1" hidden<% } else { %>data-status="0"<% } %>>
-                    <td class="key<% if flag.archived { %> archived<% } %>">
-                        <a href="/admin/flags/<%= flag.key %>"><%= flag.key %></a>
+            <% for row in &self.rows { %>
+                <tr data-key="<%= row.key() %>"
+                    data-status="<%= row.filter() %>"
+                    <% if row.is_archived() { %>hidden<% } %>>
+                    <td class="cell-key">
+                        <a class="flag-key <%= row.status_modifier() %>" href="/admin/flags/<%= row.key() %>"><%= row.key() %></a>
                     </td>
-                    <td class="status">
-                        <% if flag.archived { %>
-                            Archived
-                        <% } else if flag.enabled { %>
-                            <span class="dot on"></span>On
-                        <% } else { %>
-                            <span class="dot"></span>Off
+                    <td class="cell-status">
+                        <span class="dot <%= row.status_modifier() %>"></span><%= row.status_label() %>
+                    </td>
+                    <td class="cell-updated"><%= row.updated_at %></td>
+                    <td class="cell-actions">
+                        <% if row.can_enable() { %>
+                            <form class="flag-action-form" method="POST" action="/admin/flags/<%= row.key() %>/enable"><button class="flag-action-button">turn on</button></form>
                         <% } %>
-                    </td>
-                    <td class="updated"><%= flag.updated_at %></td>
-                    <td class="actions">
-                        <% if !flag.archived { %>
-                            <% if flag.enabled { %>
-                                <form method="POST" action="/admin/flags/<%= flag.key %>/disable"><button>turn off</button></form>
-                            <% } else { %>
-                                <form method="POST" action="/admin/flags/<%= flag.key %>/enable"><button>turn on</button></form>
-                            <% } %>
-                            <form method="POST" action="/admin/flags/<%= flag.key %>/archive"
-                                onsubmit="return confirm('Archive this flag? It cannot be restored and the key cannot be reused.')"><button>archive</button></form>
+                        <% if row.can_disable() { %>
+                            <form class="flag-action-form" method="POST" action="/admin/flags/<%= row.key() %>/disable"><button class="flag-action-button">turn off</button></form>
+                        <% } %>
+                        <% if row.can_archive() { %>
+                            <form class="flag-action-form" method="POST" action="/admin/flags/<%= row.key() %>/archive"
+                                onsubmit="return confirm('Archive this flag? It cannot be restored and the key cannot be reused.')"><button class="flag-action-button">archive</button></form>
                         <% } %>
                     </td>
                 </tr>
@@ -186,7 +184,7 @@
 
     <script>
         const q = document.getElementById("q");
-        const tabs = document.querySelectorAll(".tab");
+        const tabs = document.querySelectorAll("[data-tab]");
         const rows = document.querySelectorAll("tr[data-key]");
         const empty = document.getElementById("empty");
         let status = "0";

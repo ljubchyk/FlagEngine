@@ -50,11 +50,40 @@ fn validate_key(raw: &str) -> Result<(), AppError> {
     Ok(())
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum FlagStatus {
+    Enabled,
+    Disabled,
+    Archived,
+}
+
+impl FlagStatus {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            FlagStatus::Enabled => "enabled",
+            FlagStatus::Disabled => "disabled",
+            FlagStatus::Archived => "archived",
+        }
+    }
+}
+
+impl TryFrom<&str> for FlagStatus {
+    type Error = String;
+
+    fn try_from(value: &str) -> std::result::Result<Self, Self::Error> {
+        match value {
+            "enabled" => Ok(FlagStatus::Enabled),
+            "disabled" => Ok(FlagStatus::Disabled),
+            "archived" => Ok(FlagStatus::Archived),
+            other => Err(format!("unknown flag status: {other}")),
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct Flag {
     key: String,
-    enabled: bool,
-    archived: bool,
+    status: FlagStatus,
     updated_at: i64,
 }
 
@@ -64,15 +93,14 @@ impl Flag {
 
         let flag = Self {
             key,
-            enabled: false,
-            archived: false,
+            status: FlagStatus::Disabled,
             updated_at: now_ms(),
         };
 
         let event = flag.event(
             actor,
             EventPayload::FlagCreated {
-                enabled: flag.enabled,
+                enabled: true,
             },
         );
 
@@ -80,58 +108,53 @@ impl Flag {
     }
 
     pub fn enable(&mut self, actor: String) -> Result<Option<DomainEvent>, AppError> {
-        if self.archived {
-            return Err(AppError::Archived);
+        match self.status {
+            FlagStatus::Enabled => Ok(None),
+            FlagStatus::Disabled => {
+                self.status = FlagStatus::Enabled;
+                self.updated_at = now_ms();
+
+                let event = self.event(actor, EventPayload::FlagEnabled);
+
+                Ok(Some(event))
+            },
+            FlagStatus::Archived => Err(AppError::Archived),
         }
-
-        if self.enabled {
-            return Ok(None);
-        }
-
-        self.enabled = true;
-        self.updated_at = now_ms();
-
-        let event = self.event(actor, EventPayload::FlagEnabled);
-
-        Ok(Some(event))
     }
 
     pub fn disable(&mut self, actor: String) -> Result<Option<DomainEvent>, AppError> {
-        if self.archived {
-            return Err(AppError::Archived);
+        match self.status {
+            FlagStatus::Enabled => {
+                self.status = FlagStatus::Disabled;
+                self.updated_at = now_ms();
+
+                let event = self.event(actor, EventPayload::FlagDisabled);
+
+                Ok(Some(event))
+            },
+            FlagStatus::Disabled => Ok(None),
+            FlagStatus::Archived => Err(AppError::Archived),
         }
-
-        if !self.enabled {
-            return Ok(None);
-        }
-
-        self.enabled = false;
-        self.updated_at = now_ms();
-
-        let event = self.event(actor, EventPayload::FlagDisabled);
-
-        Ok(Some(event))
     }
 
     pub fn archive(&mut self, actor: String) -> Option<DomainEvent> {
-        if self.archived {
-            return None;
+        match self.status {
+            FlagStatus::Enabled | FlagStatus::Disabled => {
+                self.status = FlagStatus::Archived;
+                self.updated_at = now_ms();
+
+                let event = self.event(actor, EventPayload::FlagArchived);
+
+                Some(event)
+            },
+            FlagStatus::Archived => None,
         }
-
-        self.archived = true;
-        self.enabled = false;
-        self.updated_at = now_ms();
-
-        let event = self.event(actor, EventPayload::FlagArchived);
-
-        Some(event)
     }
 
-    pub(crate) fn restore(key: String, enabled: bool, archived: bool, updated_at: i64) -> Self {
+    pub(crate) fn restore(key: String, status: FlagStatus, updated_at: i64) -> Self {
         Self {
             key,
-            enabled,
-            archived,
+            status,
             updated_at,
         }
     }
@@ -140,16 +163,32 @@ impl Flag {
         &self.key
     }
 
-    pub fn is_enabled(&self) -> bool {
-        self.enabled
-    }
-
-    pub fn is_archived(&self) -> bool {
-        self.archived
+    pub fn status(&self) -> FlagStatus {
+        self.status
     }
 
     pub fn updated_at(&self) -> i64 {
         self.updated_at
+    }
+
+    pub fn is_enabled(&self) -> bool {
+        self.status() == FlagStatus::Enabled
+    }
+
+    pub fn is_archived(&self) -> bool {
+        self.status() == FlagStatus::Archived
+    }
+
+    pub fn can_enable(&self) -> bool {
+        self.status() == FlagStatus::Disabled
+    }
+
+    pub fn can_disable(&self) -> bool {
+        self.status() == FlagStatus::Enabled
+    }
+
+    pub fn can_archive(&self) -> bool {
+        !self.is_archived()
     }
 
     fn event(&self, actor: String, payload: EventPayload) -> DomainEvent {

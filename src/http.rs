@@ -178,8 +178,7 @@ async fn archive_flag(
 #[derive(Serialize)]
 struct FlagResponse {
     key: String,
-    enabled: bool,
-    archived: bool,
+    status: String,
     updated_at: i64,
 }
 
@@ -187,8 +186,7 @@ impl From<&Flag> for FlagResponse {
     fn from(flag: &Flag) -> Self {
         Self {
             key: flag.key().to_owned(),
-            enabled: flag.is_enabled(),
-            archived: flag.is_archived(),
+            status: flag.status().as_str().to_owned(),
             updated_at: flag.updated_at(),
         }
     }

@@ -1,7 +1,20 @@
-use crate::{app_error::AppError, domain::Flag};
+use crate::{app_error::AppError, domain::{Flag, FlagStatus}};
 use rusqlite::{
-    Connection, Error::SqliteFailure, OptionalExtension, Result, Row, Transaction, params,
+    Connection, Error::SqliteFailure, OptionalExtension, Result, Row, ToSql, Transaction, params, types::{FromSql, FromSqlError, FromSqlResult, ToSqlOutput, ValueRef},
 };
+
+impl ToSql for FlagStatus {
+    fn to_sql(&self) -> Result<ToSqlOutput<'_>> {
+        Ok(ToSqlOutput::from(self.as_str()))
+    }
+}
+
+impl FromSql for FlagStatus {
+    fn column_result(value: ValueRef<'_>) -> FromSqlResult<Self> {
+        let s = value.as_str()?;
+        FlagStatus::try_from(s).map_err(|err| FromSqlError::Other(err.into()))
+    }
+}
 
 #[derive(Default)]
 pub enum FlagFilter {
@@ -16,18 +29,16 @@ fn raw_to_flag(row: &Row) -> Result<Flag> {
         row.get(0)?,
         row.get(1)?,
         row.get(2)?,
-        row.get(3)?,
     ))
 }
 
 pub fn insert(tx: &Transaction, flag: &Flag) -> Result<(), AppError> {
     tx.execute(
-        "INSERT INTO flags (key, enabled, archived, updated_at)
-             VALUES (?1, ?2, ?3, ?4)",
+        "INSERT INTO flags (key, status, updated_at)
+             VALUES (?1, ?2, ?3)",
         params![
             flag.key(),
-            flag.is_enabled(),
-            flag.is_archived(),
+            flag.status(),
             flag.updated_at()
         ],
     )
@@ -46,11 +57,10 @@ pub fn insert(tx: &Transaction, flag: &Flag) -> Result<(), AppError> {
 
 pub fn update(tx: &Transaction, flag: &Flag) -> Result<()> {
     tx.execute(
-        "UPDATE flags SET enabled = ?2, archived = ?3, updated_at = ?4 WHERE key = ?1",
+        "UPDATE flags SET status = ?2, updated_at = ?3 WHERE key = ?1",
         params![
             flag.key(),
-            flag.is_enabled(),
-            flag.is_archived(),
+            flag.status(),
             flag.updated_at()
         ],
     )?;
@@ -59,19 +69,19 @@ pub fn update(tx: &Transaction, flag: &Flag) -> Result<()> {
 }
 
 pub fn find(conn: &Connection, key: &str) -> Result<Option<Flag>> {
-    conn.prepare_cached("SELECT key, enabled, archived, updated_at FROM flags WHERE key = ?1")?
+    conn.prepare_cached("SELECT key, status, updated_at FROM flags WHERE key = ?1")?
         .query_row(params![key], raw_to_flag)
         .optional()
 }
 
 pub fn find_all(conn: &Connection, filter: FlagFilter) -> Result<Vec<Flag>> {
     let where_closure = match filter {
-        FlagFilter::Active => " WHERE archived = 0",
-        FlagFilter::Archived => " WHERE archived = 1",
+        FlagFilter::Active => " WHERE status <> 'archived'",
+        FlagFilter::Archived => " WHERE status = 'archived'",
         FlagFilter::All => "",
     };
     let sql = format!(
-        "SELECT key, enabled, archived, updated_at FROM flags{} ORDER BY key",
+        "SELECT key, status, updated_at FROM flags{} ORDER BY key",
         where_closure
     );
     conn.prepare_cached(&sql)?

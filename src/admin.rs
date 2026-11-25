@@ -9,22 +9,19 @@ use serde::Deserialize;
 use time::OffsetDateTime;
 
 use crate::{
-    app_error::AppError::{self, FlagNotFound},
-    domain::{DomainEvent, EventPayload, Flag},
-    flag_repo::FlagFilter,
-    http::AppState,
+    app_error::AppError::{self, FlagNotFound}, domain::{DomainEvent, EventPayload, Flag, FlagStatus}, flag_repo::FlagFilter, http::AppState,
 };
 
 pub fn router() -> Router<AppState> {
     Router::new()
         .route("/admin", get(flags_page))
-        .route("/admin/flags", post(create_flag))
-        .route("/admin/flags/new", get(new_flag_page))
-        .route("/admin/flags/{key}", get(flag_page))
-        .route("/admin/flags/{key}/enable", post(enable_flag))
-        .route("/admin/flags/{key}/disable", post(disable_flag))
-        .route("/admin/flags/{key}/archive", post(archive_flag))
-        .route("/admin/flags/{key}/audit", get(audit_flag))
+        // .route("/admin/flags", post(create_flag))
+        // .route("/admin/flags/new", get(new_flag_page))
+        // .route("/admin/flags/{key}", get(flag_page))
+        // .route("/admin/flags/{key}/enable", post(enable_flag))
+        // .route("/admin/flags/{key}/disable", post(disable_flag))
+        // .route("/admin/flags/{key}/archive", post(archive_flag))
+        // .route("/admin/flags/{key}/audit", get(audit_flag))
 }
 
 fn format_utc(ms: i64) -> String {
@@ -42,17 +39,67 @@ fn format_utc(ms: i64) -> String {
     )
 }
 
-struct FlagView {
-    key: String,
-    enabled: bool,
-    archived: bool,
-    updated_at: String,
+pub struct FlagRow {
+    pub flag: Flag,
+    pub updated_at: String,
+}
+
+impl FlagRow {
+    pub fn new(flag: Flag) -> Self {
+        Self {
+            updated_at: format_utc(flag.updated_at()),
+            flag,
+        }
+    }
+
+    pub fn key(&self) -> &str {
+        self.flag.key()
+    }
+
+    pub fn is_archived(&self) -> bool {
+        self.flag.is_archived()
+    }
+
+    pub fn can_enable(&self) -> bool {
+        self.flag.can_enable()
+    }
+
+    pub fn can_disable(&self) -> bool {
+        self.flag.can_disable()
+    }
+
+    pub fn can_archive(&self) -> bool {
+        self.flag.can_archive()
+    }
+
+    pub fn filter(&self) -> &'static str {
+        match self.flag.status() {
+            FlagStatus::Enabled | FlagStatus::Disabled => "0",
+            FlagStatus::Archived => "1",
+        }
+    }
+
+    pub fn status_label(&self) -> &'static str {
+        match self.flag.status() {
+            FlagStatus::Enabled => "On",
+            FlagStatus::Disabled => "Off",
+            FlagStatus::Archived => "Archived",
+        }
+    }
+
+    pub fn status_modifier(&self) -> &'static str {
+        match self.flag.status() {
+            FlagStatus::Enabled => "enabled",
+            FlagStatus::Disabled => "disabled",
+            FlagStatus::Archived => "archived",
+        }
+    }
 }
 
 #[derive(Template)]
 #[template(path = "flags.stpl")]
-struct FlagsView {
-    flags: Vec<FlagView>,
+struct FlagsPage {
+    rows: Vec<FlagRow>,
 }
 
 async fn flags_page(
@@ -62,182 +109,177 @@ async fn flags_page(
 
     let flags = tokio::task::spawn_blocking(move || service.find_flags(FlagFilter::All)).await??;
 
-    let page = FlagsView {
-        flags: flags.iter().map(|f| FlagView {
-            key: f.key().to_owned(),
-            enabled: f.is_enabled(),
-            archived: f.is_archived(),
-            updated_at: format_utc(f.updated_at()),
-        }).collect(),
+    let page = FlagsPage {
+        rows: flags.into_iter().map(FlagRow::new).collect(),
     };
     Ok(Html(page.render()?))
 }
 
-#[derive(Deserialize)]
-struct CreateForm {
-    key: String,
-}
+// #[derive(Deserialize)]
+// struct CreateForm {
+//     key: String,
+// }
 
-async fn create_flag(
-    State(state): State<AppState>,
-    Form(form): Form<CreateForm>,
-) -> Result<Redirect, AppError> {
-    let service = state.service.clone();
+// async fn create_flag(
+//     State(state): State<AppState>,
+//     Form(form): Form<CreateForm>,
+// ) -> Result<Redirect, AppError> {
+//     let service = state.service.clone();
 
-    tokio::task::spawn_blocking(move || service.create_flag(form.key, "admin".to_owned()))
-        .await??;
+//     tokio::task::spawn_blocking(move || service.create_flag(form.key, "admin".to_owned()))
+//         .await??;
 
-    Ok(Redirect::to("/admin"))
-}
+//     Ok(Redirect::to("/admin"))
+// }
 
-#[derive(Deserialize)]
-struct Next {
-    next: Option<String>,
-}
+// #[derive(Deserialize)]
+// struct Next {
+//     next: Option<String>,
+// }
 
-impl Next {
-    fn target(&self, key: &str) -> String {
-        match self.next.as_deref() {
-            Some("flag") => format!("/admin/flags/{key}"),
-            _ => "/admin".to_owned(),
-        }
-    }
-}
+// impl Next {
+//     fn target(&self, key: &str) -> String {
+//         match self.next.as_deref() {
+//             Some("flag") => format!("/admin/flags/{key}"),
+//             _ => "/admin".to_owned(),
+//         }
+//     }
+// }
 
-async fn enable_flag(
-    State(state): State<AppState>,
-    Path(key): Path<String>,
-    Query(next): Query<Next>,
-) -> Result<Redirect, AppError> {
-    let service = state.service.clone();
-    let back = next.target(&key);
-    tokio::task::spawn_blocking(move || service.enable_flag(key, "admin".to_owned())).await??;
-    Ok(Redirect::to(&back))
-}
+// async fn enable_flag(
+//     State(state): State<AppState>,
+//     Path(key): Path<String>,
+//     Query(next): Query<Next>,
+// ) -> Result<Redirect, AppError> {
+//     let service = state.service.clone();
+//     let back = next.target(&key);
+//     tokio::task::spawn_blocking(move || service.enable_flag(key, "admin".to_owned())).await??;
+//     Ok(Redirect::to(&back))
+// }
 
-async fn disable_flag(
-    State(state): State<AppState>,
-    Path(key): Path<String>,
-    Query(next): Query<Next>,
-) -> Result<Redirect, AppError> {
-    let service = state.service.clone();
-    let back = next.target(&key);
-    tokio::task::spawn_blocking(move || service.disable_flag(key, "admin".to_owned())).await??;
-    Ok(Redirect::to(&back))
-}
+// async fn disable_flag(
+//     State(state): State<AppState>,
+//     Path(key): Path<String>,
+//     Query(next): Query<Next>,
+// ) -> Result<Redirect, AppError> {
+//     let service = state.service.clone();
+//     let back = next.target(&key);
+//     tokio::task::spawn_blocking(move || service.disable_flag(key, "admin".to_owned())).await??;
+//     Ok(Redirect::to(&back))
+// }
 
-async fn archive_flag(
-    State(state): State<AppState>,
-    Path(key): Path<String>,
-    Query(next): Query<Next>,
-) -> Result<Redirect, AppError> {
-    let service = state.service.clone();
-    let back = next.target(&key);
-    tokio::task::spawn_blocking(move || service.archive_flag(key, "admin".to_owned())).await??;
-    Ok(Redirect::to(&back))
-}
+// async fn archive_flag(
+//     State(state): State<AppState>,
+//     Path(key): Path<String>,
+//     Query(next): Query<Next>,
+// ) -> Result<Redirect, AppError> {
+//     let service = state.service.clone();
+//     let back = next.target(&key);
+//     tokio::task::spawn_blocking(move || service.archive_flag(key, "admin".to_owned())).await??;
+//     Ok(Redirect::to(&back))
+// }
 
-#[derive(Template)]
-#[template(path = "new.stpl")]
-struct NewFlagView;
+// #[derive(Template)]
+// #[template(path = "new.stpl")]
+// struct NewFlagView;
 
-async fn new_flag_page() -> Result<Html<String>, AppError> {
-    Ok(Html(NewFlagView.render()?))
-}
+// async fn new_flag_page() -> Result<Html<String>, AppError> {
+//     Ok(Html(NewFlagView.render()?))
+// }
 
-struct EventView {
-    actor: String,
-    action: &'static str,
-    created_at: String,
-}
+// struct EventView {
+//     actor: String,
+//     action: &'static str,
+//     created_at: String,
+// }
 
-fn event_views(events: &[DomainEvent]) -> Vec<EventView> {
-    events
-        .iter()
-        .map(|e| EventView {
-            actor: e.actor.clone(),
-            action: match e.payload {
-                EventPayload::FlagCreated { .. } => "Created",
-                EventPayload::FlagEnabled => "Enabled",
-                EventPayload::FlagDisabled => "Disabled",
-                EventPayload::FlagArchived => "Archived",
-            },
-            created_at: format_utc(e.occurred_at),
-        })
-        .collect()
-}
+// fn event_views(events: &[DomainEvent]) -> Vec<EventView> {
+//     events
+//         .iter()
+//         .map(|e| EventView {
+//             actor: e.actor.clone(),
+//             action: match e.payload {
+//                 EventPayload::FlagCreated { .. } => "Created",
+//                 EventPayload::FlagEnabled => "Enabled",
+//                 EventPayload::FlagDisabled => "Disabled",
+//                 EventPayload::FlagArchived => "Archived",
+//             },
+//             created_at: format_utc(e.occurred_at),
+//         })
+//         .collect()
+// }
 
-#[derive(Deserialize)]
-struct AuditQuery {
-    before: Option<i64>,
-}
+// #[derive(Deserialize)]
+// struct AuditQuery {
+//     before: Option<i64>,
+// }
 
-#[derive(Template)]
-#[template(path = "audit.stpl")]
-struct AuditView {
-    flag: Flag,
-    events: Vec<EventView>,
-    next_before: Option<i64>,
-}
+// #[derive(Template)]
+// #[template(path = "audit.stpl")]
+// struct AuditView {
+//     flag: Flag,
+//     events: Vec<EventView>,
+//     next_before: Option<i64>,
+// }
 
-async fn audit_flag(
-    State(state): State<AppState>,
-    Path(key): Path<String>,
-    Query(query): Query<AuditQuery>,
-) -> Result<Html<String>, AppError> {
-    let service = state.service.clone();
+// async fn audit_flag(
+//     State(state): State<AppState>,
+//     Path(key): Path<String>,
+//     Query(query): Query<AuditQuery>,
+// ) -> Result<Html<String>, AppError> {
+//     let service = state.service.clone();
 
-    let (flag, audit) = tokio::task::spawn_blocking(move || {
-        let flag = service
-            .find_flag(&key)?
-            .ok_or_else(|| FlagNotFound(key.clone()))?;
+//     let (flag, audit) = tokio::task::spawn_blocking(move || {
+//         let flag = service
+//             .find_flag(&key)?
+//             .ok_or_else(|| FlagNotFound(key.clone()))?;
 
-        let audit = service.find_audit(&key, query.before, 20)?;
+//         let audit = service.find_audit(&key, query.before, 20)?;
 
-        Ok::<_, AppError>((flag, audit))
-    })
-    .await??;
+//         Ok::<_, AppError>((flag, audit))
+//     })
+//     .await??;
 
-    let page = AuditView {
-        flag,
-        events: event_views(&audit.events),
-        next_before: audit.next_before,
-    };
+//     let page = AuditView {
+//         flag,
+//         events: event_views(&audit.events),
+//         next_before: audit.next_before,
+//     };
 
-    Ok(Html(page.render()?))
-}
+//     Ok(Html(page.render()?))
+// }
 
-#[derive(Template)]
-#[template(path = "flag.stpl")]
-struct FlagPageView {
-    flag: Flag,
-    updated_at: String,
-    events: Vec<EventView>,
-    has_more: bool,
-}
+// #[derive(Template)]
+// #[template(path = "flag.stpl")]
+// struct FlagPageView {
+//     flag: Flag,
+//     updated_at: String,
+//     events: Vec<EventView>,
+//     has_more: bool,
+// }
 
-async fn flag_page(
-    State(state): State<AppState>,
-    Path(key): Path<String>,
-) -> Result<Html<String>, AppError> {
-    let service = state.service.clone();
+// async fn flag_page(
+//     State(state): State<AppState>,
+//     Path(key): Path<String>,
+// ) -> Result<Html<String>, AppError> {
+//     let service = state.service.clone();
 
-    let (flag, audit) = tokio::task::spawn_blocking(move || {
-        let flag = service
-            .find_flag(&key)?
-            .ok_or_else(|| FlagNotFound(key.clone()))?;
+//     let (flag, audit) = tokio::task::spawn_blocking(move || {
+//         let flag = service
+//             .find_flag(&key)?
+//             .ok_or_else(|| FlagNotFound(key.clone()))?;
 
-        let audit = service.find_audit(&key, None, 5)?;
+//         let audit = service.find_audit(&key, None, 5)?;
 
-        Ok::<_, AppError>((flag, audit))
-    })
-    .await??;
+//         Ok::<_, AppError>((flag, audit))
+//     })
+//     .await??;
 
-    let page = FlagPageView {
-        updated_at: format_utc(flag.updated_at()),
-        events: event_views(&audit.events),
-        has_more: audit.next_before.is_some(),
-        flag,
-    };
-    Ok(Html(page.render()?))
-}
+//     let page = FlagPageView {
+//         updated_at: format_utc(flag.updated_at()),
+//         events: event_views(&audit.events),
+//         has_more: audit.next_before.is_some(),
+//         flag,
+//     };
+//     Ok(Html(page.render()?))
+// }

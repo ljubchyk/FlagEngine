@@ -87,9 +87,18 @@ h1 {
     background: transparent;
 }
 
-.dot.on {
+.dot.disabled {
+    background: transparent;
+    border-color: var(--muted);
+}
+
+.dot.enabled {
     background: var(--ink);
     border-color: var(--ink);
+}
+
+.dot.archived {
+    display:none
 }
 
 /* Table: horizontal lines only */

@@ -16,7 +16,7 @@ use std::{error::Error, sync::Arc};
 
 use tokio::signal::unix::{SignalKind, signal};
 
-use crate::{cache::FlagCache, flag_repo::FlagFilter, http::AppState, service::FlagService};
+use crate::{cache::FlagCache, domain::FlagStatus, flag_repo::FlagFilter, http::AppState, service::FlagService};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -32,7 +32,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     cache.hydrate(
         flags
             .into_iter()
-            .map(|flag| (flag.key().to_owned(), flag.is_enabled())),
+            .map(|flag| (flag.key().to_owned(), matches!(flag.status(), FlagStatus::Enabled))),
     );
 
     let (waker, wake_rx) = std::sync::mpsc::sync_channel::<()>(1);
